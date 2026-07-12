@@ -5,6 +5,7 @@ services:
     container_name: mysql-inv
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: inventory_service
     ports:
       - "3316:3306"
     volumes:
