@@ -24,7 +24,6 @@ services:
       KC_DB_PASSWORD: password
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
-      JAVA_OPTS_APPEND: "-Dkeycloak.migration.strategy=OVERWRITE_EXISTING"
     ports:
       - "8181:8080"
     volumes:

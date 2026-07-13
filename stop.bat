@@ -1,6 +1,9 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:: Get the directory where this script is located (includes trailing slash)
+set "BASE_DIR=%~dp0"
+
 echo Stopping Spring Boot applications and Maven launchers...
 
 :: 1. Kill the specific Spring Boot applications
@@ -18,21 +21,17 @@ for /f "tokens=1" %%a in ('jcmd ^| findstr /i "spring-boot:run"') do (
 echo.
 echo Stopping all Docker containers...
 
-cd /d "D:\SAI\SKT\api-gateway"
 echo Stopping Api Gateway Docker...
-docker compose down
+docker compose --project-directory "%BASE_DIR%api-gateway" down
 
-cd /d "D:\SAI\SKT\inventory-service"
 echo Stopping Inventory Service Docker...
-docker compose down
+docker compose --project-directory "%BASE_DIR%inventory-service" down
 
-cd /d "D:\SAI\SKT\order-service"
 echo Stopping Order Service Docker...
-docker compose down
+docker compose --project-directory "%BASE_DIR%order-service" down
 
-cd /d "D:\SAI\SKT\product-service"
 echo Stopping Product Service Docker...
-docker compose down
+docker compose --project-directory "%BASE_DIR%product-service" down
 
 echo.
 echo All services stopped successfully!

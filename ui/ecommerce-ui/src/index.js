@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import keycloak from "./key-cloack";
 
-console.log("🔥 main.jsx loaded");
+console.log("🚀 Starting app...");
 console.log("Keycloak object:", keycloak);
 
 keycloak.init({
@@ -11,11 +11,20 @@ keycloak.init({
     checkLoginIframe: false,
 })
     .then((authenticated) => {
-
         console.log("✅ Keycloak initialized");
         console.log("Authenticated:", authenticated);
+        console.log("Token:", keycloak.token);
+        console.log("Token Parsed:", keycloak.tokenParsed);
 
-        const root = ReactDOM.createRoot(document.getElementById("root"));
+        if (!authenticated) {
+            console.error("❌ User NOT authenticated");
+            return;
+        }
+
+        const rootElement = document.getElementById("root");
+        console.log("Root element:", rootElement);
+
+        const root = ReactDOM.createRoot(rootElement);
 
         root.render(
             <React.StrictMode>
