@@ -1,16 +1,39 @@
-# React + Vite
+# SKT Ecommerce UI
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+This frontend is a marketplace-style UI (Amazon/Flipkart inspired) built on top of your existing backend APIs through API Gateway.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Storefront catalog with search, category filter, and price sorting
+- Product cards and add-to-cart flow
+- Cart + checkout page with quantity editing and order summary
+- Pre-check stock with inventory API before placing order
+- Seller utility pages for creating products and manual inventory lookup
+- Keycloak-authenticated API calls via gateway
 
-## React Compiler
+## Backend Endpoint Mapping
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- `GET /api/product` -> product catalog in `shop`
+- `POST /api/product` -> seller page `products/create`
+- `GET /api/inventory` -> inventory check page and checkout stock validation
+- `POST /api/order` -> checkout order placement
 
-## Expanding the Oxlint configuration
+## Quick Start
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Run these commands in this folder (`ui/ecommerce-ui`):
+
+```powershell
+npm install
+npm run dev
+```
+
+## Production Build Check
+
+```powershell
+npm run build
+```
+
+## Notes
+
+- UI expects API Gateway at `http://localhost:7070` and Keycloak at `http://localhost:8181`.
+- Checkout places one order request per cart item because the current order API accepts a single item payload (`OrderRequest`).
