@@ -1,22 +1,33 @@
 import { NavLink, Outlet } from "react-router-dom";
 
 const navItems = [
-  { to: "/products", label: "Product Catalog" },
-  { to: "/products/create", label: "Create Product" },
-  { to: "/orders/create", label: "Place Order" },
-  { to: "/inventory/check", label: "Check Inventory" },
+  { to: "/shop", label: "Shop" },
+  { to: "/checkout", label: "Cart & Checkout" },
+  { to: "/products/create", label: "Seller: Add Product" },
+  { to: "/inventory/check", label: "Inventory Lookup" },
 ];
 
-function Layout({ keycloak }) {
+function Layout({
+  keycloak,
+  cartItems,
+  cartSummary,
+  addToCart,
+  updateCartItemQuantity,
+  removeFromCart,
+  clearCart,
+}) {
   return (
     <div className="app-shell">
       <header className="app-header">
-        <div>
-          <h1>SKT Ecommerce Console</h1>
-          <p className="subtitle">Frontend screens for every backend controller endpoint.</p>
+        <div className="brand-block">
+          <span className="brand">SKT Mart</span>
+          <p className="subtitle">Amazon-style storefront powered by your existing microservice endpoints.</p>
         </div>
         <div className="header-actions">
           <span className="user-pill">{keycloak?.tokenParsed?.preferred_username || "Authenticated user"}</span>
+          <NavLink to="/checkout" className="cart-pill">
+            Cart ({cartSummary.totalItems}) - ${cartSummary.totalPrice.toFixed(2)}
+          </NavLink>
           <button type="button" onClick={() => keycloak.logout()}>
             Logout
           </button>
@@ -36,11 +47,22 @@ function Layout({ keycloak }) {
       </nav>
 
       <main className="content-area">
-        <Outlet context={{ keycloak }} />
+        <Outlet
+          context={{
+            keycloak,
+            cartItems,
+            cartSummary,
+            addToCart,
+            updateCartItemQuantity,
+            removeFromCart,
+            clearCart,
+          }}
+        />
       </main>
     </div>
   );
 }
 
 export default Layout;
+
 
