@@ -1,56 +1,28 @@
-import React from "react";
-import axios from "axios";
+import { Navigate, Route, Routes } from "react-router-dom";
+import "./App.css";
+import Layout from "./components/Layout";
+import CreateProductPage from "./pages/CreateProductPage";
+import InventoryCheckPage from "./pages/InventoryCheckPage";
+import PlaceOrderPage from "./pages/PlaceOrderPage";
+import ProductListPage from "./pages/ProductListPage";
 
 function App({ keycloak }) {
+  if (!keycloak || !keycloak.tokenParsed) {
+    return <div className="loading">Loading authentication...</div>;
+  }
 
-    console.log("App received keycloak:", keycloak);
-
-    // ✅ HARD GUARD (fixes your crash)
-    if (!keycloak || !keycloak.tokenParsed) {
-        console.log("⏳ Waiting for Keycloak...");
-        return <div>Loading authentication...</div>;
-    }
-
-    const callPrivateApi = async () => {
-        try {
-            await keycloak.updateToken(30);
-
-            const response = await axios.get(
-                "http://localhost:7070/api/product",
-                {
-                    headers: {
-                        Authorization: `Bearer ${keycloak.token}`,
-                    },
-                }
-            );
-
-            console.log(response.data);
-
-        } catch (error) {
-            console.error("API error:", error);
-        }
-    };
-
-    return (
-        <div style={{ padding: "20px" }}>
-            <h2>Keycloak React App</h2>
-
-            <p>
-                <strong>User:</strong>{" "}
-                {keycloak.tokenParsed?.preferred_username}
-            </p>
-
-            <button onClick={callPrivateApi}>
-                Call API
-            </button>
-
-            <br /><br />
-
-            <button onClick={() => keycloak.logout()}>
-                Logout
-            </button>
-        </div>
-    );
+  return (
+    <Routes>
+      <Route path="/" element={<Layout keycloak={keycloak} />}>
+        <Route index element={<Navigate to="/products" replace />} />
+        <Route path="products" element={<ProductListPage />} />
+        <Route path="products/create" element={<CreateProductPage />} />
+        <Route path="orders/create" element={<PlaceOrderPage />} />
+        <Route path="inventory/check" element={<InventoryCheckPage />} />
+        <Route path="*" element={<Navigate to="/products" replace />} />
+      </Route>
+    </Routes>
+  );
 }
 
 export default App;

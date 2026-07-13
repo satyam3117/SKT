@@ -1,28 +1,28 @@
-import React from "react";
+import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import keycloak from "./key-cloack";
-
-console.log("🔥 main.jsx loaded");
-console.log("Keycloak object:", keycloak);
+import "./index.css";
 
 keycloak.init({
-    onLoad: "login-required",
-    checkLoginIframe: false,
+  onLoad: "login-required",
+  checkLoginIframe: false,
 })
-    .then((authenticated) => {
+  .then((authenticated) => {
+    if (!authenticated) {
+      throw new Error("User is not authenticated.");
+    }
 
-        console.log("✅ Keycloak initialized");
-        console.log("Authenticated:", authenticated);
-
-        const root = ReactDOM.createRoot(document.getElementById("root"));
-
-        root.render(
-            <React.StrictMode>
-                <App keycloak={keycloak} />
-            </React.StrictMode>
-        );
-    })
-    .catch((err) => {
-        console.error("❌ Keycloak init failed:", err);
-    });
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(
+      <StrictMode>
+        <BrowserRouter>
+          <App keycloak={keycloak} />
+        </BrowserRouter>
+      </StrictMode>
+    );
+  })
+  .catch((err) => {
+    console.error("Keycloak init failed:", err);
+  });
