@@ -34,13 +34,13 @@ function PlaceOrderPage() {
     setError("");
     setResult(null);
 
-    try {
-      for (const item of cartItems) {
-        const inStock = await checkInventory(keycloak, item.id, item.quantity);
-        if (!inStock) {
-          throw new Error(`Item ${item.name} (SKU ${item.id}) is not in stock for quantity ${item.quantity}.`);
-        }
-      }
+    // try {
+    //   for (const item of cartItems) {
+    //     const inStock = await checkInventory(keycloak, item.id, item.quantity);
+    //     if (!inStock) {
+    //       throw new Error(`Item ${item.name} (SKU ${item.id}) is not in stock for quantity ${item.quantity}.`);
+    //     }
+    //   }
 
       const orderSeed = Date.now();
       const responses = [];
@@ -69,11 +69,7 @@ function PlaceOrderPage() {
       });
       clearCart();
       setForm(initialForm);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
+
   };
 
   return (

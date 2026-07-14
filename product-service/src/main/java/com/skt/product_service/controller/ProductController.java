@@ -6,6 +6,7 @@ import com.skt.product_service.repository.ProductRepository;
 import com.skt.product_service.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +25,7 @@ public class ProductController {
         return productService.createProduct(productRequest);
     }
 
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> getAllProducts(){
@@ -32,4 +34,22 @@ public class ProductController {
                 .map(product -> new ProductResponse(product.getId(), product.getName(), product.getDescription(), product.getPrice()))
                 .toList();
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductResponse> updateProduct(
+            @PathVariable String id,
+            @RequestBody ProductRequest productRequest) {
+
+        ProductResponse updatedProduct = productService.updateProduct(id, productRequest);
+        return ResponseEntity.ok(updatedProduct);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT) // Returns HTTP 204 (No Content) on success
+    public void deleteProduct(@PathVariable String id) {
+        productService.deleteProduct(id);
+    }
+
+
+
 }

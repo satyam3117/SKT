@@ -28,4 +28,36 @@ public class ProductService {
         return new  ProductResponse(product.getId(), product.getName(), product.getDescription(), product.getPrice());
     }
 
+    public ProductResponse updateProduct(String id, ProductRequest productRequest) {
+        // Find the existing product or throw an exception
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + id));
+
+        // Map the new values from the request to our entity
+        Product updatedProduct = Product.builder()
+                .id(existingProduct.getId()) // Keep the original ID!
+                .name(productRequest.name())
+                .description(productRequest.description())
+                .price(productRequest.price())
+                .build();
+
+        productRepository.save(updatedProduct);
+        log.info("Product with id {} updated successfully", id);
+
+        return new ProductResponse(
+                updatedProduct.getId(),
+                updatedProduct.getName(),
+                updatedProduct.getDescription(),
+                updatedProduct.getPrice()
+        );
+    }
+
+    public void deleteProduct(String id) {
+        if (!productRepository.existsById(id)) {
+            throw new IllegalArgumentException("Product not found with id: " + id);
+        }
+
+        productRepository.deleteById(id);
+        log.info("Product with id {} deleted successfully", id);
+    }
 }

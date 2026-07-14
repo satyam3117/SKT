@@ -36,7 +36,7 @@ public class OrderService {
            order.setQuantity(orderRequest.quantity());
            orderRepository.save(order);
        } else {
-           throw new RuntimeException("Product with SKUCODE : "+ orderRequest.skuCode() + "is not present" );
+           log.error("Product with SKUCODE : "+ orderRequest.skuCode() + "is not present" );
        }
 
     }

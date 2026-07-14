@@ -1,0 +1,76 @@
+2026-07-14T21:49:39.522+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-14T21:49:39.610+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 81 ms. Found 1 JPA repository interface.
+2026-07-14T21:49:39.717+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=73ba6fc2-465e-3e4f-b69b-409ee0c5c19e
+2026-07-14T21:49:39.973+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8082 (http)
+2026-07-14T21:49:40.028+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 962 ms
+2026-07-14T21:49:40.419+05:30  WARN 6140 --- [INVENTORY-SERVICE] [main] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 8.3 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-07-14T21:49:40.536+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-07-14T21:49:40.568+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.53.Final
+2026-07-14T21:49:40.596+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-07-14T21:49:40.765+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-14T21:49:40.822+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.3
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-07-14T21:49:41.271+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-07-14T21:49:41.273+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-14T21:49:41.489+05:30  WARN 6140 --- [INVENTORY-SERVICE] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-14T21:49:41.520+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-14T21:49:42.095+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-14T21:49:42.124+05:30  WARN 6140 --- [INVENTORY-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-14T21:49:42.140+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-14T21:49:42.350+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application INVENTORY-SERVICE with eureka with status UP
+2026-07-14T21:49:42.374+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8082 (http) with context path '/'
+2026-07-14T21:49:42.375+05:30  INFO 6140 --- [INVENTORY-SERVICE] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8082
+2026-07-14T21:49:46.286+05:30  INFO 6140 --- [INVENTORY-SERVICE] [http-nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-14T21:49:46.287+05:30  INFO 6140 --- [INVENTORY-SERVICE] [http-nio-8082-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-14T22:46:44.122+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-14T22:46:44.368+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 221 ms. Found 1 JPA repository interface.
+2026-07-14T22:46:44.732+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=73ba6fc2-465e-3e4f-b69b-409ee0c5c19e
+2026-07-14T22:46:46.636+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8082 (http)
+2026-07-14T22:46:46.807+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3957 ms
+2026-07-14T22:46:47.607+05:30  WARN 16056 --- [INVENTORY-SERVICE] [main] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 8.3 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-07-14T22:46:47.798+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-07-14T22:46:47.851+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.53.Final
+2026-07-14T22:46:47.882+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-07-14T22:46:48.165+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-14T22:46:48.302+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.3
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-07-14T22:46:49.083+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-07-14T22:46:49.086+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-14T22:46:49.482+05:30  WARN 16056 --- [INVENTORY-SERVICE] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-14T22:46:49.542+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-14T22:46:50.629+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-14T22:46:50.671+05:30  WARN 16056 --- [INVENTORY-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-14T22:46:50.696+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-14T22:46:51.034+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application INVENTORY-SERVICE with eureka with status UP
+2026-07-14T22:46:51.044+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application INVENTORY-SERVICE with eureka with status DOWN
+2026-07-14T22:46:51.045+05:30  WARN 16056 --- [INVENTORY-SERVICE] [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2026-07-14T22:46:51.047+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-07-14T22:46:51.099+05:30  INFO 16056 --- [INVENTORY-SERVICE] [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-07-14T22:46:51.116+05:30 ERROR 16056 --- [INVENTORY-SERVICE] [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8082 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8082 or configure this application to listen on another port.
+

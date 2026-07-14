@@ -1,0 +1,48 @@
+2026-07-14T22:47:21.313+05:30  INFO 2340 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-07-14T22:47:21.396+05:30  INFO 2340 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 76 ms. Found 1 MongoDB repository interface.
+2026-07-14T22:47:21.520+05:30  INFO 2340 --- [PRODUCT-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=2677439c-4383-3d49-b299-f18822e6e7d6
+2026-07-14T22:47:21.723+05:30  INFO 2340 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-14T22:47:21.782+05:30  INFO 2340 --- [PRODUCT-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 922 ms
+2026-07-14T22:47:22.434+05:30  INFO 2340 --- [PRODUCT-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-14T22:47:22.863+05:30  INFO 2340 --- [PRODUCT-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-14T22:47:22.884+05:30  WARN 2340 --- [PRODUCT-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-14T22:47:22.903+05:30  INFO 2340 --- [PRODUCT-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-14T22:47:23.226+05:30  INFO 2340 --- [PRODUCT-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PRODUCT-SERVICE with eureka with status UP
+2026-07-14T22:47:23.247+05:30  INFO 2340 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-07-14T22:47:23.248+05:30  INFO 2340 --- [PRODUCT-SERVICE] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8080
+2026-07-14T22:47:33.505+05:30  INFO 2340 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-14T22:47:33.506+05:30  INFO 2340 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-14T22:50:06.091+05:30  INFO 2340 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PRODUCT-SERVICE with eureka with status DOWN
+2026-07-14T22:50:06.094+05:30  INFO 2340 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-14T22:50:06.190+05:30  INFO 2340 --- [PRODUCT-SERVICE] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-07-14T22:50:16.071+05:30  INFO 15364 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-07-14T22:50:16.164+05:30  INFO 15364 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 88 ms. Found 1 MongoDB repository interface.
+2026-07-14T22:50:16.275+05:30  INFO 15364 --- [PRODUCT-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=2677439c-4383-3d49-b299-f18822e6e7d6
+2026-07-14T22:50:16.491+05:30  INFO 15364 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-14T22:50:16.549+05:30  INFO 15364 --- [PRODUCT-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1127 ms
+2026-07-14T22:50:17.164+05:30  INFO 15364 --- [PRODUCT-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-14T22:50:17.581+05:30  INFO 15364 --- [PRODUCT-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-14T22:50:17.611+05:30  WARN 15364 --- [PRODUCT-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-14T22:50:17.639+05:30  INFO 15364 --- [PRODUCT-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-14T22:50:17.982+05:30  INFO 15364 --- [PRODUCT-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PRODUCT-SERVICE with eureka with status UP
+2026-07-14T22:50:18.006+05:30  INFO 15364 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-07-14T22:50:18.007+05:30  INFO 15364 --- [PRODUCT-SERVICE] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8080
+2026-07-14T22:50:25.593+05:30  INFO 15364 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-14T22:50:25.594+05:30  INFO 15364 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-14T22:50:25.693+05:30  INFO 15364 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] c.s.p.service.ProductService             : New Product Created SuccessFully
+2026-07-14T23:14:47.544+05:30  INFO 15364 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PRODUCT-SERVICE with eureka with status DOWN
+2026-07-14T23:14:47.547+05:30  INFO 15364 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-14T23:14:47.628+05:30  INFO 15364 --- [PRODUCT-SERVICE] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-07-14T23:14:50.638+05:30  WARN 15364 --- [PRODUCT-SERVICE] [DiscoveryClient-%d] c.netflix.discovery.TimedSupervisorTask  : task supervisor shutting down, can't accept the task
+2026-07-14T23:15:00.140+05:30  INFO 12632 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-07-14T23:15:00.224+05:30  INFO 12632 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 77 ms. Found 1 MongoDB repository interface.
+2026-07-14T23:15:00.322+05:30  INFO 12632 --- [PRODUCT-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=6e390f5d-91be-37e9-a428-52588c8197be
+2026-07-14T23:15:00.524+05:30  INFO 12632 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-14T23:15:00.579+05:30  INFO 12632 --- [PRODUCT-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 874 ms
+2026-07-14T23:15:01.146+05:30  INFO 12632 --- [PRODUCT-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-14T23:15:01.509+05:30  INFO 12632 --- [PRODUCT-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-14T23:15:01.532+05:30  WARN 12632 --- [PRODUCT-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-14T23:15:01.550+05:30  INFO 12632 --- [PRODUCT-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-14T23:15:01.809+05:30  INFO 12632 --- [PRODUCT-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PRODUCT-SERVICE with eureka with status UP
+2026-07-14T23:15:01.826+05:30  INFO 12632 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-07-14T23:15:01.827+05:30  INFO 12632 --- [PRODUCT-SERVICE] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8080
