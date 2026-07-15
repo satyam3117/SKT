@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1a351369-aa6f-4cd1-ac58-7dac5c98ee95" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../product-service/src/main/java/com/skt/product_service/exception/ProductNotFoundException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product-service/src/main/java/com/skt/product_service/model/Computer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product-service/src/main/java/com/skt/product_service/model/Laptop.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../product-service/src/main/java/com/skt/product_service/model/ProductType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../inventory-service/logs/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/../inventory-service/logs/app.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../order-service/logs/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/../order-service/logs/app.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../product-service/logs/app.log" beforeDir="false" afterPath="$PROJECT_DIR$/../product-service/logs/app.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../product-service/src/main/java/com/skt/product_service/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../product-service/src/main/java/com/skt/product_service/controller/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../product-service/src/main/java/com/skt/product_service/dto/ProductRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../product-service/src/main/java/com/skt/product_service/dto/ProductRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../product-service/src/main/java/com/skt/product_service/dto/ProductResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../product-service/src/main/java/com/skt/product_service/dto/ProductResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../product-service/src/main/java/com/skt/product_service/model/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/../product-service/src/main/java/com/skt/product_service/model/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../product-service/src/main/java/com/skt/product_service/service/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../product-service/src/main/java/com/skt/product_service/service/ProductService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../run.bat" beforeDir="false" afterPath="$PROJECT_DIR$/../run.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/skt/service_registry/ServiceRegistryApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/skt/service_registry/ServiceRegisteryApplicationTests.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="17" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.2648316869642053" />
+      <entry key="MS500" value="2.5507307355192883" />
+      <entry key="S2" value="6.654778455897212" />
+      <entry key="S5" value="11.40161675468204" />
+      <entry key="S10" value="15.844920559854536" />
+      <entry key="S30" value="26.110763317399798" />
+      <entry key="S60" value="34.65129175399385" />
+      <entry key="M2" value="43.2880322136544" />
+      <entry key="M5" value="53.03462291069664" />
+      <entry key="M10" value="58.13722640012857" />
+      <entry key="M15" value="60.18917520633414" />
+      <entry key="M30" value="62.46437766728146" />
+      <entry key="H1" value="63.69704017184417" />
+      <entry key="H2" value="64.33938179127296" />
+      <entry key="H4" value="64.66736064130347" />
+      <entry key="D1" value="64.94423249676666" />
+      <entry key="W1" value="64.99202513843959" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="1.20544481389E-312" />
+      <entry key="S2" value="1.04782036078931E-78" />
+      <entry key="S5" value="6.428575270148633E-32" />
+      <entry key="S10" value="2.535463521754675E-16" />
+      <entry key="S30" value="6.329252991547504E-6" />
+      <entry key="S60" value="0.002515800666099662" />
+      <entry key="M2" value="0.050157757785806834" />
+      <entry key="M5" value="0.3020892323300976" />
+      <entry key="M10" value="0.5496264479899937" />
+      <entry key="M15" value="0.6709833576333302" />
+      <entry key="M30" value="0.8191357382225062" />
+      <entry key="H1" value="0.9050611792704985" />
+      <entry key="H2" value="0.9513470340892946" />
+      <entry key="H4" value="0.9753702036095292" />
+      <entry key="D1" value="0.9958522617193868" />
+      <entry key="W1" value="0.9994064099576337" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.2232577607776494" />
+      <entry key="MS500" value="2.5157341093384655" />
+      <entry key="S2" value="6.591317038195931" />
+      <entry key="S5" value="11.333376212899086" />
+      <entry key="S10" value="15.77935502571418" />
+      <entry key="S30" value="26.04120163228967" />
+      <entry key="S60" value="34.5911673913667" />
+      <entry key="M2" value="43.28883791657317" />
+      <entry key="M5" value="53.30493260656384" />
+      <entry key="M10" value="58.66673625539028" />
+      <entry key="M15" value="60.84547664482825" />
+      <entry key="M30" value="63.275424229151476" />
+      <entry key="H1" value="64.59784488844298" />
+      <entry key="H2" value="65.28854415353695" />
+      <entry key="H4" value="65.64162393950838" />
+      <entry key="D1" value="65.93989821048102" />
+      <entry key="W1" value="65.99140484760773" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3GUzaFZwc1qsSR90PsRVLf4C8Po" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "Spring Boot.ServiceRegistryApplication.executor": "Run",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "develop",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "E:/SaiKripaTraders/service-registery",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "to.speed.mode.migration.done": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="ServiceRegistryApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UnknownPolicyInFreeMode" />
+      <module name="service-registry" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.skt.service_registry.ServiceRegistryApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.skt.service_registry.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.ServiceRegistryApplication" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-37e91769500f-intellij.indexing.shared.core-IU-261.25134.95" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-IU-261.25134.95" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1a351369-aa6f-4cd1-ac58-7dac5c98ee95" name="Changes" comment="" />
+      <created>1784040996824</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1784040996824</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-core" />
+    <option featureType="dependencySupport" implementationName="executable:docker" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.validation:jakarta.validation-api" />
+    <option featureType="dependencySupport" implementationName="java:io.projectreactor:reactor-core" />
+    <option featureType="dependencySupport" implementationName="executable:kubectl" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.cloud:spring-cloud-context" />
+    <option featureType="dependencySupport" implementationName="java:jakarta.ws.rs:jakarta.ws.rs-api" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-webmvc" />
+  </component>
+</project>

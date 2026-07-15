@@ -25,13 +25,18 @@ public class ProductController {
         return productService.createProduct(productRequest);
     }
 
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> getAllProducts(){
         return productRepository.findAll()
                 .stream()
-                .map(product -> new ProductResponse(product.getId(), product.getName(), product.getDescription(), product.getPrice()))
+                .map(product -> new ProductResponse(
+                        product.getId(),
+                        product.getName(),
+                        product.getDescription(),
+                        product.getPrice(),
+                        product.getProductType() != null ? product.getProductType().name() : "UNKNOWN" // Added the 5th parameter here!
+                ))
                 .toList();
     }
 
@@ -49,7 +54,4 @@ public class ProductController {
     public void deleteProduct(@PathVariable String id) {
         productService.deleteProduct(id);
     }
-
-
-
 }
