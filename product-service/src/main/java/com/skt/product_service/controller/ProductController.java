@@ -1,5 +1,6 @@
 package com.skt.product_service.controller;
 
+import com.skt.product_service.dto.BaseProductResponse;
 import com.skt.product_service.dto.ProductRequest;
 import com.skt.product_service.dto.ProductResponse;
 import com.skt.product_service.repository.ProductRepository;
@@ -27,15 +28,15 @@ public class ProductController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponse> getAllProducts(){
+    public List<BaseProductResponse> getAllProducts(){
         return productRepository.findAll()
                 .stream()
-                .map(product -> new ProductResponse(
+                .map(product -> new BaseProductResponse(
                         product.getId(),
                         product.getName(),
                         product.getDescription(),
                         product.getPrice(),
-                        product.getProductType() != null ? product.getProductType().name() : "UNKNOWN" // Added the 5th parameter here!
+                        product.getProductType() != null ? product.getProductType().name() : "others" // Added the 5th parameter here!
                 ))
                 .toList();
     }
@@ -53,5 +54,13 @@ public class ProductController {
     @ResponseStatus(HttpStatus.NO_CONTENT) // Returns HTTP 204 (No Content) on success
     public void deleteProduct(@PathVariable String id) {
         productService.deleteProduct(id);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable String id) {
+
+        ProductResponse productResponse = productService.getProductById(id);
+
+        return ResponseEntity.ok(productResponse);
     }
 }

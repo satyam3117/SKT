@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
@@ -13,7 +14,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @SuperBuilder // Required for inheritance builders
 @Data
-public abstract class Product {
+@TypeAlias("product")
+public class Product {
 
     @Id
     private String id;

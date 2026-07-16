@@ -1,7 +1,10 @@
 package com.skt.product_service.service;
 
+import com.skt.product_service.dto.LaptopResponse;
 import com.skt.product_service.dto.ProductRequest;
+import com.skt.product_service.dto.BaseProductResponse;
 import com.skt.product_service.dto.ProductResponse;
+import com.skt.product_service.model.Laptop;
 import com.skt.product_service.model.Product;
 import com.skt.product_service.model.ProductType;
 import com.skt.product_service.repository.ProductRepository;
@@ -9,6 +12,10 @@ import com.skt.product_service.service.factory.ProductFactory;
 import com.skt.product_service.service.factory.ProductFactoryRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,42 +24,59 @@ import org.springframework.stereotype.Service;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final ProductFactoryRegistry factoryRegistry; // Injected registry
+    private final ProductFactoryRegistry factoryRegistry;
 
-    public ProductResponse createProduct(ProductRequest productRequest) {
-        if (productRequest.productType() == null) {
-            throw new IllegalArgumentException("Product type must be provided");
+    @Cacheable(value = "products", key = "#id")
+    public ProductResponse getProductById(String id) {
+        log.info("Fetching product from DB for id: {}", id);
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + id));
+
+        if(product instanceof Laptop laptop){
+            return mapToLaptopProductResponse(laptop);
         }
 
-        // Get the specific factory (LaptopFactory or GpuFactory)
-        ProductFactory factory = factoryRegistry.getFactory(productRequest.productType());
+        return mapToBaseProductResponse(product);
+    }
 
-        // Let the factory build the entity
+    @CacheEvict(value = "productList", allEntries = true)
+    public BaseProductResponse createProduct(ProductRequest productRequest) {
+
+        ProductFactory factory = factoryRegistry.getFactory(productRequest.productType());
         Product product = factory.create(productRequest);
 
         Product savedProduct = productRepository.save(product);
         log.info("New {} Created Successfully with ID: {}", savedProduct.getProductType(), savedProduct.getId());
 
-        return mapToProductResponse(savedProduct);
+        return mapToBaseProductResponse(savedProduct);
     }
 
-    public ProductResponse updateProduct(String id, ProductRequest productRequest) {
+    @Caching(evict = {
+            @CacheEvict(value = "products", key = "#id"),
+            @CacheEvict(value = "productList", allEntries = true)
+    })
+    public BaseProductResponse updateProduct(String id, ProductRequest productRequest) {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + id));
 
-        // Use requested productType, or fallback to the type already stored in MongoDB
-        ProductType type = productRequest.productType() != null ? productRequest.productType() : existingProduct.getProductType();
+        ProductType type = productRequest.productType() != null
+                ? productRequest.productType()
+                : existingProduct.getProductType();
 
-        // Get the appropriate factory & perform the update
         ProductFactory factory = factoryRegistry.getFactory(type);
         Product updatedProduct = factory.update(existingProduct, productRequest);
 
         Product savedProduct = productRepository.save(updatedProduct);
         log.info("Product with id {} updated successfully", id);
 
-        return mapToProductResponse(savedProduct);
+        return mapToBaseProductResponse(savedProduct);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "products", key = "#id"),
+            @CacheEvict(value = "productList", allEntries = true)
+    })
     public void deleteProduct(String id) {
         if (!productRepository.existsById(id)) {
             throw new IllegalArgumentException("Product not found with id: " + id);
@@ -61,13 +85,31 @@ public class ProductService {
         log.info("Product with id {} deleted successfully", id);
     }
 
-    private ProductResponse mapToProductResponse(Product product) {
-        return new ProductResponse(
+    private BaseProductResponse mapToBaseProductResponse(Product product) {
+        return new BaseProductResponse(
                 product.getId(),
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
-                product.getProductType() != null ? product.getProductType().name() : "UNKNOWN"
+                product.getProductType() != null ? product.getProductType().name().toLowerCase() : "others"
         );
     }
+
+    private LaptopResponse mapToLaptopProductResponse(Laptop product) {
+        return new LaptopResponse(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getProductType() != null ? product.getProductType().name().toLowerCase() : "others",
+                product.getScreenSize(),
+                product.getRamGb(),
+                product.getStorageGb(),
+                product.getProcessor(),
+                product.getGraphics()
+
+        );
+    }
+
+
 }
