@@ -28,8 +28,7 @@ public class ProductService {
 
     @Cacheable(value = "products", key = "#id")
     public ProductResponse getProductById(String id) {
-        log.info("Fetching product from DB for id: {}", id);
-
+        log.info("Cache MISS - Fetching product from DB for id: {}", id);
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + id));
 
@@ -40,8 +39,9 @@ public class ProductService {
         return mapToBaseProductResponse(product);
     }
 
-    @CacheEvict(value = "productList", allEntries = true)
-    public BaseProductResponse createProduct(ProductRequest productRequest) {
+
+
+    public ProductResponse createProduct(ProductRequest productRequest) {
 
         ProductFactory factory = factoryRegistry.getFactory(productRequest.productType());
         Product product = factory.create(productRequest);
@@ -49,14 +49,15 @@ public class ProductService {
         Product savedProduct = productRepository.save(product);
         log.info("New {} Created Successfully with ID: {}", savedProduct.getProductType(), savedProduct.getId());
 
-        return mapToBaseProductResponse(savedProduct);
-    }
 
-    @Caching(evict = {
-            @CacheEvict(value = "products", key = "#id"),
-            @CacheEvict(value = "productList", allEntries = true)
-    })
-    public BaseProductResponse updateProduct(String id, ProductRequest productRequest) {
+        if(product instanceof Laptop laptop){
+            return mapToLaptopProductResponse(laptop);
+        }
+
+        return mapToBaseProductResponse(product);    }
+
+
+    public ProductResponse updateProduct(String id, ProductRequest productRequest) {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + id));
 
@@ -70,13 +71,13 @@ public class ProductService {
         Product savedProduct = productRepository.save(updatedProduct);
         log.info("Product with id {} updated successfully", id);
 
-        return mapToBaseProductResponse(savedProduct);
-    }
+        if(updatedProduct instanceof Laptop laptop){
+            return mapToLaptopProductResponse(laptop);
+        }
 
-    @Caching(evict = {
-            @CacheEvict(value = "products", key = "#id"),
-            @CacheEvict(value = "productList", allEntries = true)
-    })
+        return mapToBaseProductResponse(updatedProduct);    }
+
+
     public void deleteProduct(String id) {
         if (!productRepository.existsById(id)) {
             throw new IllegalArgumentException("Product not found with id: " + id);

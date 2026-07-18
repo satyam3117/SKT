@@ -7,7 +7,7 @@ public record LaptopResponse(
         String name,
         String description,
         BigDecimal price,
-        String type,
+        String productType,
         String processor,
         String ramGb,
         String storageGb,

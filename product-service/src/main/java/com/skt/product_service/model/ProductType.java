@@ -3,6 +3,7 @@ package com.skt.product_service.model;
 public enum ProductType {
 
     // ===== PRE-BUILT SYSTEMS =====
+    BASE,
     DESKTOP_PREBUILT,
     LAPTOP,
     WORKSTATION,

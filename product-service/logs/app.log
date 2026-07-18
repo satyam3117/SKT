@@ -1120,3 +1120,844 @@ com.fasterxml.jackson.databind.exc.InvalidTypeIdException: Could not resolve sub
 2026-07-17T01:16:30.042+05:30  INFO 30012 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
 2026-07-17T01:16:30.045+05:30  INFO 30012 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
 2026-07-17T01:16:30.405+05:30  INFO 30012 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] c.s.p.service.ProductService             : Fetching product from DB for id: 6a5934661486faf8033eaf73
+2026-07-18T20:41:30.862+05:30  INFO 7700 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T20:41:30.864+05:30  INFO 7700 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-07-18T20:41:30.946+05:30  INFO 7700 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 77 ms. Found 1 MongoDB repository interface.
+2026-07-18T20:41:31.184+05:30  INFO 7700 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T20:41:31.185+05:30  INFO 7700 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-18T20:41:31.204+05:30  INFO 7700 --- [PRODUCT-SERVICE] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.skt.product_service.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-18T20:41:31.205+05:30  INFO 7700 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+2026-07-18T20:41:31.387+05:30  INFO 7700 --- [PRODUCT-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=295f5968-f1d8-35eb-8946-9665e0899264
+2026-07-18T20:41:31.629+05:30  INFO 7700 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-18T20:41:31.691+05:30  INFO 7700 --- [PRODUCT-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1172 ms
+2026-07-18T20:41:32.267+05:30  INFO 7700 --- [PRODUCT-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-18T20:41:32.924+05:30  INFO 7700 --- [PRODUCT-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-18T20:41:32.947+05:30  WARN 7700 --- [PRODUCT-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-18T20:41:32.964+05:30  INFO 7700 --- [PRODUCT-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-18T20:41:33.236+05:30  WARN 7700 --- [PRODUCT-SERVICE] [main] c.n.d.s.t.d.RetryableEurekaHttpClient    : Request execution failed with message: I/O error on GET request for "http://localhost:8761/eureka/apps/": Connect to http://localhost:8761 failed: Connection refused: no further information
+2026-07-18T20:41:33.237+05:30  WARN 7700 --- [PRODUCT-SERVICE] [main] com.netflix.discovery.DiscoveryClient    : Using default backup registry implementation which does not do anything.
+2026-07-18T20:41:33.247+05:30  INFO 7700 --- [PRODUCT-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PRODUCT-SERVICE with eureka with status UP
+2026-07-18T20:41:33.266+05:30  INFO 7700 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-07-18T20:41:33.267+05:30  INFO 7700 --- [PRODUCT-SERVICE] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8080
+2026-07-18T20:41:33.301+05:30  WARN 7700 --- [PRODUCT-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] c.n.d.s.t.d.RetryableEurekaHttpClient    : Request execution failed with message: I/O error on POST request for "http://localhost:8761/eureka/apps/PRODUCT-SERVICE": Connect to http://localhost:8761 failed: Connection refused: no further information
+2026-07-18T20:41:33.302+05:30  WARN 7700 --- [PRODUCT-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_PRODUCT-SERVICE/DESKTOP-0RHGPG3:PRODUCT-SERVICE:8080 - registration failed Cannot execute request on any known server
+
+com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
+	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.register(EurekaHttpClientDecorator.java:56) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$1.execute(EurekaHttpClientDecorator.java:59) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:76) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.register(EurekaHttpClientDecorator.java:56) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.DiscoveryClient.register(DiscoveryClient.java:843) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.InstanceInfoReplicator.run(InstanceInfoReplicator.java:125) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.InstanceInfoReplicator$2.run(InstanceInfoReplicator.java:105) ~[eureka-client-2.0.6.jar:2.0.6]
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539) ~[na:na]
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[na:na]
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) ~[na:na]
+	at java.base/java.lang.Thread.run(Thread.java:842) ~[na:na]
+
+2026-07-18T20:41:33.304+05:30  WARN 7700 --- [PRODUCT-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] c.n.discovery.InstanceInfoReplicator     : There was a problem with the instance info replicator
+
+com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
+	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.register(EurekaHttpClientDecorator.java:56) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$1.execute(EurekaHttpClientDecorator.java:59) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:76) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.register(EurekaHttpClientDecorator.java:56) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.DiscoveryClient.register(DiscoveryClient.java:843) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.InstanceInfoReplicator.run(InstanceInfoReplicator.java:125) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.InstanceInfoReplicator$2.run(InstanceInfoReplicator.java:105) ~[eureka-client-2.0.6.jar:2.0.6]
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539) ~[na:na]
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[na:na]
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) ~[na:na]
+	at java.base/java.lang.Thread.run(Thread.java:842) ~[na:na]
+
+2026-07-18T20:41:52.124+05:30  INFO 7700 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PRODUCT-SERVICE with eureka with status DOWN
+2026-07-18T20:41:52.126+05:30  INFO 7700 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-18T20:41:52.132+05:30  WARN 7700 --- [PRODUCT-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] c.n.d.s.t.d.RetryableEurekaHttpClient    : Request execution failed with message: I/O error on POST request for "http://localhost:8761/eureka/apps/PRODUCT-SERVICE": Connect to http://localhost:8761 failed: Connection refused: no further information
+2026-07-18T20:41:52.132+05:30  WARN 7700 --- [PRODUCT-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_PRODUCT-SERVICE/DESKTOP-0RHGPG3:PRODUCT-SERVICE:8080 - registration failed Cannot execute request on any known server
+
+com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
+	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.register(EurekaHttpClientDecorator.java:56) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$1.execute(EurekaHttpClientDecorator.java:59) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:76) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.register(EurekaHttpClientDecorator.java:56) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.DiscoveryClient.register(DiscoveryClient.java:843) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.InstanceInfoReplicator.run(InstanceInfoReplicator.java:125) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.InstanceInfoReplicator$2.run(InstanceInfoReplicator.java:105) ~[eureka-client-2.0.6.jar:2.0.6]
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539) ~[na:na]
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[na:na]
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) ~[na:na]
+	at java.base/java.lang.Thread.run(Thread.java:842) ~[na:na]
+
+2026-07-18T20:41:52.133+05:30  WARN 7700 --- [PRODUCT-SERVICE] [DiscoveryClient-InstanceInfoReplicator-%d] c.n.discovery.InstanceInfoReplicator     : There was a problem with the instance info replicator
+
+com.netflix.discovery.shared.transport.TransportException: Cannot execute request on any known server
+	at com.netflix.discovery.shared.transport.decorator.RetryableEurekaHttpClient.execute(RetryableEurekaHttpClient.java:112) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.register(EurekaHttpClientDecorator.java:56) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator$1.execute(EurekaHttpClientDecorator.java:59) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.shared.transport.decorator.SessionedEurekaHttpClient.execute(SessionedEurekaHttpClient.java:76) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.shared.transport.decorator.EurekaHttpClientDecorator.register(EurekaHttpClientDecorator.java:56) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.DiscoveryClient.register(DiscoveryClient.java:843) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.InstanceInfoReplicator.run(InstanceInfoReplicator.java:125) ~[eureka-client-2.0.6.jar:2.0.6]
+	at com.netflix.discovery.InstanceInfoReplicator$2.run(InstanceInfoReplicator.java:105) ~[eureka-client-2.0.6.jar:2.0.6]
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539) ~[na:na]
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264) ~[na:na]
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:304) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) ~[na:na]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) ~[na:na]
+	at java.base/java.lang.Thread.run(Thread.java:842) ~[na:na]
+
+2026-07-18T20:41:52.216+05:30  INFO 7700 --- [PRODUCT-SERVICE] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-07-18T20:42:15.582+05:30  INFO 25380 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T20:42:15.583+05:30  INFO 25380 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-07-18T20:42:15.676+05:30  INFO 25380 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 88 ms. Found 1 MongoDB repository interface.
+2026-07-18T20:42:15.864+05:30  INFO 25380 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T20:42:15.866+05:30  INFO 25380 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-18T20:42:15.887+05:30  INFO 25380 --- [PRODUCT-SERVICE] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.skt.product_service.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-18T20:42:15.887+05:30  INFO 25380 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+2026-07-18T20:42:16.052+05:30  INFO 25380 --- [PRODUCT-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=295f5968-f1d8-35eb-8946-9665e0899264
+2026-07-18T20:42:16.342+05:30  INFO 25380 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-18T20:42:16.418+05:30  INFO 25380 --- [PRODUCT-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1262 ms
+2026-07-18T20:42:17.105+05:30  INFO 25380 --- [PRODUCT-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-18T20:42:17.809+05:30  INFO 25380 --- [PRODUCT-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-18T20:42:17.837+05:30  WARN 25380 --- [PRODUCT-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-18T20:42:17.857+05:30  INFO 25380 --- [PRODUCT-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-18T20:42:18.221+05:30  INFO 25380 --- [PRODUCT-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PRODUCT-SERVICE with eureka with status UP
+2026-07-18T20:42:18.239+05:30  INFO 25380 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-07-18T20:42:18.240+05:30  INFO 25380 --- [PRODUCT-SERVICE] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8080
+2026-07-18T20:42:33.043+05:30  INFO 25380 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-18T20:42:33.045+05:30  INFO 25380 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-18T20:42:33.074+05:30  INFO 25380 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] c.s.p.service.ProductService             : Fetching product from DB for id: 6a5b8ca082ed5e442d9f25cd
+2026-07-18T20:46:26.194+05:30  INFO 25380 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PRODUCT-SERVICE with eureka with status DOWN
+2026-07-18T20:46:26.198+05:30  INFO 25380 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-18T20:46:26.281+05:30  INFO 25380 --- [PRODUCT-SERVICE] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-07-18T20:46:52.626+05:30  INFO 25352 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T20:46:52.627+05:30  INFO 25352 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-07-18T20:46:52.707+05:30  INFO 25352 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 76 ms. Found 1 MongoDB repository interface.
+2026-07-18T20:46:52.879+05:30  INFO 25352 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T20:46:52.881+05:30  INFO 25352 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-18T20:46:52.899+05:30  INFO 25352 --- [PRODUCT-SERVICE] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.skt.product_service.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-18T20:46:52.899+05:30  INFO 25352 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-07-18T20:46:53.041+05:30  INFO 25352 --- [PRODUCT-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=295f5968-f1d8-35eb-8946-9665e0899264
+2026-07-18T20:46:53.273+05:30  INFO 25352 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-18T20:46:53.328+05:30  INFO 25352 --- [PRODUCT-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1026 ms
+2026-07-18T20:46:53.881+05:30  INFO 25352 --- [PRODUCT-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-18T20:46:54.455+05:30  INFO 25352 --- [PRODUCT-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-18T20:46:54.478+05:30  WARN 25352 --- [PRODUCT-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-18T20:46:54.495+05:30  INFO 25352 --- [PRODUCT-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-18T20:46:54.769+05:30  INFO 25352 --- [PRODUCT-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PRODUCT-SERVICE with eureka with status UP
+2026-07-18T20:46:54.788+05:30  INFO 25352 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-07-18T20:46:54.789+05:30  INFO 25352 --- [PRODUCT-SERVICE] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8080
+2026-07-18T20:47:00.957+05:30  INFO 25352 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-18T20:47:00.958+05:30  INFO 25352 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-18T20:47:01.058+05:30  INFO 25352 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] c.s.p.service.ProductService             : New LAPTOP Created Successfully with ID: 6a5b98ed07dcfb032c041570
+2026-07-18T20:47:08.500+05:30  INFO 25352 --- [PRODUCT-SERVICE] [http-nio-8080-exec-4] c.s.p.service.ProductService             : Fetching product from DB for id: 6a5b98ed07dcfb032c041570
+2026-07-18T20:47:25.643+05:30  INFO 25352 --- [PRODUCT-SERVICE] [http-nio-8080-exec-3] c.s.p.service.ProductService             : Fetching product from DB for id: 6a5b98ed07dcfb032c041570
+2026-07-18T21:09:36.227+05:30  INFO 25352 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PRODUCT-SERVICE with eureka with status DOWN
+2026-07-18T21:09:36.229+05:30  INFO 25352 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-18T21:09:36.326+05:30  INFO 25352 --- [PRODUCT-SERVICE] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-07-18T21:09:50.201+05:30  INFO 10640 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:09:50.202+05:30  INFO 10640 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-07-18T21:09:50.300+05:30  INFO 10640 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 93 ms. Found 1 MongoDB repository interface.
+2026-07-18T21:09:50.515+05:30  INFO 10640 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:09:50.516+05:30  INFO 10640 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-18T21:09:50.539+05:30  INFO 10640 --- [PRODUCT-SERVICE] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.skt.product_service.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-18T21:09:50.539+05:30  INFO 10640 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+2026-07-18T21:09:50.711+05:30  INFO 10640 --- [PRODUCT-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=5b3a4cc0-a6de-39fa-ac75-57a36714f7e8
+2026-07-18T21:09:50.964+05:30  INFO 10640 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-18T21:09:51.024+05:30  INFO 10640 --- [PRODUCT-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1194 ms
+2026-07-18T21:09:51.838+05:30  INFO 10640 --- [PRODUCT-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-18T21:09:52.341+05:30  INFO 10640 --- [PRODUCT-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-18T21:09:52.371+05:30  WARN 10640 --- [PRODUCT-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-18T21:09:52.394+05:30  INFO 10640 --- [PRODUCT-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-18T21:09:52.728+05:30  INFO 10640 --- [PRODUCT-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PRODUCT-SERVICE with eureka with status UP
+2026-07-18T21:09:52.747+05:30  INFO 10640 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-07-18T21:09:52.748+05:30  INFO 10640 --- [PRODUCT-SERVICE] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8080
+2026-07-18T21:09:53.075+05:30  INFO 10640 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-18T21:09:53.077+05:30  INFO 10640 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-18T21:09:53.183+05:30  INFO 10640 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] c.s.p.service.ProductService             : New LAPTOP Created Successfully with ID: 6a5b9e49940d0d69b170c5ba
+2026-07-18T21:10:00.724+05:30  INFO 10640 --- [PRODUCT-SERVICE] [http-nio-8080-exec-3] c.s.p.service.ProductService             : Cache MISS - Fetching product from DB for id: 6a5b9e49940d0d69b170c5ba
+2026-07-18T21:10:03.419+05:30 ERROR 10640 --- [PRODUCT-SERVICE] [http-nio-8080-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.ClassCastException: class java.util.LinkedHashMap cannot be cast to class com.skt.product_service.dto.ProductResponse (java.util.LinkedHashMap is in module java.base of loader 'bootstrap'; com.skt.product_service.dto.ProductResponse is in unnamed module of loader 'app')] with root cause
+
+java.lang.ClassCastException: class java.util.LinkedHashMap cannot be cast to class com.skt.product_service.dto.ProductResponse (java.util.LinkedHashMap is in module java.base of loader 'bootstrap'; com.skt.product_service.dto.ProductResponse is in unnamed module of loader 'app')
+	at com.skt.product_service.service.ProductService$$SpringCGLIB$$0.getProductById(<generated>) ~[classes/:na]
+	at com.skt.product_service.controller.ProductController.getProduct(ProductController.java:62) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:258) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:191) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:991) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:896) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.55.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.55.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:88) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1797) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:973) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:491) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at java.base/java.lang.Thread.run(Thread.java:842) ~[na:na]
+
+2026-07-18T21:11:04.692+05:30  INFO 10640 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PRODUCT-SERVICE with eureka with status DOWN
+2026-07-18T21:11:04.695+05:30  INFO 10640 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-18T21:11:04.798+05:30  INFO 10640 --- [PRODUCT-SERVICE] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-07-18T21:11:27.571+05:30  INFO 3100 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:11:27.572+05:30  INFO 3100 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-07-18T21:11:27.664+05:30  INFO 3100 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 86 ms. Found 1 MongoDB repository interface.
+2026-07-18T21:11:27.832+05:30  INFO 3100 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:11:27.833+05:30  INFO 3100 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-18T21:11:27.851+05:30  INFO 3100 --- [PRODUCT-SERVICE] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.skt.product_service.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-18T21:11:27.851+05:30  INFO 3100 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-07-18T21:11:28.008+05:30  INFO 3100 --- [PRODUCT-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=5b3a4cc0-a6de-39fa-ac75-57a36714f7e8
+2026-07-18T21:11:28.245+05:30  INFO 3100 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-18T21:11:28.308+05:30  INFO 3100 --- [PRODUCT-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1059 ms
+2026-07-18T21:11:29.065+05:30  INFO 3100 --- [PRODUCT-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-18T21:11:29.602+05:30  INFO 3100 --- [PRODUCT-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-18T21:11:29.635+05:30  WARN 3100 --- [PRODUCT-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-18T21:11:29.653+05:30  INFO 3100 --- [PRODUCT-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-18T21:11:29.964+05:30  INFO 3100 --- [PRODUCT-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PRODUCT-SERVICE with eureka with status UP
+2026-07-18T21:11:29.985+05:30  INFO 3100 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-07-18T21:11:29.987+05:30  INFO 3100 --- [PRODUCT-SERVICE] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8080
+2026-07-18T21:11:32.446+05:30  INFO 3100 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-18T21:11:32.447+05:30  INFO 3100 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-18T21:11:32.829+05:30  INFO 3100 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] c.s.p.service.ProductService             : Cache MISS - Fetching product from DB for id: 6a5b9e49940d0d69b170c5ba
+2026-07-18T21:11:38.178+05:30 ERROR 3100 --- [PRODUCT-SERVICE] [http-nio-8080-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.springframework.data.redis.serializer.SerializationException: Could not read JSON:Could not resolve subtype of [simple type, class java.lang.Object]: missing type id property '@class'
+ at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 138] ] with root cause
+
+com.fasterxml.jackson.databind.exc.InvalidTypeIdException: Could not resolve subtype of [simple type, class java.lang.Object]: missing type id property '@class'
+ at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 138]
+	at com.fasterxml.jackson.databind.exc.InvalidTypeIdException.from(InvalidTypeIdException.java:43) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.DeserializationContext.missingTypeIdException(DeserializationContext.java:2098) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.DeserializationContext.handleMissingTypeId(DeserializationContext.java:1669) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.jsontype.impl.TypeDeserializerBase._handleMissingTypeId(TypeDeserializerBase.java:308) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer._deserializeTypedUsingDefaultImpl(AsPropertyTypeDeserializer.java:210) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer.deserializeTypedFromObject(AsPropertyTypeDeserializer.java:144) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer.deserializeTypedFromAny(AsPropertyTypeDeserializer.java:239) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializerNR.deserializeWithType(UntypedObjectDeserializerNR.java:111) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.impl.TypeWrappedDeserializer.deserialize(TypeWrappedDeserializer.java:74) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:342) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:5052) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:4056) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at org.springframework.data.redis.serializer.JacksonObjectReader.lambda$create$0(JacksonObjectReader.java:54) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer.deserialize(GenericJackson2JsonRedisSerializer.java:309) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer.deserialize(GenericJackson2JsonRedisSerializer.java:281) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.serializer.DefaultRedisElementReader.read(DefaultRedisElementReader.java:46) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.serializer.RedisSerializationContext$SerializationPair.read(RedisSerializationContext.java:277) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.cache.RedisCache.deserializeCacheValue(RedisCache.java:361) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.cache.RedisCache.lookup(RedisCache.java:187) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.cache.support.AbstractValueAdaptingCache.get(AbstractValueAdaptingCache.java:58) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.AbstractCacheInvoker.doGet(AbstractCacheInvoker.java:78) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheAspectSupport.findInCaches(CacheAspectSupport.java:576) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheAspectSupport.findCachedValue(CacheAspectSupport.java:525) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheAspectSupport.execute(CacheAspectSupport.java:448) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheAspectSupport.execute(CacheAspectSupport.java:412) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheInterceptor.invoke(CacheInterceptor.java:65) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.19.jar:6.2.19]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728) ~[spring-aop-6.2.19.jar:6.2.19]
+	at com.skt.product_service.service.ProductService$$SpringCGLIB$$0.getProductById(<generated>) ~[classes/:na]
+	at com.skt.product_service.controller.ProductController.getProduct(ProductController.java:62) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:258) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:191) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:991) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:896) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.55.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.55.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:88) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1797) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:973) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:491) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at java.base/java.lang.Thread.run(Thread.java:842) ~[na:na]
+
+2026-07-18T21:13:33.936+05:30  INFO 3100 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PRODUCT-SERVICE with eureka with status DOWN
+2026-07-18T21:13:33.938+05:30  INFO 3100 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-18T21:13:34.025+05:30  INFO 3100 --- [PRODUCT-SERVICE] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-07-18T21:14:19.788+05:30  INFO 10532 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:14:19.790+05:30  INFO 10532 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-07-18T21:14:19.888+05:30  INFO 10532 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 93 ms. Found 1 MongoDB repository interface.
+2026-07-18T21:14:20.068+05:30  INFO 10532 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:14:20.069+05:30  INFO 10532 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-18T21:14:20.087+05:30  INFO 10532 --- [PRODUCT-SERVICE] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.skt.product_service.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-18T21:14:20.088+05:30  INFO 10532 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 12 ms. Found 0 Redis repository interfaces.
+2026-07-18T21:14:20.248+05:30  INFO 10532 --- [PRODUCT-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=5b3a4cc0-a6de-39fa-ac75-57a36714f7e8
+2026-07-18T21:14:20.485+05:30  INFO 10532 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-18T21:14:20.539+05:30  INFO 10532 --- [PRODUCT-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1215 ms
+2026-07-18T21:14:21.223+05:30  INFO 10532 --- [PRODUCT-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-18T21:14:21.714+05:30  INFO 10532 --- [PRODUCT-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-18T21:14:21.740+05:30  WARN 10532 --- [PRODUCT-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-18T21:14:21.763+05:30  INFO 10532 --- [PRODUCT-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-18T21:14:22.090+05:30  INFO 10532 --- [PRODUCT-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PRODUCT-SERVICE with eureka with status UP
+2026-07-18T21:14:22.115+05:30  INFO 10532 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-07-18T21:14:22.117+05:30  INFO 10532 --- [PRODUCT-SERVICE] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8080
+2026-07-18T21:14:23.944+05:30  INFO 10532 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-18T21:14:23.946+05:30  INFO 10532 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-18T21:14:24.054+05:30  INFO 10532 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] c.s.p.service.ProductService             : New LAPTOP Created Successfully with ID: 6a5b9f5827a221dfc4afb408
+2026-07-18T21:14:31.173+05:30  INFO 10532 --- [PRODUCT-SERVICE] [http-nio-8080-exec-2] c.s.p.service.ProductService             : Cache MISS - Fetching product from DB for id: 6a5b9f5827a221dfc4afb408
+2026-07-18T21:14:34.036+05:30 ERROR 10532 --- [PRODUCT-SERVICE] [http-nio-8080-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.springframework.data.redis.serializer.SerializationException: Could not read JSON:Could not resolve type id 'laptop' as a subtype of `java.lang.Object`: no such class found
+ at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 9] ] with root cause
+
+com.fasterxml.jackson.databind.exc.InvalidTypeIdException: Could not resolve type id 'laptop' as a subtype of `java.lang.Object`: no such class found
+ at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 9]
+	at com.fasterxml.jackson.databind.exc.InvalidTypeIdException.from(InvalidTypeIdException.java:43) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.DeserializationContext.invalidTypeIdException(DeserializationContext.java:2088) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.DeserializationContext.handleUnknownTypeId(DeserializationContext.java:1637) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.jsontype.impl.ClassNameIdResolver._typeFromId(ClassNameIdResolver.java:130) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.jsontype.impl.ClassNameIdResolver.typeFromId(ClassNameIdResolver.java:111) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.jsontype.impl.TypeDeserializerBase._findDeserializer(TypeDeserializerBase.java:158) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer._deserializeTypedForId(AsPropertyTypeDeserializer.java:150) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer.deserializeTypedFromObject(AsPropertyTypeDeserializer.java:135) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer.deserializeTypedFromAny(AsPropertyTypeDeserializer.java:239) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializerNR.deserializeWithType(UntypedObjectDeserializerNR.java:111) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.impl.TypeWrappedDeserializer.deserialize(TypeWrappedDeserializer.java:74) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:342) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:5052) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:4056) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at org.springframework.data.redis.serializer.JacksonObjectReader.lambda$create$0(JacksonObjectReader.java:54) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer.deserialize(GenericJackson2JsonRedisSerializer.java:309) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer.deserialize(GenericJackson2JsonRedisSerializer.java:281) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.serializer.DefaultRedisElementReader.read(DefaultRedisElementReader.java:46) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.serializer.RedisSerializationContext$SerializationPair.read(RedisSerializationContext.java:277) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.cache.RedisCache.deserializeCacheValue(RedisCache.java:361) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.cache.RedisCache.lookup(RedisCache.java:187) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.cache.support.AbstractValueAdaptingCache.get(AbstractValueAdaptingCache.java:58) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.AbstractCacheInvoker.doGet(AbstractCacheInvoker.java:78) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheAspectSupport.findInCaches(CacheAspectSupport.java:576) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheAspectSupport.findCachedValue(CacheAspectSupport.java:525) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheAspectSupport.execute(CacheAspectSupport.java:448) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheAspectSupport.execute(CacheAspectSupport.java:412) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheInterceptor.invoke(CacheInterceptor.java:65) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.19.jar:6.2.19]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728) ~[spring-aop-6.2.19.jar:6.2.19]
+	at com.skt.product_service.service.ProductService$$SpringCGLIB$$0.getProductById(<generated>) ~[classes/:na]
+	at com.skt.product_service.controller.ProductController.getProduct(ProductController.java:62) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:258) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:191) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:991) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:896) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.55.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.55.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:88) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1797) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:973) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:491) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at java.base/java.lang.Thread.run(Thread.java:842) ~[na:na]
+
+2026-07-18T21:16:47.353+05:30  INFO 10532 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PRODUCT-SERVICE with eureka with status DOWN
+2026-07-18T21:16:47.356+05:30  INFO 10532 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-18T21:16:47.441+05:30  INFO 10532 --- [PRODUCT-SERVICE] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-07-18T21:17:01.213+05:30  INFO 10744 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:17:01.214+05:30  INFO 10744 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-07-18T21:17:01.316+05:30  INFO 10744 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 97 ms. Found 1 MongoDB repository interface.
+2026-07-18T21:17:01.513+05:30  INFO 10744 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:17:01.514+05:30  INFO 10744 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-18T21:17:01.534+05:30  INFO 10744 --- [PRODUCT-SERVICE] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.skt.product_service.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-18T21:17:01.535+05:30  INFO 10744 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
+2026-07-18T21:17:01.697+05:30  INFO 10744 --- [PRODUCT-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=5b3a4cc0-a6de-39fa-ac75-57a36714f7e8
+2026-07-18T21:17:01.966+05:30  INFO 10744 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-18T21:17:02.024+05:30  INFO 10744 --- [PRODUCT-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1165 ms
+2026-07-18T21:17:02.711+05:30  INFO 10744 --- [PRODUCT-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-18T21:17:03.209+05:30  INFO 10744 --- [PRODUCT-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-18T21:17:03.237+05:30  WARN 10744 --- [PRODUCT-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-18T21:17:03.253+05:30  INFO 10744 --- [PRODUCT-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-18T21:17:03.545+05:30  INFO 10744 --- [PRODUCT-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PRODUCT-SERVICE with eureka with status UP
+2026-07-18T21:17:03.566+05:30  INFO 10744 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-07-18T21:17:03.567+05:30  INFO 10744 --- [PRODUCT-SERVICE] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8080
+2026-07-18T21:17:04.517+05:30  INFO 10744 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-18T21:17:04.518+05:30  INFO 10744 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-18T21:17:04.615+05:30  INFO 10744 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] c.s.p.service.ProductService             : New LAPTOP Created Successfully with ID: 6a5b9ff8ce6792d72b2baac5
+2026-07-18T21:17:10.799+05:30  INFO 10744 --- [PRODUCT-SERVICE] [http-nio-8080-exec-2] c.s.p.service.ProductService             : Cache MISS - Fetching product from DB for id: 6a5b9ff8ce6792d72b2baac5
+2026-07-18T21:17:12.334+05:30 ERROR 10744 --- [PRODUCT-SERVICE] [http-nio-8080-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.ClassCastException: class java.util.LinkedHashMap cannot be cast to class com.skt.product_service.dto.ProductResponse (java.util.LinkedHashMap is in module java.base of loader 'bootstrap'; com.skt.product_service.dto.ProductResponse is in unnamed module of loader 'app')] with root cause
+
+java.lang.ClassCastException: class java.util.LinkedHashMap cannot be cast to class com.skt.product_service.dto.ProductResponse (java.util.LinkedHashMap is in module java.base of loader 'bootstrap'; com.skt.product_service.dto.ProductResponse is in unnamed module of loader 'app')
+	at com.skt.product_service.service.ProductService$$SpringCGLIB$$0.getProductById(<generated>) ~[classes/:na]
+	at com.skt.product_service.controller.ProductController.getProduct(ProductController.java:62) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:258) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:191) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:991) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:896) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.55.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.55.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:88) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1797) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:973) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:491) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at java.base/java.lang.Thread.run(Thread.java:842) ~[na:na]
+
+2026-07-18T21:18:17.948+05:30  INFO 10744 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PRODUCT-SERVICE with eureka with status DOWN
+2026-07-18T21:18:17.950+05:30  INFO 10744 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-18T21:18:18.031+05:30  INFO 10744 --- [PRODUCT-SERVICE] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-07-18T21:18:31.485+05:30  INFO 23544 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:18:31.486+05:30  INFO 23544 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-07-18T21:18:31.566+05:30  INFO 23544 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 75 ms. Found 1 MongoDB repository interface.
+2026-07-18T21:18:31.729+05:30  INFO 23544 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:18:31.730+05:30  INFO 23544 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-18T21:18:31.746+05:30  INFO 23544 --- [PRODUCT-SERVICE] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.skt.product_service.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-18T21:18:31.746+05:30  INFO 23544 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-07-18T21:18:31.907+05:30  INFO 23544 --- [PRODUCT-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=5b3a4cc0-a6de-39fa-ac75-57a36714f7e8
+2026-07-18T21:18:32.149+05:30  INFO 23544 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-18T21:18:32.202+05:30  INFO 23544 --- [PRODUCT-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1063 ms
+2026-07-18T21:18:32.922+05:30  INFO 23544 --- [PRODUCT-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-18T21:18:33.399+05:30  INFO 23544 --- [PRODUCT-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-18T21:18:33.423+05:30  WARN 23544 --- [PRODUCT-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-18T21:18:33.442+05:30  INFO 23544 --- [PRODUCT-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-18T21:18:33.724+05:30  INFO 23544 --- [PRODUCT-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PRODUCT-SERVICE with eureka with status UP
+2026-07-18T21:18:33.741+05:30  INFO 23544 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-07-18T21:18:33.742+05:30  INFO 23544 --- [PRODUCT-SERVICE] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8080
+2026-07-18T21:18:37.706+05:30  INFO 23544 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-18T21:18:37.708+05:30  INFO 23544 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-18T21:18:38.064+05:30  INFO 23544 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] c.s.p.service.ProductService             : Cache MISS - Fetching product from DB for id: 6a5b9ff8ce6792d72b2baac5
+2026-07-18T21:18:40.152+05:30 ERROR 23544 --- [PRODUCT-SERVICE] [http-nio-8080-exec-3] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.springframework.data.redis.serializer.SerializationException: Could not read JSON: No fallback setter/field defined for creator property 'type' (of `com.skt.product_service.dto.BaseProductResponse`) (through reference chain: com.skt.product_service.dto.BaseProductResponse["type"])] with root cause
+
+com.fasterxml.jackson.databind.exc.InvalidDefinitionException: No fallback setter/field defined for creator property 'type' (of `com.skt.product_service.dto.BaseProductResponse`) (through reference chain: com.skt.product_service.dto.BaseProductResponse["type"])
+	at com.fasterxml.jackson.databind.exc.InvalidDefinitionException.from(InvalidDefinitionException.java:67) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.CreatorProperty._reportMissingSetter(CreatorProperty.java:333) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.CreatorProperty._verifySetter(CreatorProperty.java:316) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.CreatorProperty.deserializeAndSet(CreatorProperty.java:240) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:265) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer._deserializeUsingPropertyBased(BeanDeserializer.java:472) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.BeanDeserializerBase.deserializeFromObjectUsingNonDefault(BeanDeserializerBase.java:1499) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserializeFromObject(BeanDeserializer.java:340) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer._deserializeOther(BeanDeserializer.java:212) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.BeanDeserializer.deserialize(BeanDeserializer.java:179) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer._deserializeTypedForId(AsPropertyTypeDeserializer.java:169) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer.deserializeTypedFromObject(AsPropertyTypeDeserializer.java:135) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.AbstractDeserializer.deserializeWithType(AbstractDeserializer.java:262) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.impl.TypeWrappedDeserializer.deserialize(TypeWrappedDeserializer.java:74) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:342) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:5052) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:4056) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at org.springframework.data.redis.serializer.JacksonObjectReader.lambda$create$0(JacksonObjectReader.java:54) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer.deserialize(Jackson2JsonRedisSerializer.java:170) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.serializer.DefaultRedisElementReader.read(DefaultRedisElementReader.java:46) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.serializer.RedisSerializationContext$SerializationPair.read(RedisSerializationContext.java:277) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.cache.RedisCache.deserializeCacheValue(RedisCache.java:361) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.cache.RedisCache.lookup(RedisCache.java:187) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.cache.support.AbstractValueAdaptingCache.get(AbstractValueAdaptingCache.java:58) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.AbstractCacheInvoker.doGet(AbstractCacheInvoker.java:78) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheAspectSupport.findInCaches(CacheAspectSupport.java:576) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheAspectSupport.findCachedValue(CacheAspectSupport.java:525) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheAspectSupport.execute(CacheAspectSupport.java:448) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheAspectSupport.execute(CacheAspectSupport.java:412) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheInterceptor.invoke(CacheInterceptor.java:65) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.19.jar:6.2.19]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728) ~[spring-aop-6.2.19.jar:6.2.19]
+	at com.skt.product_service.service.ProductService$$SpringCGLIB$$0.getProductById(<generated>) ~[classes/:na]
+	at com.skt.product_service.controller.ProductController.getProduct(ProductController.java:62) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:258) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:191) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:991) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:896) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.55.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.55.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:88) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1797) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:973) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:491) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at java.base/java.lang.Thread.run(Thread.java:842) ~[na:na]
+
+2026-07-18T21:19:41.397+05:30  INFO 23544 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PRODUCT-SERVICE with eureka with status DOWN
+2026-07-18T21:19:41.399+05:30  INFO 23544 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-18T21:19:41.488+05:30  INFO 23544 --- [PRODUCT-SERVICE] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-07-18T21:19:55.110+05:30  INFO 7100 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:19:55.111+05:30  INFO 7100 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-07-18T21:19:55.187+05:30  INFO 7100 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 72 ms. Found 1 MongoDB repository interface.
+2026-07-18T21:19:55.344+05:30  INFO 7100 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:19:55.346+05:30  INFO 7100 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-18T21:19:55.362+05:30  INFO 7100 --- [PRODUCT-SERVICE] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.skt.product_service.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-18T21:19:55.363+05:30  INFO 7100 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-07-18T21:19:55.513+05:30  INFO 7100 --- [PRODUCT-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=5b3a4cc0-a6de-39fa-ac75-57a36714f7e8
+2026-07-18T21:19:55.743+05:30  INFO 7100 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-18T21:19:55.799+05:30  INFO 7100 --- [PRODUCT-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1022 ms
+2026-07-18T21:19:56.529+05:30  INFO 7100 --- [PRODUCT-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-18T21:19:56.944+05:30  INFO 7100 --- [PRODUCT-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-18T21:19:56.968+05:30  WARN 7100 --- [PRODUCT-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-18T21:19:56.991+05:30  INFO 7100 --- [PRODUCT-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-18T21:19:57.309+05:30  INFO 7100 --- [PRODUCT-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PRODUCT-SERVICE with eureka with status UP
+2026-07-18T21:19:57.330+05:30  INFO 7100 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-07-18T21:19:57.331+05:30  INFO 7100 --- [PRODUCT-SERVICE] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8080
+2026-07-18T21:19:58.612+05:30  INFO 7100 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-18T21:19:58.614+05:30  INFO 7100 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-18T21:19:59.003+05:30  INFO 7100 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] c.s.p.service.ProductService             : Cache MISS - Fetching product from DB for id: 6a5b9ff8ce6792d72b2baac5
+2026-07-18T21:20:23.810+05:30  INFO 7100 --- [PRODUCT-SERVICE] [http-nio-8080-exec-6] c.s.p.service.ProductService             : New LAPTOP Created Successfully with ID: 6a5ba0bf1fbc15191dffc826
+2026-07-18T21:20:43.797+05:30  INFO 7100 --- [PRODUCT-SERVICE] [http-nio-8080-exec-3] c.s.p.service.ProductService             : Cache MISS - Fetching product from DB for id: 6a5ba0bf1fbc15191dffc826
+2026-07-18T21:23:49.758+05:30  INFO 7100 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PRODUCT-SERVICE with eureka with status DOWN
+2026-07-18T21:23:49.760+05:30  INFO 7100 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-18T21:23:49.842+05:30  INFO 7100 --- [PRODUCT-SERVICE] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-07-18T21:24:21.355+05:30  INFO 4392 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:24:21.356+05:30  INFO 4392 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-07-18T21:24:21.433+05:30  INFO 4392 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 72 ms. Found 1 MongoDB repository interface.
+2026-07-18T21:24:21.600+05:30  INFO 4392 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:24:21.601+05:30  INFO 4392 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-18T21:24:21.617+05:30  INFO 4392 --- [PRODUCT-SERVICE] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.skt.product_service.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-18T21:24:21.618+05:30  INFO 4392 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 10 ms. Found 0 Redis repository interfaces.
+2026-07-18T21:24:21.773+05:30  INFO 4392 --- [PRODUCT-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=5b3a4cc0-a6de-39fa-ac75-57a36714f7e8
+2026-07-18T21:24:22.003+05:30  INFO 4392 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-18T21:24:22.062+05:30  INFO 4392 --- [PRODUCT-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1049 ms
+2026-07-18T21:24:22.858+05:30  INFO 4392 --- [PRODUCT-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-18T21:24:23.313+05:30  INFO 4392 --- [PRODUCT-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-18T21:24:23.342+05:30  WARN 4392 --- [PRODUCT-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-18T21:24:23.362+05:30  INFO 4392 --- [PRODUCT-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-18T21:24:23.692+05:30  INFO 4392 --- [PRODUCT-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PRODUCT-SERVICE with eureka with status UP
+2026-07-18T21:24:23.713+05:30  INFO 4392 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-07-18T21:24:23.714+05:30  INFO 4392 --- [PRODUCT-SERVICE] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8080
+2026-07-18T21:24:25.311+05:30  INFO 4392 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-18T21:24:25.313+05:30  INFO 4392 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-18T21:24:25.691+05:30 ERROR 4392 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.springframework.data.redis.serializer.SerializationException: Could not read JSON: Could not resolve subtype of [simple type, class com.skt.product_service.dto.ProductResponse]: missing type id property 'productType'
+ at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 113]] with root cause
+
+com.fasterxml.jackson.databind.exc.InvalidTypeIdException: Could not resolve subtype of [simple type, class com.skt.product_service.dto.ProductResponse]: missing type id property 'productType'
+ at [Source: REDACTED (`StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION` disabled); line: 1, column: 113]
+	at com.fasterxml.jackson.databind.exc.InvalidTypeIdException.from(InvalidTypeIdException.java:43) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.DeserializationContext.missingTypeIdException(DeserializationContext.java:2098) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.DeserializationContext.handleMissingTypeId(DeserializationContext.java:1669) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.jsontype.impl.TypeDeserializerBase._handleMissingTypeId(TypeDeserializerBase.java:308) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer._deserializeTypedUsingDefaultImpl(AsPropertyTypeDeserializer.java:210) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.jsontype.impl.AsPropertyTypeDeserializer.deserializeTypedFromObject(AsPropertyTypeDeserializer.java:144) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.AbstractDeserializer.deserializeWithType(AbstractDeserializer.java:262) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.impl.TypeWrappedDeserializer.deserialize(TypeWrappedDeserializer.java:74) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.deser.DefaultDeserializationContext.readRootValue(DefaultDeserializationContext.java:342) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.ObjectMapper._readMapAndClose(ObjectMapper.java:5052) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at com.fasterxml.jackson.databind.ObjectMapper.readValue(ObjectMapper.java:4056) ~[jackson-databind-2.21.4.jar:2.21.4]
+	at org.springframework.data.redis.serializer.JacksonObjectReader.lambda$create$0(JacksonObjectReader.java:54) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer.deserialize(Jackson2JsonRedisSerializer.java:170) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.serializer.DefaultRedisElementReader.read(DefaultRedisElementReader.java:46) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.serializer.RedisSerializationContext$SerializationPair.read(RedisSerializationContext.java:277) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.cache.RedisCache.deserializeCacheValue(RedisCache.java:361) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.data.redis.cache.RedisCache.lookup(RedisCache.java:187) ~[spring-data-redis-3.5.12.jar:3.5.12]
+	at org.springframework.cache.support.AbstractValueAdaptingCache.get(AbstractValueAdaptingCache.java:58) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.AbstractCacheInvoker.doGet(AbstractCacheInvoker.java:78) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheAspectSupport.findInCaches(CacheAspectSupport.java:576) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheAspectSupport.findCachedValue(CacheAspectSupport.java:525) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheAspectSupport.execute(CacheAspectSupport.java:448) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheAspectSupport.execute(CacheAspectSupport.java:412) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.cache.interceptor.CacheInterceptor.invoke(CacheInterceptor.java:65) ~[spring-context-6.2.19.jar:6.2.19]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.19.jar:6.2.19]
+	at org.springframework.aop.framework.CglibAopProxy$DynamicAdvisedInterceptor.intercept(CglibAopProxy.java:728) ~[spring-aop-6.2.19.jar:6.2.19]
+	at com.skt.product_service.service.ProductService$$SpringCGLIB$$0.getProductById(<generated>) ~[classes/:na]
+	at com.skt.product_service.controller.ProductController.getProduct(ProductController.java:62) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:258) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:191) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:991) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:896) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.55.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.19.jar:6.2.19]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.55.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.19.jar:6.2.19]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:162) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:138) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:165) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:88) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:492) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:113) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:83) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:72) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:342) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:399) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:1272) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1797) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:973) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:491) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.55.jar:10.1.55]
+	at java.base/java.lang.Thread.run(Thread.java:842) ~[na:na]
+
+2026-07-18T21:25:23.380+05:30  INFO 4392 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PRODUCT-SERVICE with eureka with status DOWN
+2026-07-18T21:25:23.384+05:30  INFO 4392 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-18T21:25:23.467+05:30  INFO 4392 --- [PRODUCT-SERVICE] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-07-18T21:25:26.495+05:30  WARN 4392 --- [PRODUCT-SERVICE] [DiscoveryClient-%d] c.netflix.discovery.TimedSupervisorTask  : task supervisor shutting down, can't accept the task
+2026-07-18T21:25:34.913+05:30  INFO 11724 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:25:34.915+05:30  INFO 11724 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-07-18T21:25:35.009+05:30  INFO 11724 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 89 ms. Found 1 MongoDB repository interface.
+2026-07-18T21:25:35.202+05:30  INFO 11724 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:25:35.204+05:30  INFO 11724 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-18T21:25:35.225+05:30  INFO 11724 --- [PRODUCT-SERVICE] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.skt.product_service.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-18T21:25:35.225+05:30  INFO 11724 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 14 ms. Found 0 Redis repository interfaces.
+2026-07-18T21:25:35.402+05:30  INFO 11724 --- [PRODUCT-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=5b3a4cc0-a6de-39fa-ac75-57a36714f7e8
+2026-07-18T21:25:35.648+05:30  INFO 11724 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-18T21:25:35.713+05:30  INFO 11724 --- [PRODUCT-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1154 ms
+2026-07-18T21:25:36.477+05:30  INFO 11724 --- [PRODUCT-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-18T21:25:36.894+05:30  INFO 11724 --- [PRODUCT-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-18T21:25:36.917+05:30  WARN 11724 --- [PRODUCT-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-18T21:25:36.933+05:30  INFO 11724 --- [PRODUCT-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-18T21:25:37.216+05:30  INFO 11724 --- [PRODUCT-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PRODUCT-SERVICE with eureka with status UP
+2026-07-18T21:25:37.234+05:30  INFO 11724 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-07-18T21:25:37.235+05:30  INFO 11724 --- [PRODUCT-SERVICE] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8080
+2026-07-18T21:25:39.431+05:30  INFO 11724 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-18T21:25:39.432+05:30  INFO 11724 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-18T21:25:39.780+05:30  INFO 11724 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] c.s.p.service.ProductService             : Cache MISS - Fetching product from DB for id: 6a5ba0bf1fbc15191dffc826
+2026-07-18T21:26:05.438+05:30  INFO 11724 --- [PRODUCT-SERVICE] [http-nio-8080-exec-3] c.s.p.service.ProductService             : New LAPTOP Created Successfully with ID: 6a5ba215c8066a3d3b32f6f0
+2026-07-18T21:27:00.289+05:30  INFO 11724 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PRODUCT-SERVICE with eureka with status DOWN
+2026-07-18T21:27:00.292+05:30  INFO 11724 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-18T21:27:00.373+05:30  INFO 11724 --- [PRODUCT-SERVICE] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-07-18T21:28:49.669+05:30  INFO 11508 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:28:49.670+05:30  INFO 11508 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-07-18T21:28:49.748+05:30  INFO 11508 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 75 ms. Found 1 MongoDB repository interface.
+2026-07-18T21:28:49.904+05:30  INFO 11508 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:28:49.905+05:30  INFO 11508 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-18T21:28:49.921+05:30  INFO 11508 --- [PRODUCT-SERVICE] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.skt.product_service.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-18T21:28:49.922+05:30  INFO 11508 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-07-18T21:28:50.079+05:30  INFO 11508 --- [PRODUCT-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=5b3a4cc0-a6de-39fa-ac75-57a36714f7e8
+2026-07-18T21:28:50.372+05:30  INFO 11508 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-18T21:28:50.428+05:30  INFO 11508 --- [PRODUCT-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1079 ms
+2026-07-18T21:28:51.150+05:30  INFO 11508 --- [PRODUCT-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-18T21:28:51.564+05:30  INFO 11508 --- [PRODUCT-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-18T21:28:51.588+05:30  WARN 11508 --- [PRODUCT-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-18T21:28:51.603+05:30  INFO 11508 --- [PRODUCT-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-18T21:28:51.861+05:30  INFO 11508 --- [PRODUCT-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PRODUCT-SERVICE with eureka with status UP
+2026-07-18T21:28:51.876+05:30  INFO 11508 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-07-18T21:28:51.878+05:30  INFO 11508 --- [PRODUCT-SERVICE] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8080
+2026-07-18T21:29:09.407+05:30  INFO 11508 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-18T21:29:09.409+05:30  INFO 11508 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-07-18T21:29:09.514+05:30  INFO 11508 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] c.s.p.service.ProductService             : New LAPTOP Created Successfully with ID: 6a5ba2cd4bf101d999c49817
+2026-07-18T21:29:12.709+05:30  INFO 11508 --- [PRODUCT-SERVICE] [http-nio-8080-exec-8] c.s.p.service.ProductService             : New LAPTOP Created Successfully with ID: 6a5ba2d04bf101d999c49818
+2026-07-18T21:29:38.850+05:30  INFO 11508 --- [PRODUCT-SERVICE] [http-nio-8080-exec-7] c.s.p.service.ProductService             : Cache MISS - Fetching product from DB for id: 6a5ba2d04bf101d999c49818
+2026-07-18T21:29:54.865+05:30  INFO 11508 --- [PRODUCT-SERVICE] [http-nio-8080-exec-8] c.s.p.service.ProductService             : New LAPTOP Created Successfully with ID: 6a5ba2fa4bf101d999c49819
+2026-07-18T21:30:00.903+05:30  WARN 11508 --- [PRODUCT-SERVICE] [http-nio-8080-exec-2] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `com.skt.product_service.model.ProductType` from String "base": not one of the values accepted for Enum class: [STORAGE_SSD, MOUSE, CPU, POWER_SUPPLY, GPU, OPERATING_SYSTEM, CUSTOM_PC_BUILD, CABLES, CABINET_CASE, UPS, NETWORK_ROUTER, COMPUTER, DESKTOP_PREBUILT, SPEAKER, HEADSET, MOTHERBOARD, STORAGE_HDD, GRAPHICS_CARD_EXTERNAL, KEYBOARD, MICROPHONE, THERMAL_PASTE, OTHER, STREAMING_DEVICE, MONITOR, ANTIVIRUS, BLUETOOTH_ADAPTER, WIFI_ADAPTER, CAPTURE_CARD, CPU_COOLER, LAPTOP, WORKSTATION, EXTERNAL_STORAGE, USB_HUB, RAM, WEBCAM, NETWORK_SWITCH]]
+2026-07-18T21:30:31.389+05:30  INFO 11508 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.c.n.e.s.EurekaServiceRegistry        : Unregistering application PRODUCT-SERVICE with eureka with status DOWN
+2026-07-18T21:30:31.392+05:30  INFO 11508 --- [PRODUCT-SERVICE] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-18T21:30:31.476+05:30  INFO 11508 --- [PRODUCT-SERVICE] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-07-18T21:30:49.881+05:30  INFO 13400 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:30:49.882+05:30  INFO 13400 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-07-18T21:30:49.957+05:30  INFO 13400 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 70 ms. Found 1 MongoDB repository interface.
+2026-07-18T21:30:50.117+05:30  INFO 13400 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-18T21:30:50.118+05:30  INFO 13400 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-18T21:30:50.135+05:30  INFO 13400 --- [PRODUCT-SERVICE] [main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.skt.product_service.repository.ProductRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-18T21:30:50.136+05:30  INFO 13400 --- [PRODUCT-SERVICE] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+2026-07-18T21:30:50.300+05:30  INFO 13400 --- [PRODUCT-SERVICE] [main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=5b3a4cc0-a6de-39fa-ac75-57a36714f7e8
+2026-07-18T21:30:50.584+05:30  INFO 13400 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-07-18T21:30:50.657+05:30  INFO 13400 --- [PRODUCT-SERVICE] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1104 ms
+2026-07-18T21:30:51.436+05:30  INFO 13400 --- [PRODUCT-SERVICE] [main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-07-18T21:30:51.864+05:30  INFO 13400 --- [PRODUCT-SERVICE] [main] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-07-18T21:30:51.888+05:30  WARN 13400 --- [PRODUCT-SERVICE] [main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-07-18T21:30:51.911+05:30  INFO 13400 --- [PRODUCT-SERVICE] [main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-07-18T21:30:52.201+05:30  INFO 13400 --- [PRODUCT-SERVICE] [main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application PRODUCT-SERVICE with eureka with status UP
+2026-07-18T21:30:52.222+05:30  INFO 13400 --- [PRODUCT-SERVICE] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-07-18T21:30:52.222+05:30  INFO 13400 --- [PRODUCT-SERVICE] [main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8080
+2026-07-18T21:30:53.506+05:30  INFO 13400 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-07-18T21:30:53.507+05:30  INFO 13400 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2026-07-18T21:30:53.536+05:30  WARN 13400 --- [PRODUCT-SERVICE] [http-nio-8080-exec-1] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotReadableException: JSON parse error: Cannot deserialize value of type `com.skt.product_service.model.ProductType` from String "base": not one of the values accepted for Enum class: [STORAGE_SSD, MOUSE, CPU, POWER_SUPPLY, GPU, OPERATING_SYSTEM, CUSTOM_PC_BUILD, BASE, CABLES, CABINET_CASE, UPS, NETWORK_ROUTER, COMPUTER, DESKTOP_PREBUILT, SPEAKER, HEADSET, MOTHERBOARD, STORAGE_HDD, GRAPHICS_CARD_EXTERNAL, KEYBOARD, MICROPHONE, THERMAL_PASTE, OTHER, STREAMING_DEVICE, MONITOR, ANTIVIRUS, BLUETOOTH_ADAPTER, WIFI_ADAPTER, CAPTURE_CARD, CPU_COOLER, LAPTOP, WORKSTATION, EXTERNAL_STORAGE, USB_HUB, RAM, WEBCAM, NETWORK_SWITCH]]
+2026-07-18T21:31:35.864+05:30  INFO 13400 --- [PRODUCT-SERVICE] [http-nio-8080-exec-3] c.s.p.service.ProductService             : New COMPUTER Created Successfully with ID: 6a5ba35fb9790588071bb113
+2026-07-18T21:31:49.807+05:30  INFO 13400 --- [PRODUCT-SERVICE] [http-nio-8080-exec-6] c.s.p.service.ProductService             : Cache MISS - Fetching product from DB for id: 6a5ba35fb9790588071bb113
