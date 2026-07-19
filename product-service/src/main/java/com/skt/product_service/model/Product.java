@@ -22,5 +22,6 @@ public class Product {
     private String name;
     private String description;
     private BigDecimal price;
-    private ProductType productType; // Helps easily identify the type programmatically
+    private String brandName;
+    private String productType; // Helps easily identify the type programmatically
 }

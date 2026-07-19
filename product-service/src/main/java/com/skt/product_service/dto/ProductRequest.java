@@ -8,7 +8,9 @@ public record ProductRequest(
         String name,
         String description,
         BigDecimal price,
-        ProductType productType,
+        String productType,
+        String brandName,
+
 
         // Laptop specific fields (Optional depending on productType)
         String processor,

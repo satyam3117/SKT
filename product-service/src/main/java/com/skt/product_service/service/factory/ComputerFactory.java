@@ -16,7 +16,6 @@ public class ComputerFactory implements ProductFactory {
                 .name(request.name())
                 .description(request.description())
                 .price(request.price())
-                .productType(ProductType.COMPUTER)
                 .processor(request.processor())
                 .ramGb(request.ramGb() != null ? request.ramGb() : StringUtils.EMPTY)
                 .storageGb(request.storageGb() != null ? request.storageGb() : StringUtils.EMPTY)
@@ -34,7 +33,6 @@ public class ComputerFactory implements ProductFactory {
                 .name(request.name() != null ? request.name() : existingComputer.getName())
                 .description(request.description() != null ? request.description() : existingComputer.getDescription())
                 .price(request.price() != null ? request.price() : existingComputer.getPrice())
-                .productType(ProductType.COMPUTER)
                 .processor(request.processor() != null ? request.processor() : existingComputer.getProcessor())
                 .ramGb(request.ramGb() != null ? request.ramGb() : existingComputer.getRamGb())
                 .storageGb(request.storageGb() != null ? request.storageGb() : existingComputer.getStorageGb())
@@ -45,7 +43,8 @@ public class ComputerFactory implements ProductFactory {
     }
 
     @Override
-    public ProductType getType() {
-        return ProductType.COMPUTER;
+    public String productType() {
+        return "COMPUTER";
     }
+
 }

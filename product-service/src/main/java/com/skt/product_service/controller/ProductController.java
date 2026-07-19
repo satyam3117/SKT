@@ -36,7 +36,7 @@ public class ProductController {
                         product.getName(),
                         product.getDescription(),
                         product.getPrice(),
-                        product.getProductType() != null ? product.getProductType().name() : "others" // Added the 5th parameter here!
+                        product.getProductType() != null ? product.getProductType() : "others" // Added the 5th parameter here!
                 ))
                 .toList();
     }

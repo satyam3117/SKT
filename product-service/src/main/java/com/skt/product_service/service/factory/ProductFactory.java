@@ -13,5 +13,5 @@ public interface ProductFactory {
     Product update(Product existingProduct, ProductRequest request);
 
     // Tells the registry which product type this factory supports
-    ProductType getType();
+    String productType();
 }

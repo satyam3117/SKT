@@ -16,7 +16,7 @@ public class LaptopFactory implements ProductFactory {
                 .name(request.name())
                 .description(request.description())
                 .price(request.price())
-                .productType(ProductType.LAPTOP)
+                .productType(request.productType())
                 .processor(request.processor())
                 .ramGb(request.ramGb() != null ? request.ramGb() : StringUtils.EMPTY)
                 .storageGb(request.storageGb() != null ? request.storageGb() : StringUtils.EMPTY)
@@ -32,7 +32,7 @@ public class LaptopFactory implements ProductFactory {
                 .name(request.name() != null ? request.name() : existingLaptop.getName())
                 .description(request.description() != null ? request.description() : existingLaptop.getDescription())
                 .price(request.price() != null ? request.price() : existingLaptop.getPrice())
-                .productType(ProductType.LAPTOP)
+                .productType(existingProduct.getProductType())
                 .processor(request.processor() != null ? request.processor() : existingLaptop.getProcessor())
                 .ramGb(request.ramGb() != null ? request.ramGb() : existingLaptop.getRamGb())
                 .storageGb(request.storageGb() != null ? request.storageGb() : existingLaptop.getStorageGb())
@@ -41,7 +41,8 @@ public class LaptopFactory implements ProductFactory {
     }
 
     @Override
-    public ProductType getType() {
-        return ProductType.LAPTOP;
+    public String productType() {
+        return "LAPTOP";
     }
-}
+
+   }

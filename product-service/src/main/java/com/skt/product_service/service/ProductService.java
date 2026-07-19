@@ -6,16 +6,12 @@ import com.skt.product_service.dto.BaseProductResponse;
 import com.skt.product_service.dto.ProductResponse;
 import com.skt.product_service.model.Laptop;
 import com.skt.product_service.model.Product;
-import com.skt.product_service.model.ProductType;
 import com.skt.product_service.repository.ProductRepository;
 import com.skt.product_service.service.factory.ProductFactory;
 import com.skt.product_service.service.factory.ProductFactoryRegistry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -61,11 +57,11 @@ public class ProductService {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + id));
 
-        ProductType type = productRequest.productType() != null
+        String productType = productRequest.productType() != null
                 ? productRequest.productType()
                 : existingProduct.getProductType();
 
-        ProductFactory factory = factoryRegistry.getFactory(type);
+        ProductFactory factory = factoryRegistry.getFactory(productRequest.productType());
         Product updatedProduct = factory.update(existingProduct, productRequest);
 
         Product savedProduct = productRepository.save(updatedProduct);
@@ -92,7 +88,7 @@ public class ProductService {
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
-                product.getProductType() != null ? product.getProductType().name().toLowerCase() : "others"
+                product.getProductType() != null ? product.getProductType().toLowerCase() : "others"
         );
     }
 
@@ -102,7 +98,6 @@ public class ProductService {
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
-                product.getProductType() != null ? product.getProductType().name().toLowerCase() : "others",
                 product.getScreenSize(),
                 product.getRamGb(),
                 product.getStorageGb(),

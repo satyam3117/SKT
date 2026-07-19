@@ -12,15 +12,15 @@ import java.util.stream.Collectors;
 @Component
 public class ProductFactoryRegistry {
 
-    private final Map<ProductType, ProductFactory> factoryMap;
+    private final Map<String, ProductFactory> factoryMap;
 
     // Spring Boot automatically injects all beans implementing ProductFactory here
     public ProductFactoryRegistry(List<ProductFactory> factories) {
         this.factoryMap = factories.stream()
-                .collect(Collectors.toMap(ProductFactory::getType, Function.identity()));
+                .collect(Collectors.toMap(ProductFactory::productType, Function.identity()));
     }
 
-    public ProductFactory getFactory(ProductType type) {
+    public ProductFactory getFactory(String type) {
         return Optional.ofNullable(factoryMap.get(type))
                 .orElseThrow(() -> new IllegalArgumentException("No factory registered for product type: " + type));
     }
