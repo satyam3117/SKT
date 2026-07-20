@@ -21,6 +21,7 @@ public class LaptopFactory implements ProductFactory {
                 .ramGb(request.ramGb() != null ? request.ramGb() : StringUtils.EMPTY)
                 .storageGb(request.storageGb() != null ? request.storageGb() : StringUtils.EMPTY)
                 .graphics(request.graphics() != null ? request.graphics() : StringUtils.EMPTY)
+                .brandName(request.brandName() != null ? request.brandName() : StringUtils.EMPTY)
                 .build();
     }
 
@@ -37,12 +38,13 @@ public class LaptopFactory implements ProductFactory {
                 .ramGb(request.ramGb() != null ? request.ramGb() : existingLaptop.getRamGb())
                 .storageGb(request.storageGb() != null ? request.storageGb() : existingLaptop.getStorageGb())
                 .graphics(request.graphics() != null ? request.graphics() : StringUtils.EMPTY)
+                .brandName(request.brandName()!= null ? request.brandName() : StringUtils.EMPTY)
                 .build();
     }
 
     @Override
     public String productType() {
-        return "LAPTOP";
+        return "laptop";
     }
 
    }

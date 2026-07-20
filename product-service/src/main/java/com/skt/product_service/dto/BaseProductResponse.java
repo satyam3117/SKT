@@ -8,5 +8,6 @@ public record BaseProductResponse
         String name,
         String description,
         BigDecimal price,
-        String productType
+        String productType,
+        String brandName
 ) implements ProductResponse {}

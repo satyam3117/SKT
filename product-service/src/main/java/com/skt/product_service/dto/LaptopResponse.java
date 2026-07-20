@@ -14,7 +14,8 @@ public record LaptopResponse(
         String ramGb,
         String storageGb,
         String screenSize,
-        String graphics
+        String graphics,
+        String brandName
 
 ) implements ProductResponse {
 

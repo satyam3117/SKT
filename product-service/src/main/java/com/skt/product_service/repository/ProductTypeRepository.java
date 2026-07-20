@@ -8,4 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface ProductTypeRepository extends MongoRepository<ProductTypeEntity, String> {
+    Optional<ProductTypeEntity> findByProductType(String productType);
+
 }

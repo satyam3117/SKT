@@ -4,9 +4,10 @@ import com.skt.product_service.dto.LaptopResponse;
 import com.skt.product_service.dto.ProductRequest;
 import com.skt.product_service.dto.BaseProductResponse;
 import com.skt.product_service.dto.ProductResponse;
-import com.skt.product_service.model.Laptop;
-import com.skt.product_service.model.Product;
+import com.skt.product_service.model.*;
+import com.skt.product_service.repository.ProductBrandRepository;
 import com.skt.product_service.repository.ProductRepository;
+import com.skt.product_service.repository.ProductTypeRepository;
 import com.skt.product_service.service.factory.ProductFactory;
 import com.skt.product_service.service.factory.ProductFactoryRegistry;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductBrandRepository productBrandRepository;
+    private final ProductTypeRepository productTypeRepository;
     private final ProductFactoryRegistry factoryRegistry;
 
     @Cacheable(value = "products", key = "#id")
@@ -39,19 +42,74 @@ public class ProductService {
 
     public ProductResponse createProduct(ProductRequest productRequest) {
 
-        ProductFactory factory = factoryRegistry.getFactory(productRequest.productType());
-        Product product = factory.create(productRequest);
+        Product product = createProductFromFactory(productRequest);
 
-        Product savedProduct = productRepository.save(product);
-        log.info("New {} Created Successfully with ID: {}", savedProduct.getProductType(), savedProduct.getId());
+        ProductBrand brand = getOrCreateBrand(product.getBrandName());
+        ProductTypeEntity productType = getOrCreateProductType(product.getProductType());
 
+        // IMPORTANT: link with product (if using references)
+        product.setBrandName(brand.getBrandName());
+        product.setProductType(productType.getProductType());
 
-        if(product instanceof Laptop laptop){
+        Product savedProduct = saveProduct(product);
+
+        if (product instanceof Laptop laptop)
+
+        {
             return mapToLaptopProductResponse(laptop);
         }
 
-        return mapToBaseProductResponse(product);    }
+        return mapToBaseProductResponse(product);
+    }
 
+
+// -------------------- FACTORY --------------------
+
+    private Product createProductFromFactory(ProductRequest productRequest) {
+        ProductFactory factory = factoryRegistry.getFactory(productRequest.productType());
+        return factory.create(productRequest);
+    }
+
+
+// -------------------- BRAND --------------------
+
+    private ProductBrand getOrCreateBrand(String brandName) {
+        return productBrandRepository
+                .findByBrandName(brandName)
+                .orElseGet(() -> {
+                    ProductBrand newBrand = new ProductBrand();
+                    newBrand.setBrandName(brandName);
+                    ProductBrand saved = productBrandRepository.save(newBrand);
+                    log.info("New Brand Created: {} with ID: {}", brandName, saved.getId());
+                    return saved;
+                });
+    }
+
+
+// -------------------- PRODUCT TYPE --------------------
+
+    private ProductTypeEntity getOrCreateProductType(String productType) {
+        return productTypeRepository
+                .findByProductType(productType)
+                .orElseGet(() -> {
+                    ProductTypeEntity newType = new ProductTypeEntity();
+                    newType.setProductType(productType);
+                    ProductTypeEntity saved = productTypeRepository.save(newType);
+                    log.info("New Product Type Created: {} with ID: {}", productType, saved.getId());
+                    return saved;
+                });
+    }
+
+
+// -------------------- SAVE --------------------
+
+    private Product saveProduct(Product product) {
+        Product savedProduct = productRepository.save(product);
+        log.info("New {} Created Successfully with ID: {}",
+                savedProduct.getProductType(),
+                savedProduct.getId());
+        return savedProduct;
+    }
 
     public ProductResponse updateProduct(String id, ProductRequest productRequest) {
         Product existingProduct = productRepository.findById(id)
@@ -88,6 +146,7 @@ public class ProductService {
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
+                product.getBrandName(),
                 product.getProductType() != null ? product.getProductType().toLowerCase() : "others"
         );
     }
@@ -102,8 +161,8 @@ public class ProductService {
                 product.getRamGb(),
                 product.getStorageGb(),
                 product.getProcessor(),
-                product.getGraphics()
-
+                product.getGraphics(),
+                product.getBrandName()
         );
     }
 
