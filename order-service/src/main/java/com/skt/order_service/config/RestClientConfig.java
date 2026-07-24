@@ -19,21 +19,27 @@ import java.time.Duration;
 @NoArgsConstructor
 public class RestClientConfig {
 
+    @Bean
+    @org.springframework.cloud.client.loadbalancer.LoadBalanced
+    public RestClient.Builder restClientBuilder() {
+        return RestClient.builder();
+    }
 
     @Value("${inventory.url}")
     private String inventoryServiceUrl;
 
     @Bean
-    public InventoryClient inventoryClient() {
+    public InventoryClient inventoryClient(RestClient.Builder builder) {
 
-        RestClient restClient = RestClient.builder()
-                .baseUrl(inventoryServiceUrl)
+        RestClient restClient = builder
+                .baseUrl(inventoryServiceUrl) // http://INVENTORY-SERVICE
                 .requestFactory(getClientHttpRequestFactory())
                 .build();
 
-        var restClientAdapter = RestClientAdapter.create(restClient);
-        var httpServiceProxyFactory = HttpServiceProxyFactory.builderFor(restClientAdapter).build();
-        return httpServiceProxyFactory.createClient(InventoryClient.class);
+        var adapter = RestClientAdapter.create(restClient);
+        var factory = HttpServiceProxyFactory.builderFor(adapter).build();
+
+        return factory.createClient(InventoryClient.class);
     }
 
     private ClientHttpRequestFactory getClientHttpRequestFactory() {
