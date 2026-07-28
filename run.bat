@@ -11,3 +11,6 @@ start "Inv Service" /D "%BASE_DIR%inventory-service" /min cmd /k "docker compose
 start "Order Service" /D "%BASE_DIR%order-service" /min cmd /k "docker compose up -d && timeout /t 20 /nobreak && mvn spring-boot:run"
 
 start "Product Service" /D "%BASE_DIR%product-service" /min cmd /k "docker compose up -d && timeout /t 20 /nobreak && mvn spring-boot:run"
+
+start "Notification Service" /D "%BASE_DIR%notification-service" /min cmd /k "mvn spring-boot:run"
+

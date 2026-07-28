@@ -15,3 +15,22 @@ api-gateway/volume-data/
 inventory-service/mysql/
 **/mysql_keycloak_data/
 **/mysql/
+
+# Logs
+logs/
+*.log
+*.gz
+
+# Service-specific logs
+**/logs/
+
+# Build
+target/
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
