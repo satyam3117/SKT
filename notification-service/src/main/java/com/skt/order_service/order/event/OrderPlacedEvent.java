@@ -11,6 +11,8 @@ import org.apache.avro.message.BinaryMessageEncoder;
 import org.apache.avro.message.BinaryMessageDecoder;
 import org.apache.avro.message.SchemaStore;
 
+import java.util.Objects;
+
 @org.apache.avro.specific.AvroGenerated
 public class OrderPlacedEvent extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
   private static final long serialVersionUID = 5186142788576107710L;
@@ -564,13 +566,12 @@ public class OrderPlacedEvent extends org.apache.avro.specific.SpecificRecordBas
     if (!(o instanceof OrderPlacedEvent)) {
       return false;
     }
-
     OrderPlacedEvent other = (OrderPlacedEvent) o;
 
-    return java.util.Objects.equals(this.orderNumber, other.orderNumber) &&
-            java.util.Objects.equals(this.email, other.email) &&
-            java.util.Objects.equals(this.firstName, other.firstName) &&
-            java.util.Objects.equals(this.lastName, other.lastName);
+    return Objects.equals(this.orderNumber, other.orderNumber)
+            && Objects.equals(this.email, other.email)
+            && Objects.equals(this.firstName, other.firstName)
+            && Objects.equals(this.lastName, other.lastName);
   }
 }
 

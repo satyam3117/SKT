@@ -10,8 +10,9 @@ services:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: root
             MONGO_INITDB_DATABASE: product-service
+        restart: always
         volumes:
-            - ./data:/data/db
+            - mongo_data:/data/db
 
     redis:
         image: redis:7.2
@@ -28,3 +29,6 @@ services:
         restart: always
         depends_on:
             - redis
+
+volumes:
+    mongo_data:

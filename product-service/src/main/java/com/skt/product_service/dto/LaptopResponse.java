@@ -1,6 +1,7 @@
 package com.skt.product_service.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.skt.product_service.model.ProductType;
 
 import java.math.BigDecimal;
 
@@ -19,8 +20,8 @@ public record LaptopResponse(
 
 ) implements ProductResponse {
 
-    @JsonProperty("productType")
+    @Override
     public String productType() {
-        return "laptop";
+        return ProductType.LAPTOP.name().toLowerCase();
     }
 }
