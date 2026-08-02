@@ -34,3 +34,10 @@ scrape_configs:
       - targets: ['host.docker.internal:8083'] # Ensure this matches your local port
         labels:
           application: 'NOTIFICATION SERVICE'
+
+  - job_name: 'API-GATEWAY'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [ 'host.docker.internal:7070' ] # Ensure this matches your local port
+        labels:
+          application: 'API GATEWAY'

@@ -26,12 +26,12 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     public ProductResponse createProduct(@RequestBody ProductRequest productRequest){
 
-        log.info("📌 [CREATE] Request received to create product: {}", productRequest.name());
-        log.debug("📌 [CREATE] Full payload: {}", productRequest);
+        log.info("[CREATE] Request received to create product: {}", productRequest.name());
+        log.debug("[CREATE] Full payload: {}", productRequest);
 
         ProductResponse response = productService.createProduct(productRequest);
 
-        log.info("✅ [CREATE] Product created successfully with id: {}", response.id());
+        log.info("[CREATE] Product created successfully with id: {}", response.id());
         return response;
     }
 
@@ -39,7 +39,7 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     public List<BaseProductResponse> getAllProducts(){
 
-        log.info("📌 [GET ALL] Fetching all products");
+        log.info(" [GET ALL] Fetching all products");
 
         List<BaseProductResponse> products = productRepository.findAll()
                 .stream()
@@ -53,8 +53,8 @@ public class ProductController {
                 ))
                 .toList();
 
-        log.info("✅ [GET ALL] Total products fetched: {}", products.size());
-        log.debug("📌 [GET ALL] Product list: {}", products);
+        log.info("[GET ALL] Total products fetched: {}", products.size());
+        log.debug(" [GET ALL] Product list: {}", products);
 
         return products;
     }
@@ -64,8 +64,8 @@ public class ProductController {
             @PathVariable String id,
             @RequestBody ProductRequest productRequest) {
 
-        log.info("📌 [UPDATE] Request received to update product with id: {}", id);
-        log.debug("📌 [UPDATE] Payload: {}", productRequest);
+        log.info(" [UPDATE] Request received to update product with id: {}", id);
+        log.debug(" [UPDATE] Payload: {}", productRequest);
 
         ProductResponse updatedProduct = productService.updateProduct(id, productRequest);
 
@@ -77,7 +77,7 @@ public class ProductController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProduct(@PathVariable String id) {
 
-        log.info("📌 [DELETE] Request received to delete product with id: {}", id);
+        log.info(" [DELETE] Request received to delete product with id: {}", id);
 
         productService.deleteProduct(id);
 
@@ -87,12 +87,12 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProduct(@PathVariable String id) {
 
-        log.info("📌 [GET] Fetching product with id: {}", id);
+        log.info("[GET] Fetching product with id: {}", id);
 
         ProductResponse productResponse = productService.getProductById(id);
 
-        log.info("✅ [GET] Product fetched successfully for id: {}", id);
-        log.debug("📌 [GET] Product details: {}", productResponse);
+        log.info("[GET] Product fetched successfully for id: {}", id);
+        log.debug("[GET] Product details: {}", productResponse);
 
         return ResponseEntity.ok(productResponse);
     }

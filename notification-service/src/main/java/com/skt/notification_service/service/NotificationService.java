@@ -46,8 +46,9 @@ public class NotificationService {
             javaMailSender.send(messagePreparator);
             log.info("Order Notification email sent!!");
         } catch (MailException e) {
-            log.error("Exception occurred when sending mail", e);
-            throw new RuntimeException("Exception occurred when sending mail", e);
+            // Log the error, but DO NOT re-throw it!
+            log.error("Failed to send email notification for order {}: {}",
+                    orderPlacedEvent.getOrderNumber(), e.getMessage());
         }
     }
 }

@@ -32,7 +32,8 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",
                                 "/api-docs/**",
-                                "/aggregate/**"
+                                "/aggregate/**",
+                                "/actuator/prometheus"
                         ).permitAll()
 
                         // Example: allow public APIs

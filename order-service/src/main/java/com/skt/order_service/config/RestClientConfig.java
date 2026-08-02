@@ -1,8 +1,10 @@
 package com.skt.order_service.config;
 
 import com.skt.order_service.client.InventoryClient;
+import io.micrometer.observation.ObservationRegistry;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.http.client.ClientHttpRequestFactoryBuilder;
 import org.springframework.boot.http.client.ClientHttpRequestFactorySettings;
@@ -16,7 +18,7 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 import java.time.Duration;
 
 @Configuration
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class RestClientConfig {
 
     @Bean
@@ -27,6 +29,7 @@ public class RestClientConfig {
 
     @Value("${inventory.url}")
     private String inventoryServiceUrl;
+    private final ObservationRegistry observationRegistry;
 
     @Bean
     public InventoryClient inventoryClient(RestClient.Builder builder) {
@@ -34,6 +37,7 @@ public class RestClientConfig {
         RestClient restClient = builder
                 .baseUrl(inventoryServiceUrl) // http://INVENTORY-SERVICE
                 .requestFactory(getClientHttpRequestFactory())
+                .observationRegistry(observationRegistry)
                 .build();
 
         var adapter = RestClientAdapter.create(restClient);

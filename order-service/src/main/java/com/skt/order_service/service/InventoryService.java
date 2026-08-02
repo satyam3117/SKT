@@ -14,21 +14,33 @@ public class InventoryService {
 
     private final InventoryClient inventoryClient;
 
-    @CircuitBreaker(name = "inventory", fallbackMethod = "fallbackMethod")
     @Retry(name = "inventory")
+    @CircuitBreaker(name = "inventory", fallbackMethod = "fallbackMethod")
     public boolean checkStock(String skuCode, Integer quantity) {
-        log.info("Checking Inventory for SKU CODE : {}", skuCode);
+        log.info("Checking inventory stock | SkuCode: {}, Quantity: {}", skuCode, quantity);
 
-        boolean x = inventoryClient.isInStock(skuCode, quantity);
-        log.info("BOolean value {}",x);
+        boolean inStock = inventoryClient.isInStock(skuCode, quantity);
 
-        return x;
+        log.debug("Inventory service response received | SkuCode: {}, IsInStock: {}", skuCode, inStock);
+
+        if (!inStock) {
+            log.info("Stock check complete: SkuCode {} is OUT OF STOCK for quantity {}", skuCode, quantity);
+        } else {
+            log.info("Stock check complete: SkuCode {} is IN STOCK", skuCode);
+        }
+
+        return inStock;
     }
 
-    // CRITICAL: The Throwable parameter MUST be the last parameter in the signature
+    /**
+     * Fallback method triggered when CircuitBreaker opens or Retries fail.
+     * Note: Throwable MUST be the final parameter in the signature.
+     */
     public boolean fallbackMethod(String skuCode, Integer quantity, Throwable throwable) {
-        log.error("Inventory service FAILED for skuCode {}, quantity {}. Reason: {}",
-                skuCode, quantity, throwable.getMessage());
+        // Logging as WARN (or ERROR) with key context and passing the full throwable for root-cause trace
+        log.warn("Inventory check fallback triggered | SkuCode: {}, Quantity: {}, Reason: {}",
+                skuCode, quantity, throwable.getMessage(), throwable);
+
         return false;
     }
 }

@@ -28,7 +28,7 @@ services:
       - "8181:8080"
     volumes:
       # Make sure your JSON realm file is placed directly inside this local path folder
-      - ./docker/keycloak/realms:/opt/keycloak/data/import
+      - ./docker/keycloak/realms:/opt/keycloak/data/import/
     depends_on:
       - keycloak-mysql
 
