@@ -99,4 +99,13 @@ public class Routes {
                         .body("Service Unavailable , Please try again later"))
                 .build();
     }
+
+    @Bean
+    public RouterFunction<ServerResponse> userServiceRoute() {
+        return route("user_service")
+                .route(RequestPredicates.path("/api/user/**"), HandlerFunctions.http("http://localhost:8087"))
+                .filter(CircuitBreakerFilterFunctions.circuitBreaker("userServiceCircuitBreaker",
+                        URI.create("forward:/fallbackRoute")))
+                .build();
+    }
 }
