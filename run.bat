@@ -12,6 +12,7 @@ start "Docker - Api Gateway" /D "%BASE_DIR%api-gateway" /wait cmd /c "docker com
 start "Docker - Inv Service" /D "%BASE_DIR%inventory-service" /wait cmd /c "docker compose up -d"
 start "Docker - Order Service" /D "%BASE_DIR%order-service" /wait cmd /c "docker compose up -d"
 start "Docker - Product Service" /D "%BASE_DIR%product-service" /wait cmd /c "docker compose up -d"
+start "Docker - User Service" /D "%BASE_DIR%user-service" /wait cmd /c "docker compose up -d"
 
 echo.
 echo Waiting 25 seconds for MySQL & MongoDB to fully initialize...
@@ -32,5 +33,6 @@ start "Inv Service" /D "%BASE_DIR%inventory-service" /min cmd /k "mvn spring-boo
 start "Order Service" /D "%BASE_DIR%order-service" /min cmd /k "mvn spring-boot:run"
 start "Product Service" /D "%BASE_DIR%product-service" /min cmd /k "mvn spring-boot:run"
 start "Notification Service" /D "%BASE_DIR%notification-service" /min cmd /k "mvn spring-boot:run"
+start "User Service" /D "%BASE_DIR%user-service" /min cmd /k "mvn spring-boot:run"
 
 echo All services dispatched!

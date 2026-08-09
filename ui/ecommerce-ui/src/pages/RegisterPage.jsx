@@ -1,0 +1,3 @@
+const handleRegister = () => {
+  keycloak.register();
+};

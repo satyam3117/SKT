@@ -1,13 +1,17 @@
 package com.skt.product_service.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.skt.product_service.model.ProductType;
+import com.skt.product_service.model.ProductCategory;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.List;
 
 public record LaptopResponse(
 
         String id,
+        String skuCode,
+        Instant createdAt,
+        Instant updatedAt,
         String name,
         String description,
         BigDecimal price,
@@ -16,12 +20,14 @@ public record LaptopResponse(
         String storageGb,
         String screenSize,
         String graphics,
-        String brandName
+        String brandName,
+        String categoryId,
+        List<String> categoryPath
 
 ) implements ProductResponse {
 
     @Override
-    public String productType() {
-        return ProductType.LAPTOP.name().toLowerCase();
+    public String productCategory() {
+        return ProductCategory.LAPTOP.name().toLowerCase();
     }
 }

@@ -3,10 +3,10 @@ package com.skt.product_service.controller;
 import com.skt.product_service.dto.BaseProductResponse;
 import com.skt.product_service.dto.ProductRequest;
 import com.skt.product_service.dto.ProductResponse;
-import com.skt.product_service.repository.ProductRepository;
 import com.skt.product_service.service.ProductService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j; // ✅ Correct import
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +20,10 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    private final ProductRepository productRepository;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductResponse createProduct(@RequestBody ProductRequest productRequest){
+    public ProductResponse createProduct(@Valid @RequestBody ProductRequest productRequest){
 
         log.info("[CREATE] Request received to create product: {}", productRequest.name());
         log.debug("[CREATE] Full payload: {}", productRequest);
@@ -41,17 +40,7 @@ public class ProductController {
 
         log.info(" [GET ALL] Fetching all products");
 
-        List<BaseProductResponse> products = productRepository.findAll()
-                .stream()
-                .map(product -> new BaseProductResponse(
-                        product.getId(),
-                        product.getName(),
-                        product.getDescription(),
-                        product.getPrice(),
-                        product.getBrandName(),
-                        product.getProductType() != null ? product.getProductType() : "others"
-                ))
-                .toList();
+        List<BaseProductResponse> products = productService.getAllProducts();
 
         log.info("[GET ALL] Total products fetched: {}", products.size());
         log.debug(" [GET ALL] Product list: {}", products);
@@ -62,7 +51,7 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> updateProduct(
             @PathVariable String id,
-            @RequestBody ProductRequest productRequest) {
+            @Valid @RequestBody ProductRequest productRequest) {
 
         log.info(" [UPDATE] Request received to update product with id: {}", id);
         log.debug(" [UPDATE] Payload: {}", productRequest);
@@ -95,5 +84,29 @@ public class ProductController {
         log.debug("[GET] Product details: {}", productResponse);
 
         return ResponseEntity.ok(productResponse);
+    }
+    
+    @GetMapping("/category/{productCategory}")
+    public ResponseEntity<List<BaseProductResponse>> getProductsByCategory(@PathVariable String productCategory) {
+        log.info("[GET] Fetching products with Product Category: {}", productCategory);
+
+        List<BaseProductResponse> products = productService.getProductsByCategory(productCategory);
+
+        log.info("[GET] Products fetched successfully for Product Category: {}", productCategory);
+        log.debug("[GET] Product list: {}", products);
+
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/brand/{productBrand}")
+    public ResponseEntity<List<BaseProductResponse>> getProductsByBrand(@PathVariable String productBrand) {
+        log.info("[GET] Fetching products with Product Brand: {}", productBrand);
+
+        List<BaseProductResponse> products = productService.getProductByBrand(productBrand);
+
+        log.info("[GET] Products fetched successfully for Product Brand: {}", productBrand);
+        log.debug("[GET] Product list: {}", products);
+
+        return ResponseEntity.ok(products);
     }
 }

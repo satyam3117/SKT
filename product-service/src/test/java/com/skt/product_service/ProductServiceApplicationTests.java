@@ -39,10 +39,13 @@ class ProductServiceApplicationTests {
 				{
 				     "name": "iphone 15",
 				     "description": "Iphone 15 Blue Color",
-				     "price": 1000
+				     "price": 1000,
+				     "productCategory": "laptop",
+				     "brandName": "apple"
 				}
 				""";
 	RestAssured.given()
+			.auth().preemptive().basic("product_admin", "product_pass")
 			.contentType("application/json")
 			.body(requestBody)
 			.when()

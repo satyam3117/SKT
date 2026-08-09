@@ -13,14 +13,14 @@ import java.time.Instant;
 @Document(collection = "product_type")
 @Getter
 @Setter
-public class ProductTypeEntity {
+public class ProductCategoryEntity {
 
     @Id
     private String id;
 
     @Field("product_type")
-    @NotBlank(message = "Product type name cannot be blank")
-    private String productType;
+    @NotBlank(message = "Product Category name cannot be blank")
+    private String productCategory;
 
     @CreatedDate
     @Field("created_at")
@@ -28,10 +28,10 @@ public class ProductTypeEntity {
     private Instant createdAt;
 
     // Standard Boilerplate (Boots up default constructor and getters/setters)
-    public ProductTypeEntity() {}
+    public ProductCategoryEntity() {}
 
-    public ProductTypeEntity(String productType) {
-        this.productType = productType;
+    public ProductCategoryEntity(String productCategory) {
+        this.productCategory = productCategory;
         // Spring Auditing will populate createdAt automatically,
         // but setting it here provides a safe fallback for manual creation.
         this.createdAt = Instant.now();

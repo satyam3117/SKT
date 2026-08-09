@@ -4,6 +4,7 @@ services:
   keycloak-mysql:
     container_name: keycloak-mysql
     image: mysql:8
+    restart: unless-stopped
     volumes:
       - ./volume-data/mysql_keycloak_data:/var/lib/mysql
     environment:
@@ -11,13 +12,23 @@ services:
       MYSQL_DATABASE: keycloak
       MYSQL_USER: keycloak
       MYSQL_PASSWORD: password
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -proot --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
 
   keycloak:
     container_name: keycloak
     image: quay.io/keycloak/keycloak:24.0.1
-    command: [ "start-dev", "--import-realm" ]
+    restart: unless-stopped
+    command:
+      - start-dev
+      - --spi-theme-static-max-age=-1
+      - --spi-theme-cache-themes=false
+      - --spi-theme-cache-templates=false
     environment:
-      # Modern Keycloak 24 Database configuration properties
       KC_DB: mysql
       KC_DB_URL: jdbc:mysql://keycloak-mysql:3306/keycloak
       KC_DB_USERNAME: keycloak
@@ -27,11 +38,11 @@ services:
     ports:
       - "8181:8080"
     volumes:
-      # Make sure your JSON realm file is placed directly inside this local path folder
       - ./docker/keycloak/realms:/opt/keycloak/data/import/
+      - ./docker/keycloak/themes:/opt/keycloak/themes
     depends_on:
-      - keycloak-mysql
-
+      keycloak-mysql:
+        condition: service_healthy
   loki:
     image: grafana/loki:main
     command: [ '-config.file=/etc/loki/local-config.yaml' ]

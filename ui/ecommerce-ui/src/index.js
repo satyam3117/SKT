@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import keycloak from "./key-cloack";
+import keycloak from "./keycloak.js";
 
 console.log("🚀 Starting app...");
 console.log("Keycloak object:", keycloak);

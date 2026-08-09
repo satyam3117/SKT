@@ -1,0 +1,10 @@
+{
+  "type": "record",
+  "name": "ProductCreatedEvent",
+  "namespace": "com.skt.product_service.event",
+  "fields": [
+    { "name": "productId", "type": "string" },
+    { "name": "skuCode", "type": "string" },
+    { "name": "initialQuantity", "type": "int" }
+  ]
+}

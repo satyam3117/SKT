@@ -1,18 +1,28 @@
 package com.skt.product_service.dto;
 
-import com.skt.product_service.model.ProductType;
+
+import com.skt.product_service.model.ProductCategory;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public record ProductRequest(
         String name,
         String description,
+        @DecimalMin(value = "0.0", inclusive = false, message = "price must be greater than 0")
         BigDecimal price,
-        String productType,
+        @NotNull(message = "productCategory is required")
+        ProductCategory productCategory,
         String brandName,
 
+        @NotBlank(message = "categoryId is required")
+        String categoryId,
+        List<String> categoryPath,
 
-        // Laptop specific fields (Optional depending on productType)
+        // Laptop / Computer specific fields (Optional depending on productCategory)
         String processor,
         String ramGb,
         String storageGb,
@@ -20,6 +30,5 @@ public record ProductRequest(
 
         String mouse,
         String keyboard
-
 
 ) {}

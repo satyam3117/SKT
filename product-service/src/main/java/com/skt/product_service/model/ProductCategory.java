@@ -1,6 +1,10 @@
 package com.skt.product_service.model;
 
-public enum ProductType {
+import com.fasterxml.jackson.annotation.JsonCreator;
+
+import java.util.Locale;
+
+public enum ProductCategory {
 
     // ===== PRE-BUILT SYSTEMS =====
     BASE,
@@ -54,4 +58,10 @@ public enum ProductType {
 
     // ===== OTHER =====
     OTHER
+    ;
+
+    @JsonCreator
+    public static ProductCategory from(String value) {
+        return ProductCategory.valueOf(value.trim().toUpperCase(Locale.ROOT));
+    }
 }

@@ -2,15 +2,19 @@ package com.skt.product_service.model;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import lombok.Builder;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.List;
 
 @NoArgsConstructor
 @SuperBuilder // Required for inheritance builders
@@ -20,7 +24,7 @@ import java.math.BigDecimal;
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
-        property = "productType"
+        property = "productCategory"
 )
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Laptop.class, name = "laptop"),
@@ -33,6 +37,18 @@ public class Product {
     private String name;
     private String description;
     private BigDecimal price;
+    private String skuCode;
     private String brandName;
-    private String productType; // Helps easily identify the type programmatically
+    private String productCategory; // Helps easily identify the type programmatically
+    
+    // Category support
+    @NotNull(message = "Category ID is required")
+    private String categoryId; // Leaf category ID for DB relations and filtering (e.g., "business-laptop-id")
+    
+    private List<String> categoryPath; // Hierarchy for UI (e.g., ["Electronics", "Laptops", "Business Laptops"])
+    
+    @CreatedDate
+    private Instant createdAt;
+    @LastModifiedDate
+    private Instant updatedAt;
 }
