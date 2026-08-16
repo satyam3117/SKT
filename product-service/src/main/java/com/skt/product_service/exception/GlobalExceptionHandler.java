@@ -40,6 +40,12 @@ public class GlobalExceptionHandler {
         return buildError(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+    @ExceptionHandler(ProductCreationException.class)
+    public ResponseEntity<ApiError> handleProductCreationError(ProductCreationException ex) {
+        log.error("[ERROR] Product creation failed: {}", ex.getMessage(), ex);
+        return buildError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiError> handleUnreadablePayload(HttpMessageNotReadableException ex) {
         log.warn("[ERROR] Invalid request payload: {}", ex.getMessage());

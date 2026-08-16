@@ -20,7 +20,6 @@ public class BaseProductFactory implements ProductFactory {
                 .productCategory(request.productCategory().name().toLowerCase(Locale.ROOT))
                 .brandName(request.brandName() != null ? request.brandName() : StringUtils.EMPTY)
                 .categoryId(request.categoryId())
-                .categoryPath(request.categoryPath())
                 .build();
     }
 
@@ -34,7 +33,6 @@ public class BaseProductFactory implements ProductFactory {
                 .productCategory(existingProduct.getProductCategory())
                 .brandName(request.brandName() != null ? request.brandName() : existingProduct.getBrandName())
                 .categoryId(request.categoryId() != null ? request.categoryId() : existingProduct.getCategoryId())
-                .categoryPath(request.categoryPath() != null ? request.categoryPath() : existingProduct.getCategoryPath())
                 .build();
     }
 

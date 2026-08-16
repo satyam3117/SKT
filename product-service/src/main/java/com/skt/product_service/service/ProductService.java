@@ -2,18 +2,19 @@ package com.skt.product_service.service;
 
 import com.skt.product_service.dto.BaseProductResponse;
 import com.skt.product_service.dto.CachedProduct;
+import com.skt.product_service.dto.ProductFormConfig;
+import com.skt.product_service.dto.ProductPageResponse;
 import com.skt.product_service.dto.ProductRequest;
 import com.skt.product_service.dto.ProductResponse;
 import com.skt.product_service.event.ProductCreatedEvent;
+import com.skt.product_service.exception.ProductCreationException;
 import com.skt.product_service.exception.ProductNotFoundException;
 import com.skt.product_service.service.factory.ProductFactory;
 import com.skt.product_service.util.ProductUtil;
 import com.skt.product_service.model.Product;
-import com.skt.product_service.model.ProductBrand;
-import com.skt.product_service.model.ProductCategoryEntity;
-import com.skt.product_service.repository.ProductBrandRepository;
+
+import com.skt.product_service.model.ProductCategory;
 import com.skt.product_service.repository.ProductRepository;
-import com.skt.product_service.repository.ProductCategoryRepository;
 
 import com.skt.product_service.service.factory.ProductFactoryRegistry;
 import lombok.RequiredArgsConstructor;
@@ -21,23 +22,28 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class ProductService {
-
     private final ProductRepository productRepository;
-    private final ProductBrandRepository productBrandRepository;
-    private final ProductCategoryRepository productCategoryRepository;
     private final ProductFactoryRegistry factoryRegistry;
     private final ProductUtil productUtil;
     private final ProductMapper productMapper;
     private final ProductQueryService productQueryService;
+    private final ProductPageRequestService productPageRequestService;
+    private final ProductFormConfigService productFormConfigService;
     @Autowired
     private KafkaTemplate<String, ProductCreatedEvent> kafkaTemplate;
     public static final String PRODUCT_CREATED_TOPIC = "product-created-topic";
@@ -49,38 +55,40 @@ public class ProductService {
     }
 
     // ========================= CREATE =========================
-    public ProductResponse createProduct(ProductRequest productRequest) {
+    public ProductResponse createProduct(ProductRequest productRequest, List<MultipartFile> productImages)  {
 
         long start = System.currentTimeMillis();
-        validateCreateRequest(productRequest);
+        validateCreateRequest(productRequest, productImages);
 
         log.info("[CREATE] Creating product name={}, type={}",
                 productRequest.name(), productRequest.productCategory());
 
         log.debug("[CREATE] Payload={}", productRequest);
 
-        Product product = createProductFromFactory(productRequest);
+        try {
+            Product product = createProductFromFactory(productRequest);
 
-        ProductBrand brand = getOrCreateBrand(product.getBrandName());
-        ProductCategoryEntity productCategory = getOrCreateProductCategory(product.getProductCategory());
+            product.setBrandName(product.getBrandName());
+            product.setProductCategory(product.getProductCategory());
+            product.setSkuCode(productUtil.generateUniqueSkuCode(product.getProductCategory()));
+            product.setProductImages(productUtil.uploadProductImages(productImages, product.getSkuCode(), product.getCategoryId()));
 
-        product.setBrandName(brand.getBrandName());
-        product.setProductCategory(productCategory.getProductCategory());
-        product.setSkuCode(productUtil.generateUniqueSkuCode(product.getProductCategory()));
+            Product savedProduct = saveProduct(product);
 
-        Product savedProduct = saveProduct(product);
+            log.info("[CREATE] Product created id={}", savedProduct.getId());
+            publishProductCreatedEvent(savedProduct);
 
-        log.info("[CREATE] Product created id={}", savedProduct.getId());
-
-        // ✅ 🔥 PUBLISH EVENT HERE
-        publishProductCreatedEvent(savedProduct);
-
-        log.debug("[PERF] createProduct took {} ms",
-                System.currentTimeMillis() - start);
-
-        return productMapper.toProductResponse(
-                productMapper.toCachedProduct(savedProduct)
-        );
+            return productMapper.toProductResponse(
+                    productMapper.toCachedProduct(savedProduct)
+            );
+        } catch (IllegalArgumentException ex) {
+            throw ex;
+        } catch (RuntimeException ex) {
+            throw new ProductCreationException("Error in creating product", ex);
+        } finally {
+            log.debug("[PERF] createProduct took {} ms",
+                    System.currentTimeMillis() - start);
+        }
     }
 
     private void publishProductCreatedEvent(Product savedProduct) {
@@ -106,7 +114,7 @@ public class ProductService {
     }
     // ========================= UPDATE =========================
     @CacheEvict(value = "products_v4", key = "#id")
-    public ProductResponse updateProduct(String id, ProductRequest productRequest) {
+    public ProductResponse updateProduct(String id, ProductRequest productRequest, List<MultipartFile> productImages) {
 
         log.info("[UPDATE] Updating product id={}", id);
         log.debug("[UPDATE] Payload={}", productRequest);
@@ -129,6 +137,11 @@ public class ProductService {
         Product updatedProduct = factory.update(existingProduct, productRequest);
         updatedProduct.setSkuCode(existingProduct.getSkuCode());
         updatedProduct.setCreatedAt(existingProduct.getCreatedAt());
+        if (productImages != null && !productImages.isEmpty()) {
+            updatedProduct.setProductImages(productUtil.uploadProductImages(productImages, updatedProduct.getSkuCode(), updatedProduct.getCategoryId()));
+        } else {
+            updatedProduct.setProductImages(existingProduct.getProductImages());
+        }
 
         Product savedProduct = productRepository.save(updatedProduct);
 
@@ -167,44 +180,6 @@ public class ProductService {
         return savedProduct;
     }
 
-    private ProductBrand getOrCreateBrand(String brandName) {
-
-        return productBrandRepository
-                .findByBrandName(brandName)
-                .orElseGet(() -> {
-                    log.debug("[BRAND] Creating new brand name={}", brandName);
-
-                    ProductBrand brand = new ProductBrand();
-                    brand.setBrandName(brandName);
-
-                    ProductBrand saved = productBrandRepository.save(brand);
-
-                    log.info("[BRAND] Created brand name={} id={}",
-                            brandName, saved.getId());
-
-                    return saved;
-                });
-    }
-
-    private ProductCategoryEntity getOrCreateProductCategory(String productCategory) {
-
-        return productCategoryRepository
-                .findByProductCategory(productCategory)
-                .orElseGet(() -> {
-                    log.debug("[TYPE] Creating new Product Category={}", productCategory);
-
-                    ProductCategoryEntity type = new ProductCategoryEntity();
-                    type.setProductCategory(productCategory);
-
-                    ProductCategoryEntity saved = productCategoryRepository.save(type);
-
-                    log.info("[TYPE] Created Product Category={} id={}",
-                            productCategory, saved.getId());
-
-                    return saved;
-                });
-    }
-
     public List<BaseProductResponse> getProductsByCategory(String productCategory) {
         return productRepository.findAllByProductCategoryIgnoreCase(productCategory).stream()
                 .map(productMapper::toBaseResponse)
@@ -224,6 +199,108 @@ public class ProductService {
                 .toList();
     }
 
+    public ProductPageResponse getProductsPage(
+            int page,
+            int size,
+            String categoryId,
+            String brand,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
+            String sort,
+            String direction
+    ) {
+        ProductPageRequestService.ProductPagingOptions pagingOptions =
+                productPageRequestService.resolvePagingOptions(page, size, minPrice, maxPrice, sort, direction);
+
+        String normalizedCategoryId = productPageRequestService.normalizeOptional(categoryId);
+        String normalizedBrand = productPageRequestService.normalizeOptional(brand);
+
+        Query query = new Query();
+        List<Criteria> criteriaList = new ArrayList<>();
+
+        if (normalizedCategoryId != null) {
+            criteriaList.add(Criteria.where("categoryId").is(normalizedCategoryId));
+        }
+
+        if (normalizedBrand != null) {
+            criteriaList.add(Criteria.where("brandName").regex("^" + Pattern.quote(normalizedBrand) + "$", "i"));
+        }
+
+        if (minPrice != null || maxPrice != null) {
+            Criteria priceCriteria = Criteria.where("price");
+            if (minPrice != null) {
+                priceCriteria.gte(minPrice.doubleValue());
+            }
+            if (maxPrice != null) {
+                priceCriteria.lte(maxPrice.doubleValue());
+            }
+            criteriaList.add(priceCriteria);
+        }
+
+        criteriaList.forEach(query::addCriteria);
+
+        return productPageRequestService.fetchPage(query, pagingOptions);
+    }
+
+    public ProductPageResponse searchProducts(
+            String q,
+            String categoryId,
+            String brand,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
+            int page,
+            int size,
+            String sort,
+            String direction
+    ) {
+        if (q == null || q.trim().isEmpty()) {
+            throw new IllegalArgumentException("q must not be blank");
+        }
+
+        ProductPageRequestService.ProductPagingOptions pagingOptions =
+                productPageRequestService.resolvePagingOptions(page, size, minPrice, maxPrice, sort, direction);
+        String normalizedQ = q.trim();
+        String normalizedCategoryId = productPageRequestService.normalizeOptional(categoryId);
+        String normalizedBrand = productPageRequestService.normalizeOptional(brand);
+
+        Query query = new Query();
+        List<Criteria> criteriaList = new ArrayList<>();
+
+        criteriaList.add(new Criteria().orOperator(
+                Criteria.where("name").regex(Pattern.quote(normalizedQ), "i"),
+                Criteria.where("description").regex(Pattern.quote(normalizedQ), "i"),
+                Criteria.where("skuCode").regex(Pattern.quote(normalizedQ), "i"),
+                Criteria.where("brandName").regex(Pattern.quote(normalizedQ), "i")
+        ));
+
+        if (normalizedCategoryId != null) {
+            criteriaList.add(Criteria.where("categoryId").is(normalizedCategoryId));
+        }
+
+        if (normalizedBrand != null) {
+            criteriaList.add(Criteria.where("brandName").regex("^" + Pattern.quote(normalizedBrand) + "$", "i"));
+        }
+
+        if (minPrice != null || maxPrice != null) {
+            Criteria priceCriteria = Criteria.where("price");
+            if (minPrice != null) {
+                priceCriteria.gte(minPrice.doubleValue());
+            }
+            if (maxPrice != null) {
+                priceCriteria.lte(maxPrice.doubleValue());
+            }
+            criteriaList.add(priceCriteria);
+        }
+
+        criteriaList.forEach(query::addCriteria);
+
+        return productPageRequestService.fetchPage(query, pagingOptions);
+    }
+
+    public ProductFormConfig getProductFormConfig(String productCategory) {
+        return productFormConfigService.getProductFormConfig(productCategory);
+    }
+
 
     private Product createProductFromFactory(ProductRequest request) {
 
@@ -234,7 +311,7 @@ public class ProductService {
         return factory.create(request);
     }
 
-    private void validateCreateRequest(ProductRequest request) {
+    private void validateCreateRequest(ProductRequest request, List<MultipartFile> productImages) {
         if (request.name() == null || request.name().isBlank()) {
             throw new IllegalArgumentException("name is required");
         }
@@ -247,11 +324,53 @@ public class ProductService {
         if (request.categoryId() == null || request.categoryId().isBlank()) {
             throw new IllegalArgumentException("categoryId is required");
         }
+        if (request.brandName() == null || request.brandName().isBlank()) {
+            throw new IllegalArgumentException("brandName is required");
+        }
+
+        if (productImages == null || productImages.isEmpty()) {
+            throw new IllegalArgumentException("productImages are required");
+        }
+        validateCategorySpecificFields(request);
     }
 
     private void validateUpdateRequest(ProductRequest request) {
         if (request.productCategory() == null) {
             throw new IllegalArgumentException("productCategory is required");
+        }
+    }
+
+    private void validateCategorySpecificFields(ProductRequest request) {
+        List<String> missingFields = new java.util.ArrayList<>();
+
+        if (request.productCategory() == ProductCategory.LAPTOP) {
+            addMissing(missingFields, "processor", request.processor());
+            addMissing(missingFields, "ramGb", request.ramGb());
+            addMissing(missingFields, "storageGb", request.storageGb());
+            addMissing(missingFields, "screenSize", request.screenSize());
+            addMissing(missingFields, "graphics", request.graphics());
+        }
+
+        if (request.productCategory() == ProductCategory.COMPUTER) {
+            addMissing(missingFields, "processor", request.processor());
+            addMissing(missingFields, "ramGb", request.ramGb());
+            addMissing(missingFields, "storageGb", request.storageGb());
+            addMissing(missingFields, "screenSize", request.screenSize());
+            addMissing(missingFields, "graphics", request.graphics());
+            addMissing(missingFields, "mouse", request.mouse());
+            addMissing(missingFields, "keyboard", request.keyboard());
+        }
+
+        if (!missingFields.isEmpty()) {
+            throw new IllegalArgumentException("Missing required fields for "
+                    + request.productCategory().name().toLowerCase(java.util.Locale.ROOT)
+                    + ": " + String.join(", ", missingFields));
+        }
+    }
+
+    private void addMissing(List<String> missingFields, String fieldName, String value) {
+        if (value == null || value.isBlank()) {
+            missingFields.add(fieldName);
         }
     }
 

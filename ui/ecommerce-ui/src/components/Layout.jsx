@@ -3,7 +3,7 @@ import { NavLink, Outlet } from "react-router-dom";
 const navItems = [
   { to: "/shop", label: "Shop" },
   { to: "/checkout", label: "Cart & Checkout" },
-  { to: "/products/create", label: "Seller: Add Product" },
+  { to: "/admin/products", label: "Admin: Products" },
   { to: "/inventory/check", label: "Inventory Lookup" },
 ];
 
@@ -64,5 +64,3 @@ function Layout({
 }
 
 export default Layout;
-
-

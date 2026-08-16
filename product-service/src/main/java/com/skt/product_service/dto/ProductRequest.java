@@ -1,6 +1,6 @@
 package com.skt.product_service.dto;
 
-
+import com.skt.product_service.model.ProductCategory;
 import com.skt.product_service.model.ProductCategory;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -20,13 +20,13 @@ public record ProductRequest(
 
         @NotBlank(message = "categoryId is required")
         String categoryId,
-        List<String> categoryPath,
 
         // Laptop / Computer specific fields (Optional depending on productCategory)
         String processor,
         String ramGb,
         String storageGb,
         String graphics,
+        String screenSize,
 
         String mouse,
         String keyboard

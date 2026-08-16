@@ -1,5 +1,6 @@
 package com.skt.product_service.dto;
 
+import com.skt.product_service.model.ProductImage;
 import com.skt.product_service.model.ProductCategory;
 
 import java.math.BigDecimal;
@@ -22,7 +23,7 @@ public record LaptopResponse(
         String graphics,
         String brandName,
         String categoryId,
-        List<String> categoryPath
+        List<ProductImage> productImages
 
 ) implements ProductResponse {
 

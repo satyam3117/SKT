@@ -1,5 +1,7 @@
 package com.skt.product_service.dto;
 
+import com.skt.product_service.model.ProductImage;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
@@ -16,5 +18,5 @@ public sealed interface ProductResponse
     BigDecimal price();
     String productCategory();
     String categoryId();
-    List<String> categoryPath();
+    List<ProductImage> productImages();
 }

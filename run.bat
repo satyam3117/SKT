@@ -34,5 +34,7 @@ start "Order Service" /D "%BASE_DIR%order-service" /min cmd /k "mvn spring-boot:
 start "Product Service" /D "%BASE_DIR%product-service" /min cmd /k "mvn spring-boot:run"
 start "Notification Service" /D "%BASE_DIR%notification-service" /min cmd /k "mvn spring-boot:run"
 start "User Service" /D "%BASE_DIR%user-service" /min cmd /k "mvn spring-boot:run"
+start "React UI" /D "%BASE_DIR%/ui/ecommerce-ui>" /min cmd /k "npm run dev"
+
 
 echo All services dispatched!

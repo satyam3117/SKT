@@ -22,10 +22,10 @@ public class LaptopFactory implements ProductFactory {
                 .processor(request.processor())
                 .ramGb(request.ramGb() != null ? request.ramGb() : StringUtils.EMPTY)
                 .storageGb(request.storageGb() != null ? request.storageGb() : StringUtils.EMPTY)
+                .screenSize(request.screenSize() != null ? request.screenSize() : StringUtils.EMPTY)
                 .graphics(request.graphics() != null ? request.graphics() : StringUtils.EMPTY)
                 .brandName(request.brandName() != null ? request.brandName() : StringUtils.EMPTY)
                 .categoryId(request.categoryId())
-                .categoryPath(request.categoryPath())
                 .build();
     }
 
@@ -45,10 +45,10 @@ public class LaptopFactory implements ProductFactory {
                 .processor(request.processor() != null ? request.processor() : existingLaptop.getProcessor())
                 .ramGb(request.ramGb() != null ? request.ramGb() : existingLaptop.getRamGb())
                 .storageGb(request.storageGb() != null ? request.storageGb() : existingLaptop.getStorageGb())
+                .screenSize(request.screenSize() != null ? request.screenSize() : existingLaptop.getScreenSize())
                 .graphics(request.graphics() != null ? request.graphics() : existingLaptop.getGraphics())
                 .brandName(request.brandName()!= null ? request.brandName() : existingLaptop.getBrandName())
                 .categoryId(request.categoryId() != null ? request.categoryId() : existingLaptop.getCategoryId())
-                .categoryPath(request.categoryPath() != null ? request.categoryPath() : existingLaptop.getCategoryPath())
                 .build();
     }
 

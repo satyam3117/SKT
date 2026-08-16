@@ -23,7 +23,7 @@ public class ProductMapper {
                 product.getProductCategory() != null ? product.getProductCategory().toLowerCase() : "others",
                 product.getBrandName(),
                 product.getCategoryId(),
-                product.getCategoryPath()
+                product.getProductImages()
         );
     }
 
@@ -43,7 +43,7 @@ public class ProductMapper {
                 product.getGraphics(),
                 product.getBrandName(),
                 product.getCategoryId(),
-                product.getCategoryPath()
+                product.getProductImages()
         );
     }
 

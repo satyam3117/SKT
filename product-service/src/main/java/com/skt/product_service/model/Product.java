@@ -44,8 +44,8 @@ public class Product {
     // Category support
     @NotNull(message = "Category ID is required")
     private String categoryId; // Leaf category ID for DB relations and filtering (e.g., "business-laptop-id")
-    
-    private List<String> categoryPath; // Hierarchy for UI (e.g., ["Electronics", "Laptops", "Business Laptops"])
+
+    private List<ProductImage> productImages; // List of product images
     
     @CreatedDate
     private Instant createdAt;

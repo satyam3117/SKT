@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 
 import Layout from "./components/Layout";
+import AdminProductManagementPage from "./pages/AdminProductManagementPage";
 import CreateProductPage from "./pages/CreateProductPage";
 import InventoryCheckPage from "./pages/InventoryCheckPage";
 import PlaceOrderPage from "./pages/PlaceOrderPage";
@@ -117,6 +118,7 @@ function App({ keycloak }) {
           <Route index element={<Navigate to="/shop" replace />} />
           <Route path="products" element={<ProductListPage />} />
           <Route path="products/create" element={<CreateProductPage />} />
+          <Route path="admin/products" element={<AdminProductManagementPage />} />
           <Route path="orders/create" element={<PlaceOrderPage />} />
           <Route path="shop" element={<ProductListPage />} />
           <Route path="checkout" element={<PlaceOrderPage />} />

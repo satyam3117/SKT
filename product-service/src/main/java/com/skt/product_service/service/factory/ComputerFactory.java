@@ -23,11 +23,11 @@ public class ComputerFactory implements ProductFactory {
                 .processor(request.processor())
                 .ramGb(request.ramGb() != null ? request.ramGb() : StringUtils.EMPTY)
                 .storageGb(request.storageGb() != null ? request.storageGb() : StringUtils.EMPTY)
+                .screenSize(request.screenSize() != null ? request.screenSize() : StringUtils.EMPTY)
                 .graphics(request.graphics() != null ? request.graphics() : StringUtils.EMPTY)
                 .mouse(request.mouse() != null ? request.mouse() : StringUtils.EMPTY)
                 .keyboard(request.keyboard() != null ? request.keyboard() : StringUtils.EMPTY)
                 .categoryId(request.categoryId())
-                .categoryPath(request.categoryPath())
                 .build();
     }
 
@@ -48,11 +48,11 @@ public class ComputerFactory implements ProductFactory {
                 .processor(request.processor() != null ? request.processor() : existingComputer.getProcessor())
                 .ramGb(request.ramGb() != null ? request.ramGb() : existingComputer.getRamGb())
                 .storageGb(request.storageGb() != null ? request.storageGb() : existingComputer.getStorageGb())
+                .screenSize(request.screenSize() != null ? request.screenSize() : existingComputer.getScreenSize())
                 .graphics(request.graphics() != null ? request.graphics() : existingComputer.getGraphics())
                 .mouse(request.mouse() != null ? request.mouse() : existingComputer.getMouse())
                 .keyboard(request.keyboard() != null ? request.keyboard() : existingComputer.getKeyboard())
                 .categoryId(request.categoryId() != null ? request.categoryId() : existingComputer.getCategoryId())
-                .categoryPath(request.categoryPath() != null ? request.categoryPath() : existingComputer.getCategoryPath())
                 .build();
     }
 
