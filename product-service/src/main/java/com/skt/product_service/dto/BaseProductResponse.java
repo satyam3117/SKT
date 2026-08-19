@@ -15,7 +15,7 @@ public record BaseProductResponse(
         String description,
         BigDecimal price,
         String productCategory,
-        String brandName,
+        String brandId,
         String categoryId,
         List<ProductImage> productImages
 ) implements ProductResponse {}

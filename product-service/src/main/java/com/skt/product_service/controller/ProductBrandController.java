@@ -1,9 +1,9 @@
 package com.skt.product_service.controller;
 
-import com.skt.product_service.dto.category.ProductCategoryCreateRequest;
-import com.skt.product_service.dto.category.ProductCategoryResponse;
-import com.skt.product_service.dto.category.ProductCategoryUpdateRequest;
-import com.skt.product_service.service.category.ProductCategoryService;
+import com.skt.product_service.dto.brand.ProductBrandCreateRequest;
+import com.skt.product_service.dto.brand.ProductBrandResponse;
+import com.skt.product_service.dto.brand.ProductBrandUpdateRequest;
+import com.skt.product_service.service.brand.ProductBrandService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/product-categories")
+@RequestMapping("/api/product-brands")
 @RequiredArgsConstructor
 @Slf4j
-public class ProductCategoryController {
+public class ProductBrandController {
 
-    private final ProductCategoryService productCategoryService;
+    private final ProductBrandService productBrandService;
 
 
     // ============================================================
@@ -27,18 +27,18 @@ public class ProductCategoryController {
     // ============================================================
 
     @PostMapping
-    public ResponseEntity<ProductCategoryResponse> createCategory(
-            @Valid @RequestBody ProductCategoryCreateRequest request
+    public ResponseEntity<ProductBrandResponse> createBrand(
+            @Valid @RequestBody ProductBrandCreateRequest request
     ) {
 
         log.info(
-                "[CREATE CATEGORY] name={}, parentId={}",
+                "[CREATE BRAND] name={}, slug={}",
                 request.getName(),
-                request.getParentId()
+                request.getSlug()
         );
 
-        ProductCategoryResponse response =
-                productCategoryService.createCategory(request);
+        ProductBrandResponse response =
+                productBrandService.createBrand(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -51,29 +51,29 @@ public class ProductCategoryController {
     // ============================================================
 
     @GetMapping
-    public ResponseEntity<List<ProductCategoryResponse>>
-    getAllCategories() {
+    public ResponseEntity<List<ProductBrandResponse>>
+    getAllBrands() {
 
-        log.info("[GET ALL CATEGORIES]");
+        log.info("[GET ALL BRANDS]");
 
         return ResponseEntity.ok(
-                productCategoryService.getAllCategories()
+                productBrandService.getAllBrands()
         );
     }
 
 
     // ============================================================
-    // GET ROOT CATEGORIES
+    // GET ACTIVE
     // ============================================================
 
-    @GetMapping("/root")
-    public ResponseEntity<List<ProductCategoryResponse>>
-    getRootCategories() {
+    @GetMapping("/active")
+    public ResponseEntity<List<ProductBrandResponse>>
+    getActiveBrands() {
 
-        log.info("[GET ROOT CATEGORIES]");
+        log.info("[GET ACTIVE BRANDS]");
 
         return ResponseEntity.ok(
-                productCategoryService.getRootCategories()
+                productBrandService.getActiveBrands()
         );
     }
 
@@ -83,17 +83,39 @@ public class ProductCategoryController {
     // ============================================================
 
     @GetMapping("/slug/{slug}")
-    public ResponseEntity<ProductCategoryResponse> getBySlug(
+    public ResponseEntity<ProductBrandResponse>
+    getBySlug(
             @PathVariable String slug
     ) {
 
         log.info(
-                "[GET CATEGORY BY SLUG] slug={}",
+                "[GET BRAND BY SLUG] slug={}",
                 slug
         );
 
         return ResponseEntity.ok(
-                productCategoryService.getBySlug(slug)
+                productBrandService.getBySlug(slug)
+        );
+    }
+
+
+    // ============================================================
+    // GET BY NAME
+    // ============================================================
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<ProductBrandResponse>
+    getByName(
+            @PathVariable String name
+    ) {
+
+        log.info(
+                "[GET BRAND BY NAME] name={}",
+                name
+        );
+
+        return ResponseEntity.ok(
+                productBrandService.getByName(name)
         );
     }
 
@@ -103,38 +125,18 @@ public class ProductCategoryController {
     // ============================================================
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductCategoryResponse> getCategory(
+    public ResponseEntity<ProductBrandResponse>
+    getBrand(
             @PathVariable String id
     ) {
 
         log.info(
-                "[GET CATEGORY] id={}",
+                "[GET BRAND] id={}",
                 id
         );
 
         return ResponseEntity.ok(
-                productCategoryService.getCategoryById(id)
-        );
-    }
-
-
-    // ============================================================
-    // GET CHILDREN
-    // ============================================================
-
-    @GetMapping("/{parentId}/children")
-    public ResponseEntity<List<ProductCategoryResponse>>
-    getChildren(
-            @PathVariable String parentId
-    ) {
-
-        log.info(
-                "[GET CATEGORY CHILDREN] parentId={}",
-                parentId
-        );
-
-        return ResponseEntity.ok(
-                productCategoryService.getChildren(parentId)
+                productBrandService.getBrandById(id)
         );
     }
 
@@ -144,18 +146,19 @@ public class ProductCategoryController {
     // ============================================================
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductCategoryResponse> updateCategory(
+    public ResponseEntity<ProductBrandResponse>
+    updateBrand(
             @PathVariable String id,
-            @Valid @RequestBody ProductCategoryUpdateRequest request
+            @Valid @RequestBody ProductBrandUpdateRequest request
     ) {
 
         log.info(
-                "[UPDATE CATEGORY] id={}",
+                "[UPDATE BRAND] id={}",
                 id
         );
 
-        ProductCategoryResponse response =
-                productCategoryService.updateCategory(
+        ProductBrandResponse response =
+                productBrandService.updateBrand(
                         id,
                         request
                 );
@@ -170,15 +173,15 @@ public class ProductCategoryController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategory(
+    public void deleteBrand(
             @PathVariable String id
     ) {
 
         log.info(
-                "[DELETE CATEGORY] id={}",
+                "[DELETE BRAND] id={}",
                 id
         );
 
-        productCategoryService.deleteCategory(id);
+        productBrandService.deleteBrand(id);
     }
 }

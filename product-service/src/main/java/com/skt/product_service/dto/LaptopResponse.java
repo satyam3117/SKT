@@ -21,7 +21,7 @@ public record LaptopResponse(
         String storageGb,
         String screenSize,
         String graphics,
-        String brandName,
+        String brandId,
         String categoryId,
         List<ProductImage> productImages
 

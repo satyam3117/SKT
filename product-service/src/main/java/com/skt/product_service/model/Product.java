@@ -38,7 +38,7 @@ public class Product {
     private String description;
     private BigDecimal price;
     private String skuCode;
-    private String brandName;
+    private String brandId;
     private String productCategory; // Helps easily identify the type programmatically
     
     // Category support

@@ -1,23 +1,25 @@
 package com.skt.product_service.dto.brand;
 
-import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+
+import java.time.Instant;
 
 @Getter
-@Setter
-public class ProductBrandUpdateRequest {
+@Builder
+public class ProductBrandResponse {
 
-    @NotBlank(message = "Brand name cannot be blank")
+    private String id;
+
     private String name;
 
-    @NotBlank(message = "Brand slug cannot be blank")
     private String slug;
 
     private Boolean active;
 
     private Integer sortOrder;
 
-    public ProductBrandUpdateRequest() {
-    }
+    private Instant createdAt;
+
+    private Instant updatedAt;
 }

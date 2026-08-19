@@ -25,7 +25,7 @@ public class ProductFormConfigService {
             new FormFieldDefinition("name", "Name", "text", true),
             new FormFieldDefinition("description", "Description", "textarea", true),
             new FormFieldDefinition("price", "Price", "number", true),
-            new FormFieldDefinition("brandName", "Brand", "text", true)
+            new FormFieldDefinition("brandId", "Brand", "text", true)
     );
 
     private static final Map<ProductCategory, List<FormFieldDefinition>> TYPE_FIELDS = Map.of(

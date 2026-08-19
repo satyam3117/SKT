@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductBrandCreateRequest {
+public class ProductBrandUpdateRequest {
 
     @NotBlank(message = "Brand name cannot be blank")
     private String name;
@@ -14,11 +14,10 @@ public class ProductBrandCreateRequest {
     @NotBlank(message = "Brand slug cannot be blank")
     private String slug;
 
-    /**
-     * Optional UI ordering.
-     */
+    private Boolean active;
+
     private Integer sortOrder;
 
-    public ProductBrandCreateRequest() {
+    public ProductBrandUpdateRequest() {
     }
 }

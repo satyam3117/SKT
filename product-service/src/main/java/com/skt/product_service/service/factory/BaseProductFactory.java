@@ -18,7 +18,7 @@ public class BaseProductFactory implements ProductFactory {
                 .description(request.description())
                 .price(request.price())
                 .productCategory(request.productCategory().name().toLowerCase(Locale.ROOT))
-                .brandName(request.brandName() != null ? request.brandName() : StringUtils.EMPTY)
+                .brandId(request.brandId() != null ? request.brandId() : StringUtils.EMPTY)
                 .categoryId(request.categoryId())
                 .build();
     }
@@ -31,7 +31,7 @@ public class BaseProductFactory implements ProductFactory {
                 .description(request.description() != null ? request.description() : existingProduct.getDescription())
                 .price(request.price() != null ? request.price() : existingProduct.getPrice())
                 .productCategory(existingProduct.getProductCategory())
-                .brandName(request.brandName() != null ? request.brandName() : existingProduct.getBrandName())
+                .brandId(request.brandId() != null ? request.brandId() : existingProduct.getBrandId())
                 .categoryId(request.categoryId() != null ? request.categoryId() : existingProduct.getCategoryId())
                 .build();
     }
