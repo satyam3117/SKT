@@ -36,6 +36,12 @@ public class SecurityConfig {
                                 "/actuator/prometheus"
                         ).permitAll()
 
+
+                        // Product browsing
+                        .requestMatchers(
+                                "/api/product/**"
+                        ).permitAll()
+
                         // Example: allow public APIs
                         .requestMatchers("/public/**").permitAll()
 
