@@ -13,9 +13,9 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
     boolean existsBySkuCode(String skuCode);
 
-    List<Product> findAllByBrandNameIgnoreCase(String brandName);
+    List<Product> findAllBybrandIdIgnoreCase(String brandId);
 
-
+    boolean existsByBrandId(String brandId);
 
 
 }

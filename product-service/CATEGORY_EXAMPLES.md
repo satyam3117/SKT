@@ -14,7 +14,7 @@ The Product model now supports hierarchical categories through two fields:
   "description": "Premium business laptop with exceptional performance",
   "price": 1499.99,
   "skuCode": "LENOVO-X1-GEN11-001",
-  "brandName": "Lenovo",
+  "brandId": "Lenovo",
   "productCategory": "laptop",
   "categoryId": "business-laptop-id",
   "categoryPath": ["Electronics", "Laptops", "Business Laptops"],
@@ -37,7 +37,7 @@ The Product model now supports hierarchical categories through two fields:
   "description": "High-performance gaming laptop",
   "price": 1899.99,
   "skuCode": "ASUS-ROG-G15-001",
-  "brandName": "ASUS",
+  "brandId": "ASUS",
   "productCategory": "laptop",
   "categoryId": "gaming-laptop-id",
   "categoryPath": ["Electronics", "Laptops", "Gaming Laptops"],
@@ -60,7 +60,7 @@ The Product model now supports hierarchical categories through two fields:
   "description": "Professional desktop computer",
   "price": 899.99,
   "skuCode": "DELL-OPT-7090-001",
-  "brandName": "Dell",
+  "brandId": "Dell",
   "productCategory": "computer",
   "categoryId": "desktop-computer-id",
   "categoryPath": ["Electronics", "Computers", "Desktop Computers"],
@@ -85,7 +85,7 @@ The Product model now supports hierarchical categories through two fields:
   "description": "Ultra-thin and light laptop",
   "price": 1199.99,
   "skuCode": "APPLE-MBA-M2-001",
-  "brandName": "Apple",
+  "brandId": "Apple",
   "productCategory": "laptop",
   "categoryId": "ultrabook-laptop-id",
   "processor": "Apple M2",
@@ -124,7 +124,7 @@ Laptop laptop = Laptop.builder()
     .description("Premium business laptop")
     .price(new BigDecimal("1499.99"))
     .skuCode("LENOVO-X1-GEN11-001")
-    .brandName("Lenovo")
+    .brandId("Lenovo")
     .productCategory("laptop")
     .categoryId("business-laptop-id")
     .categoryPath(Arrays.asList("Electronics", "Laptops", "Business Laptops"))

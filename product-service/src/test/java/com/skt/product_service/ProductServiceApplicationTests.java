@@ -52,7 +52,7 @@ class ProductServiceApplicationTests {
 				.multiPart("description", "Iphone 15 Blue Color")
 				.multiPart("price", "1000")
 				.multiPart("productCategory", "laptop")
-				.multiPart("brandName", "apple")
+				.multiPart("brandId", "apple")
 				.multiPart("categoryId", "electronics-laptops-business")
 				.multiPart("processor", "Apple M2")
 				.multiPart("ramGb", "8")
@@ -81,7 +81,7 @@ class ProductServiceApplicationTests {
 				.body("fields.size()", Matchers.equalTo(10))
 				.body("fields.find { it.name == 'categoryId' }.type", Matchers.equalTo("select"))
 				.body("fields.find { it.name == 'categoryId' }.options.size()", Matchers.greaterThan(0))
-				.body("fields.find { it.name == 'brandName' }.required", Matchers.equalTo(true))
+				.body("fields.find { it.name == 'brandId' }.required", Matchers.equalTo(true))
 				.body("fields.find { it.name == 'processor' }.required", Matchers.equalTo(true))
 				.body("fields.find { it.name == 'screenSize' }.required", Matchers.equalTo(true));
 	}
@@ -163,7 +163,7 @@ class ProductServiceApplicationTests {
 			String name,
 			String description,
 			BigDecimal price,
-			String brandName,
+			String brandId,
 			String categoryId
 	) {
 		Laptop product = Laptop.builder()
@@ -171,7 +171,7 @@ class ProductServiceApplicationTests {
 				.description(description)
 				.price(price)
 				.productCategory("laptop")
-				.brandName(brandName)
+				.brandId(brandId)
 				.categoryId(categoryId)
 				.processor("Intel")
 				.ramGb("16")

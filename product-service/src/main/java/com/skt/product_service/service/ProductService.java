@@ -9,6 +9,7 @@ import com.skt.product_service.dto.ProductResponse;
 import com.skt.product_service.event.ProductCreatedEvent;
 import com.skt.product_service.exception.ProductCreationException;
 import com.skt.product_service.exception.ProductNotFoundException;
+import com.skt.product_service.service.brand.ProductBrandService;
 import com.skt.product_service.service.factory.ProductFactory;
 import com.skt.product_service.util.ProductUtil;
 import com.skt.product_service.model.Product;
@@ -44,6 +45,8 @@ public class ProductService {
     private final ProductQueryService productQueryService;
     private final ProductPageRequestService productPageRequestService;
     private final ProductFormConfigService productFormConfigService;
+    private final ProductBrandService productBrandService;
+
     @Autowired
     private KafkaTemplate<String, ProductCreatedEvent> kafkaTemplate;
     public static final String PRODUCT_CREATED_TOPIC = "product-created-topic";
@@ -68,7 +71,9 @@ public class ProductService {
         try {
             Product product = createProductFromFactory(productRequest);
 
-            product.setBrandName(product.getBrandName());
+            productBrandService.validateActiveBrand(productRequest.brandId());
+
+            product.setBrandId(product.getBrandId());
             product.setProductCategory(product.getProductCategory());
             product.setSkuCode(productUtil.generateUniqueSkuCode(product.getProductCategory()));
             product.setProductImages(productUtil.uploadProductImages(productImages, product.getSkuCode(), product.getCategoryId()));
@@ -188,7 +193,7 @@ public class ProductService {
     }
 
     public List<BaseProductResponse> getProductByBrand(String productBrand) {
-        return productRepository.findAllByBrandNameIgnoreCase(productBrand).stream()
+        return productRepository.findAllBybrandIdIgnoreCase(productBrand).stream()
                 .map(productMapper::toBaseResponse)
                 .toList();
     }
@@ -223,7 +228,7 @@ public class ProductService {
         }
 
         if (normalizedBrand != null) {
-            criteriaList.add(Criteria.where("brandName").regex("^" + Pattern.quote(normalizedBrand) + "$", "i"));
+            criteriaList.add(Criteria.where("brandId").regex("^" + Pattern.quote(normalizedBrand) + "$", "i"));
         }
 
         if (minPrice != null || maxPrice != null) {
@@ -270,7 +275,7 @@ public class ProductService {
                 Criteria.where("name").regex(Pattern.quote(normalizedQ), "i"),
                 Criteria.where("description").regex(Pattern.quote(normalizedQ), "i"),
                 Criteria.where("skuCode").regex(Pattern.quote(normalizedQ), "i"),
-                Criteria.where("brandName").regex(Pattern.quote(normalizedQ), "i")
+                Criteria.where("brandId").regex(Pattern.quote(normalizedQ), "i")
         ));
 
         if (normalizedCategoryId != null) {
@@ -278,7 +283,7 @@ public class ProductService {
         }
 
         if (normalizedBrand != null) {
-            criteriaList.add(Criteria.where("brandName").regex("^" + Pattern.quote(normalizedBrand) + "$", "i"));
+            criteriaList.add(Criteria.where("brandId").regex("^" + Pattern.quote(normalizedBrand) + "$", "i"));
         }
 
         if (minPrice != null || maxPrice != null) {
@@ -324,8 +329,8 @@ public class ProductService {
         if (request.categoryId() == null || request.categoryId().isBlank()) {
             throw new IllegalArgumentException("categoryId is required");
         }
-        if (request.brandName() == null || request.brandName().isBlank()) {
-            throw new IllegalArgumentException("brandName is required");
+        if (request.brandId() == null || request.brandId().isBlank()) {
+            throw new IllegalArgumentException("brandId is required");
         }
 
         if (productImages == null || productImages.isEmpty()) {

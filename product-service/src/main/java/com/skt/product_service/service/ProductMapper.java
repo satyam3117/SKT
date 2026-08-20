@@ -21,7 +21,7 @@ public class ProductMapper {
                 product.getDescription(),
                 product.getPrice(),
                 product.getProductCategory() != null ? product.getProductCategory().toLowerCase() : "others",
-                product.getBrandName(),
+                product.getBrandId(),
                 product.getCategoryId(),
                 product.getProductImages()
         );
@@ -41,7 +41,7 @@ public class ProductMapper {
                 product.getStorageGb(),
                 product.getScreenSize(),
                 product.getGraphics(),
-                product.getBrandName(),
+                product.getBrandId(),
                 product.getCategoryId(),
                 product.getProductImages()
         );

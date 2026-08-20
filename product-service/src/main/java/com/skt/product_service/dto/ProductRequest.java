@@ -16,7 +16,8 @@ public record ProductRequest(
         BigDecimal price,
         @NotNull(message = "productCategory is required")
         ProductCategory productCategory,
-        String brandName,
+        @NotBlank(message = "brandId is required")
+        String brandId,
 
         @NotBlank(message = "categoryId is required")
         String categoryId,

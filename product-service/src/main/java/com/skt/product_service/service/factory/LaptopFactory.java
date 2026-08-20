@@ -24,7 +24,7 @@ public class LaptopFactory implements ProductFactory {
                 .storageGb(request.storageGb() != null ? request.storageGb() : StringUtils.EMPTY)
                 .screenSize(request.screenSize() != null ? request.screenSize() : StringUtils.EMPTY)
                 .graphics(request.graphics() != null ? request.graphics() : StringUtils.EMPTY)
-                .brandName(request.brandName() != null ? request.brandName() : StringUtils.EMPTY)
+                .brandId(request.brandId() != null ? request.brandId() : StringUtils.EMPTY)
                 .categoryId(request.categoryId())
                 .build();
     }
@@ -47,7 +47,7 @@ public class LaptopFactory implements ProductFactory {
                 .storageGb(request.storageGb() != null ? request.storageGb() : existingLaptop.getStorageGb())
                 .screenSize(request.screenSize() != null ? request.screenSize() : existingLaptop.getScreenSize())
                 .graphics(request.graphics() != null ? request.graphics() : existingLaptop.getGraphics())
-                .brandName(request.brandName()!= null ? request.brandName() : existingLaptop.getBrandName())
+                .brandId(request.brandId()!= null ? request.brandId() : existingLaptop.getBrandId())
                 .categoryId(request.categoryId() != null ? request.categoryId() : existingLaptop.getCategoryId())
                 .build();
     }

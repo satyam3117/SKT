@@ -26,7 +26,7 @@ public class ProductPageRequestService {
             "price",
             "createdAt",
             "updatedAt",
-            "brandName"
+            "brandId"
     );
 
     private final MongoTemplate mongoTemplate;
