@@ -46,8 +46,12 @@ export async function getBearerToken(keycloak) {
 apiClient.interceptors.request.use((config) => {
   const headers = config.headers || {};
   const hasAuthorization = Boolean(headers.Authorization || headers.authorization);
+  const requestUrl = String(config.url || "");
+  const isProductApiRequest =
+    requestUrl === "/api/product" ||
+    requestUrl.startsWith("/api/product/");
 
-  if (!hasAuthorization) {
+  if (!hasAuthorization && !isProductApiRequest) {
     const token = getStoredAccessToken();
     if (token) {
       headers.Authorization = `Bearer ${token}`;
