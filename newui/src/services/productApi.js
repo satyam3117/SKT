@@ -1,4 +1,4 @@
-import apiClient, { getBearerToken } from "./apiClient";
+import apiClient from "./apiClient";
 
 function buildQueryParams(params = {}) {
   const queryParams = new URLSearchParams();
@@ -20,39 +20,23 @@ function buildQueryParams(params = {}) {
   return queryParams.toString();
 }
 
-function isKeycloakClient(value) {
-  return Boolean(value && typeof value.updateToken === "function");
-}
-
 function resolveParams(firstArg = {}, secondArg) {
   if (typeof secondArg !== "undefined") {
     return secondArg || {};
   }
 
-  if (isKeycloakClient(firstArg)) {
+  const isKeycloakClient =
+    Boolean(firstArg && typeof firstArg.updateToken === "function");
+
+  if (isKeycloakClient) {
     return {};
   }
 
   return firstArg || {};
 }
 
-async function buildAuthConfig(firstArg) {
-  if (!isKeycloakClient(firstArg)) {
-    return undefined;
-  }
-
-  const token = await getBearerToken(firstArg);
-
-  return {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-}
-
 export async function getProductsPage(firstArg = {}, secondArg) {
   const params = resolveParams(firstArg, secondArg);
-  const authConfig = await buildAuthConfig(firstArg);
   const queryString = buildQueryParams(params);
 
   const url =
@@ -60,19 +44,17 @@ export async function getProductsPage(firstArg = {}, secondArg) {
           ? `/api/product?${queryString}`
           : "/api/product";
 
-  const response = await apiClient.get(url, authConfig);
+  const response = await apiClient.get(url);
 
   return response.data;
 }
 
 export async function searchProducts(firstArg = {}, secondArg) {
   const resolvedParams = resolveParams(firstArg, secondArg);
-  const authConfig = await buildAuthConfig(firstArg);
   const queryString = buildQueryParams(resolvedParams);
 
   const response = await apiClient.get(
-      `/api/product/search?${queryString}`,
-      authConfig
+      `/api/product/search?${queryString}`
   );
 
   return response.data;
