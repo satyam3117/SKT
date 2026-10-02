@@ -118,7 +118,7 @@ public class ProductService {
         }
     }
     // ========================= UPDATE =========================
-    @CacheEvict(value = "products_v4", key = "#id")
+    @CacheEvict(value = "products", key = "#id")
     public ProductResponse updateProduct(String id, ProductRequest productRequest, List<MultipartFile> productImages) {
 
         log.info("[UPDATE] Updating product id={}", id);
@@ -156,7 +156,7 @@ public class ProductService {
     }
 
     // ========================= DELETE =========================
-    @CacheEvict(value = "products_v4", key = "#id")
+    @CacheEvict(value = "products", key = "#id")
     public void deleteProduct(String id) {
 
         log.info("[DELETE] Deleting product id={}", id);

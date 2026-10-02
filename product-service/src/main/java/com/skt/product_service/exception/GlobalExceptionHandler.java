@@ -6,8 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.time.Instant;
 import java.util.stream.Collectors;
@@ -43,13 +46,33 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ProductCreationException.class)
     public ResponseEntity<ApiError> handleProductCreationError(ProductCreationException ex) {
         log.error("[ERROR] Product creation failed: {}", ex.getMessage(), ex);
-        return buildError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        return buildError(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create product");
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiError> handleUnreadablePayload(HttpMessageNotReadableException ex) {
         log.warn("[ERROR] Invalid request payload: {}", ex.getMessage());
         return buildError(HttpStatus.BAD_REQUEST, "Invalid request payload. Check productCategory value.");
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiError> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        String message = "Invalid value for parameter '" + ex.getName() + "'";
+        log.warn("[ERROR] Request parameter type mismatch: {}", ex.getMessage());
+        return buildError(HttpStatus.BAD_REQUEST, message);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiError> handleMissingRequestParameter(MissingServletRequestParameterException ex) {
+        String message = "Missing required parameter '" + ex.getParameterName() + "'";
+        log.warn("[ERROR] Missing request parameter: {}", ex.getMessage());
+        return buildError(HttpStatus.BAD_REQUEST, message);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiError> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException ex) {
+        log.warn("[ERROR] Upload size exceeded: {}", ex.getMessage());
+        return buildError(HttpStatus.PAYLOAD_TOO_LARGE, "Uploaded file size exceeds the allowed limit");
     }
 
     @ExceptionHandler(Exception.class)

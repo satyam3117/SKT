@@ -14,6 +14,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -31,6 +32,7 @@ public class ProductController {
     private final ProductService productService;
     private final LocalImageStorageService localImageStorageService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ProductResponse createProduct(@Valid @ModelAttribute ProductRequest productRequest,
@@ -124,9 +126,12 @@ public class ProductController {
     public ProductFormConfig getProductFormConfig(@PathVariable String productCategory) {
         log.info("[GET] Fetching form config for product category: {}", productCategory);
         return productService.getProductFormConfig(productCategory);
+
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<ProductResponse> updateProduct(
             @PathVariable String id,
             @Valid @ModelAttribute ProductRequest productRequest,
@@ -141,6 +146,7 @@ public class ProductController {
         return ResponseEntity.ok(updatedProduct);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProduct(@PathVariable String id) {

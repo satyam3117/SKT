@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class ProductBrandController {
     // ============================================================
     // CREATE
     // ============================================================
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ProductBrandResponse> createBrand(
             @Valid @RequestBody ProductBrandCreateRequest request
@@ -145,6 +146,7 @@ public class ProductBrandController {
     // UPDATE
     // ============================================================
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ProductBrandResponse>
     updateBrand(
@@ -171,6 +173,7 @@ public class ProductBrandController {
     // DELETE
     // ============================================================
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBrand(
