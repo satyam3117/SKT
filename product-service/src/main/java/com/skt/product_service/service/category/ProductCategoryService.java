@@ -7,6 +7,8 @@ import com.skt.product_service.model.ProductCategoryEntity;
 import com.skt.product_service.repository.ProductCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -25,7 +27,7 @@ public class ProductCategoryService {
     // ============================================================
     // CREATE
     // ============================================================
-
+    @CacheEvict(value = "productCategory", allEntries = true)
     public ProductCategoryResponse createCategory(
             ProductCategoryCreateRequest request
     ) {
@@ -157,7 +159,7 @@ public class ProductCategoryService {
     // ============================================================
     // GET ALL
     // ============================================================
-
+    @Cacheable(value = "productCategory", key = "'all'")
     public List<ProductCategoryResponse> getAllCategories() {
 
         return productCategoryRepository
@@ -171,7 +173,7 @@ public class ProductCategoryService {
     // ============================================================
     // GET BY ID
     // ============================================================
-
+    @Cacheable(value = "productCategory", key = "#id")
     public ProductCategoryResponse getCategoryById(
             String id
     ) {
@@ -181,6 +183,7 @@ public class ProductCategoryService {
         );
     }
 
+    @Cacheable(value = "productCategory", key = "#categoryId")
     public List<String> getCategoryHierarchyNames(
             String categoryId
     ) {
@@ -218,7 +221,7 @@ public class ProductCategoryService {
     // ============================================================
     // GET ROOT CATEGORIES
     // ============================================================
-
+    @Cacheable(value = "productCategory", key = "'root'")
     public List<ProductCategoryResponse> getRootCategories() {
 
         return productCategoryRepository
@@ -233,6 +236,7 @@ public class ProductCategoryService {
     // GET CHILDREN
     // ============================================================
 
+    @Cacheable(value = "productCategory", key = "#parentId")
     public List<ProductCategoryResponse> getChildren(
             String parentId
     ) {
@@ -256,6 +260,7 @@ public class ProductCategoryService {
     // GET BY SLUG
     // ============================================================
 
+    @Cacheable(value = "productCategory", key = "#slug")
     public ProductCategoryResponse getBySlug(
             String slug
     ) {
@@ -278,6 +283,7 @@ public class ProductCategoryService {
     // UPDATE
     // ============================================================
 
+    @CacheEvict(value = "productCategory", allEntries = true)
     public ProductCategoryResponse updateCategory(
             String id,
             ProductCategoryUpdateRequest request
@@ -481,6 +487,7 @@ public class ProductCategoryService {
     // DELETE
     // ============================================================
 
+    @CacheEvict(value = "productCategory", allEntries = true)
     public void deleteCategory(String id) {
 
         ProductCategoryEntity category =

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class ProductCategoryController {
     // ============================================================
     // CREATE
     // ============================================================
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ProductCategoryResponse> createCategory(
             @Valid @RequestBody ProductCategoryCreateRequest request
@@ -143,6 +144,7 @@ public class ProductCategoryController {
     // UPDATE
     // ============================================================
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ProductCategoryResponse> updateCategory(
             @PathVariable String id,
@@ -167,7 +169,7 @@ public class ProductCategoryController {
     // ============================================================
     // DELETE
     // ============================================================
-
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(

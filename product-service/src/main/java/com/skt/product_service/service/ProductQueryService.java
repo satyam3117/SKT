@@ -17,7 +17,7 @@ public class ProductQueryService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
 
-    @Cacheable(value = "products_v4", key = "#id")
+    @Cacheable(value = "products", key = "#id")
     public CachedProduct getCachedProductById(String id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> {

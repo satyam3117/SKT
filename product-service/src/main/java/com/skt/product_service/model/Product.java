@@ -10,6 +10,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
@@ -21,6 +24,20 @@ import java.util.List;
 @Data
 @TypeAlias("product")
 @Document(collection = "product")
+@CompoundIndexes({
+        @CompoundIndex(
+                name = "category_created_idx",
+                def = "{'categoryId': 1, 'createdAt': -1}"
+        ),
+        @CompoundIndex(
+                name = "brand_created_idx",
+                def = "{'brandId': 1, 'createdAt': -1}"
+        ),
+        @CompoundIndex(
+                name = "product_category_created_idx",
+                def = "{'productCategory': 1, 'createdAt': -1}"
+        )
+})
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -37,6 +54,8 @@ public class Product {
     private String name;
     private String description;
     private BigDecimal price;
+
+    @Indexed(unique = true)
     private String skuCode;
     private String brandId;
     private String productCategory; // Helps easily identify the type programmatically
