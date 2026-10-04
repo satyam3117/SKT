@@ -9,11 +9,14 @@ import com.skt.product_service.dto.ProductResponse;
 import com.skt.product_service.event.ProductCreatedEvent;
 import com.skt.product_service.exception.ProductCreationException;
 import com.skt.product_service.exception.ProductNotFoundException;
+import com.skt.product_service.model.ProductImage;
+import com.skt.product_service.model.ProductStatus;
 import com.skt.product_service.service.brand.ProductBrandService;
+import com.skt.product_service.service.category.ProductCategoryService;
 import com.skt.product_service.service.factory.ProductFactory;
 import com.skt.product_service.util.ProductUtil;
 import com.skt.product_service.model.Product;
-
+import org.springframework.dao.DuplicateKeyException;
 import com.skt.product_service.model.ProductCategory;
 import com.skt.product_service.repository.ProductRepository;
 
@@ -22,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -46,6 +50,14 @@ public class ProductService {
     private final ProductPageRequestService productPageRequestService;
     private final ProductFormConfigService productFormConfigService;
     private final ProductBrandService productBrandService;
+    private final ProductCategoryService productCategoryService;
+
+    @Value("${app.product.images.max-count:8}")
+    private int maxImageCount;
+
+    @Value("${app.product.images.max-size-bytes:5242880}")
+    private long maxImageSizeBytes;
+
 
     @Autowired
     private KafkaTemplate<String, ProductCreatedEvent> kafkaTemplate;
@@ -71,14 +83,26 @@ public class ProductService {
         try {
             Product product = createProductFromFactory(productRequest);
 
+            // New products remain visible in the catalog by default.
+            product.setStatus(ProductStatus.ACTIVE);
+
             productBrandService.validateActiveBrand(productRequest.brandId());
+            productCategoryService.validateActiveCategory(productRequest.categoryId());
+            validatePrice(productRequest.price());
 
             product.setBrandId(product.getBrandId());
             product.setProductCategory(product.getProductCategory());
             product.setSkuCode(productUtil.generateUniqueSkuCode(product.getProductCategory()));
             product.setProductImages(productUtil.uploadProductImages(productImages, product.getSkuCode(), product.getCategoryId()));
 
-            Product savedProduct = saveProduct(product);
+            Product savedProduct = saveProductWithSkuRetry(product);
+
+            CachedProduct cachedProduct = productMapper.toCachedProduct(savedProduct);
+
+            productQueryService.putProductInCache(
+                    savedProduct.getId(),
+                    cachedProduct
+            );
 
             log.info("[CREATE] Product created id={}", savedProduct.getId());
             publishProductCreatedEvent(savedProduct);
@@ -97,33 +121,44 @@ public class ProductService {
     }
 
     private void publishProductCreatedEvent(Product savedProduct) {
+        ProductCreatedEvent event = ProductCreatedEvent.newBuilder()
+                .setProductId(savedProduct.getId())
+                .setSkuCode(savedProduct.getSkuCode())
+                .setInitialQuantity(0)
+                .build();
 
-        try {
-            ProductCreatedEvent event = ProductCreatedEvent.newBuilder()
-                    .setProductId(savedProduct.getId())
-                    .setSkuCode(savedProduct.getSkuCode())
-                    .setInitialQuantity(0)   // default stock
-                    .build();
+        kafkaTemplate.send(
+                PRODUCT_CREATED_TOPIC,
+                savedProduct.getId(),
+                event
+        ).whenComplete((result, exception) -> {
+            if (exception != null) {
+                log.error(
+                        "[KAFKA] Publish failed. productId={}, skuCode={}",
+                        savedProduct.getId(),
+                        savedProduct.getSkuCode(),
+                        exception
+                );
+                return;
+            }
 
-            kafkaTemplate.send(PRODUCT_CREATED_TOPIC, savedProduct.getId(), event);
-
-            log.info("[KAFKA] ProductCreatedEvent sent for productId={}", savedProduct.getId());
-
-        } catch (Exception ex) {
-            log.error("[KAFKA] Failed to publish ProductCreatedEvent for productId={}",
-                    savedProduct.getId(), ex);
-
-            // ⚠️ Do NOT fail product creation because of Kafka
-            // (eventual consistency)
-        }
+            log.info(
+                    "[KAFKA] Publish acknowledged. productId={}, topic={}, partition={}, offset={}",
+                    savedProduct.getId(),
+                    result.getRecordMetadata().topic(),
+                    result.getRecordMetadata().partition(),
+                    result.getRecordMetadata().offset()
+            );
+        });
     }
     // ========================= UPDATE =========================
-    @CacheEvict(value = "products", key = "#id")
+    @CacheEvict(value = ProductQueryService.PRODUCT_CACHE, key = "#id")
     public ProductResponse updateProduct(String id, ProductRequest productRequest, List<MultipartFile> productImages) {
 
         log.info("[UPDATE] Updating product id={}", id);
         log.debug("[UPDATE] Payload={}", productRequest);
         validateUpdateRequest(productRequest);
+        validatePrice(productRequest.price());
 
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> {
@@ -131,21 +166,58 @@ public class ProductService {
                     return new ProductNotFoundException(id);
                 });
 
-        String existingCategory = existingProduct.getProductCategory();
-        if (existingCategory != null
-                && productRequest.productCategory() != null
-                && !existingCategory.equalsIgnoreCase(productRequest.productCategory().name())) {
-            throw new IllegalArgumentException("Changing productCategory is not supported for existing products");
-        }
+        String effectiveCategoryId =
+                productRequest.categoryId() != null
+                        ? productRequest.categoryId().trim()
+                        : existingProduct.getCategoryId();
 
-        ProductFactory factory = factoryRegistry.getFactory(existingCategory);
+        String effectiveBrandId =
+                productRequest.brandId() != null
+                        ? productRequest.brandId().trim()
+                        : existingProduct.getBrandId();
+
+        BigDecimal effectivePrice = productRequest.price() != null
+                ? productRequest.price()
+                : existingProduct.getPrice();
+
+        validatePrice(effectivePrice);
+
+        productCategoryService.validateActiveCategory(effectiveCategoryId);
+
+        productBrandService.validateActiveBrand(effectiveBrandId);
+
+        ProductFactory factory = factoryRegistry.getFactory(effectiveCategoryId);
         Product updatedProduct = factory.update(existingProduct, productRequest);
+        updatedProduct.setStatus(existingProduct.getStatus());
         updatedProduct.setSkuCode(existingProduct.getSkuCode());
         updatedProduct.setCreatedAt(existingProduct.getCreatedAt());
+
         if (productImages != null && !productImages.isEmpty()) {
-            updatedProduct.setProductImages(productUtil.uploadProductImages(productImages, updatedProduct.getSkuCode(), updatedProduct.getCategoryId()));
-        } else {
-            updatedProduct.setProductImages(existingProduct.getProductImages());
+
+            validateProductImages(productImages);
+
+            List<ProductImage> oldImages = existingProduct.getProductImages();
+
+            List<ProductImage> newImages =
+                    productUtil.uploadProductImages(
+                            productImages,
+                            updatedProduct.getSkuCode(),
+                            updatedProduct.getCategoryId()
+                    );
+
+            updatedProduct.setProductImages(newImages);
+
+            Product savedProduct = productRepository.save(updatedProduct);
+
+            productUtil.deleteProductImages(
+                    oldImages,
+                    existingProduct.getSkuCode(),
+                    existingProduct.getCategoryId()
+            );
+
+            return productMapper.toProductResponse(
+                    productMapper.toCachedProduct(savedProduct)
+            );
         }
 
         Product savedProduct = productRepository.save(updatedProduct);
@@ -156,19 +228,18 @@ public class ProductService {
     }
 
     // ========================= DELETE =========================
-    @CacheEvict(value = "products", key = "#id")
+    @CacheEvict(
+            value = ProductQueryService.PRODUCT_CACHE,
+            key = "#id"
+    )
     public void deleteProduct(String id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
 
-        log.info("[DELETE] Deleting product id={}", id);
+        product.setStatus(ProductStatus.ARCHIVED);
+        productRepository.save(product);
 
-        if (!productRepository.existsById(id)) {
-            log.warn("[DELETE] Product not found id={}", id);
-            throw new ProductNotFoundException(id);
-        }
-
-        productRepository.deleteById(id);
-
-        log.info("[DELETE] Product deleted id={}", id);
+        log.info("[DELETE] Product archived id={}", id);
     }
 
     // ========================= INTERNAL =========================
@@ -185,21 +256,48 @@ public class ProductService {
         return savedProduct;
     }
 
-    public List<BaseProductResponse> getProductsByCategory(String productCategory) {
-        return productRepository.findAllByProductCategoryIgnoreCase(productCategory).stream()
-                .map(productMapper::toBaseResponse)
-                .toList();
+    public ProductPageResponse getProductsByCategory(
+            String productCategory,
+            int page,
+            int size,
+            String sort,
+            String direction
+    ) {
+        String normalizedCategory =
+                productPageRequestService.normalizeRequired(productCategory, "productCategory");
 
+        ProductPageRequestService.ProductPagingOptions pagingOptions =
+                productPageRequestService.resolvePagingOptions(
+                        page,
+                        size,
+                        null,
+                        null,
+                        sort,
+                        direction
+                );
+
+        Query query = new Query(
+                Criteria.where("productCategory").is(normalizedCategory)
+        );
+
+        return productPageRequestService.fetchPage(
+                query,
+                pagingOptions
+        );
     }
 
     public List<BaseProductResponse> getProductByBrand(String productBrand) {
-        return productRepository.findAllBybrandIdIgnoreCase(productBrand).stream()
+        return productRepository.findAllBybrandIdIgnoreCase(productBrand)
+                .stream()
+                .filter(product -> product.getStatus() == ProductStatus.ACTIVE)
                 .map(productMapper::toBaseResponse)
                 .toList();
     }
 
     public List<BaseProductResponse> getAllProducts() {
-        return productRepository.findAll().stream()
+        return productRepository.findAll()
+                .stream()
+                .filter(product -> product.getStatus() == ProductStatus.ACTIVE)
                 .map(productMapper::toBaseResponse)
                 .toList();
     }
@@ -217,8 +315,19 @@ public class ProductService {
         ProductPageRequestService.ProductPagingOptions pagingOptions =
                 productPageRequestService.resolvePagingOptions(page, size, minPrice, maxPrice, sort, direction);
 
-        String normalizedCategoryId = productPageRequestService.normalizeOptional(categoryId);
-        String normalizedBrand = productPageRequestService.normalizeOptional(brand);
+        String normalizedCategoryId =
+                productPageRequestService.normalizeAndValidateFilter(
+                        categoryId,
+                        "categoryId",
+                        100
+                );
+
+        String normalizedBrand =
+                productPageRequestService.normalizeAndValidateFilter(
+                        brand,
+                        "brand",
+                        100
+                );
 
         Query query = new Query();
         List<Criteria> criteriaList = new ArrayList<>();
@@ -228,16 +337,17 @@ public class ProductService {
         }
 
         if (normalizedBrand != null) {
-            criteriaList.add(Criteria.where("brandId").regex("^" + Pattern.quote(normalizedBrand) + "$", "i"));
+            criteriaList.add(Criteria.where("brandId").is(normalizedBrand));
         }
 
         if (minPrice != null || maxPrice != null) {
             Criteria priceCriteria = Criteria.where("price");
             if (minPrice != null) {
-                priceCriteria.gte(minPrice.doubleValue());
+                priceCriteria.gte(minPrice);
             }
+
             if (maxPrice != null) {
-                priceCriteria.lte(maxPrice.doubleValue());
+                priceCriteria.lte(maxPrice);
             }
             criteriaList.add(priceCriteria);
         }
@@ -245,6 +355,35 @@ public class ProductService {
         criteriaList.forEach(query::addCriteria);
 
         return productPageRequestService.fetchPage(query, pagingOptions);
+    }
+
+
+    private Product saveProductWithSkuRetry(Product product) {
+        final int maxAttempts = 5;
+
+        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                return productRepository.save(product);
+            } catch (DuplicateKeyException ex) {
+                if (attempt == maxAttempts) {
+                    throw ex;
+                }
+
+                log.warn(
+                        "[SKU] Duplicate key during product save; attempt {}/{}",
+                        attempt,
+                        maxAttempts
+                );
+
+                product.setSkuCode(
+                        productUtil.generateUniqueSkuCode(
+                                product.getProductCategory()
+                        )
+                );
+            }
+        }
+
+        throw new IllegalStateException("Unreachable SKU retry state");
     }
 
     public ProductPageResponse searchProducts(
@@ -258,13 +397,13 @@ public class ProductService {
             String sort,
             String direction
     ) {
-        if (q == null || q.trim().isEmpty()) {
-            throw new IllegalArgumentException("q must not be blank");
-        }
+
+        productPageRequestService.normalizeRequired(q, "q");
+        String normalizedQ;
 
         ProductPageRequestService.ProductPagingOptions pagingOptions =
                 productPageRequestService.resolvePagingOptions(page, size, minPrice, maxPrice, sort, direction);
-        String normalizedQ = q.trim();
+        normalizedQ = q.trim();
         String normalizedCategoryId = productPageRequestService.normalizeOptional(categoryId);
         String normalizedBrand = productPageRequestService.normalizeOptional(brand);
 
@@ -283,16 +422,17 @@ public class ProductService {
         }
 
         if (normalizedBrand != null) {
-            criteriaList.add(Criteria.where("brandId").regex("^" + Pattern.quote(normalizedBrand) + "$", "i"));
+            criteriaList.add(Criteria.where("brandId").is(normalizedBrand));
         }
 
         if (minPrice != null || maxPrice != null) {
             Criteria priceCriteria = Criteria.where("price");
             if (minPrice != null) {
-                priceCriteria.gte(minPrice.doubleValue());
+                priceCriteria.gte(minPrice);
             }
+
             if (maxPrice != null) {
-                priceCriteria.lte(maxPrice.doubleValue());
+                priceCriteria.lte(maxPrice);
             }
             criteriaList.add(priceCriteria);
         }
@@ -333,9 +473,7 @@ public class ProductService {
             throw new IllegalArgumentException("brandId is required");
         }
 
-        if (productImages == null || productImages.isEmpty()) {
-            throw new IllegalArgumentException("productImages are required");
-        }
+        validateProductImages(productImages);
         validateCategorySpecificFields(request);
     }
 
@@ -379,4 +517,89 @@ public class ProductService {
         }
     }
 
+    private static final BigDecimal MAX_PRODUCT_PRICE =
+            new BigDecimal("100000000.00");
+
+    private void validatePrice(BigDecimal price) {
+        if (price == null) {
+            throw new IllegalArgumentException("Price is required");
+        }
+
+        if (price.signum() <= 0) {
+            throw new IllegalArgumentException("Price must be greater than 0");
+        }
+
+        if (price.compareTo(MAX_PRODUCT_PRICE) > 0) {
+            throw new IllegalArgumentException(
+                    "Price cannot exceed " + MAX_PRODUCT_PRICE
+            );
+        }
+
+        if (price.scale() > 2) {
+            throw new IllegalArgumentException(
+                    "Price can have at most 2 decimal places"
+            );
+        }
+    }
+
+    private void validateProductImages(List<MultipartFile> productImages) {
+
+        if (productImages == null || productImages.isEmpty()) {
+            throw new IllegalArgumentException("productImages are required");
+        }
+
+        if (productImages.size() > maxImageCount) {
+            throw new IllegalArgumentException(
+                    "Maximum " + maxImageCount + " images are allowed"
+            );
+        }
+
+        for (MultipartFile image : productImages) {
+
+            if (image == null || image.isEmpty()) {
+                throw new IllegalArgumentException("Image cannot be empty");
+            }
+
+            if (image.getSize() > maxImageSizeBytes) {
+                throw new IllegalArgumentException(
+                        "Image size cannot exceed "
+                                + (maxImageSizeBytes / (1024 * 1024))
+                                + " MB"
+                );
+            }
+        }
+    }
+
+    public ProductPageResponse getProductsByBrand(
+            String productBrand,
+            int page,
+            int size,
+            String sort,
+            String direction
+    ) {
+        String normalizedBrand =
+                productPageRequestService.normalizeRequired(
+                        productBrand,
+                        "productBrand"
+                );
+
+        ProductPageRequestService.ProductPagingOptions pagingOptions =
+                productPageRequestService.resolvePagingOptions(
+                        page,
+                        size,
+                        null,
+                        null,
+                        sort,
+                        direction
+                );
+
+        Query query = new Query(
+                Criteria.where("brandId").is(normalizedBrand)
+        );
+
+        return productPageRequestService.fetchPage(
+                query,
+                pagingOptions
+        );
+    }
 }

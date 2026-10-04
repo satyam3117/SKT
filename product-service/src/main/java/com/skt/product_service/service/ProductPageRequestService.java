@@ -9,6 +9,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import com.skt.product_service.model.ProductStatus;
+import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,6 +23,10 @@ public class ProductPageRequestService {
     private static final int MAX_PAGE_SIZE = 100;
     private static final String DEFAULT_SORT_FIELD = "createdAt";
     private static final String DEFAULT_SORT_DIRECTION = "desc";
+    private static final int MAX_CATEGORY_ID_LENGTH = 100;
+    private static final int MAX_BRAND_LENGTH = 100;
+    private static final int MAX_SEARCH_QUERY_LENGTH = 100;
+
     private static final Set<String> ALLOWED_SORT_FIELDS = Set.of(
             "name",
             "price",
@@ -50,28 +56,54 @@ public class ProductPageRequestService {
         }
 
         String trimmed = value.trim();
+
         return trimmed.isEmpty() ? null : trimmed;
     }
 
-    public ProductPageResponse fetchPage(Query baseQuery, ProductPagingOptions pagingOptions) {
-        Query countQuery = Query.of(baseQuery).limit(-1).skip(-1);
-        long totalElements = mongoTemplate.count(countQuery, Product.class);
+    public ProductPageResponse fetchPage(
+            Query baseQuery,
+            ProductPagingOptions pagingOptions
+    ) {
+        // Copy the original query so the caller's query is not mutated.
+        Query publicQuery = Query.of(baseQuery);
+
+        // Public catalog must only show active products.
+        publicQuery.addCriteria(
+                Criteria.where("status").is(ProductStatus.ACTIVE)
+        );
+
+        // Count using the same filter as the result query.
+        Query countQuery = Query.of(publicQuery)
+                .limit(-1)
+                .skip(-1);
+
+        long totalElements = mongoTemplate.count(
+                countQuery,
+                Product.class
+        );
 
         PageRequest pageRequest = PageRequest.of(
                 pagingOptions.page(),
                 pagingOptions.size(),
-                Sort.by(pagingOptions.direction(), pagingOptions.sortField())
+                Sort.by(
+                        pagingOptions.direction(),
+                        pagingOptions.sortField()
+                )
         );
-        Query pageQuery = Query.of(baseQuery).with(pageRequest);
 
-        List<BaseProductResponse> items = mongoTemplate.find(pageQuery, Product.class)
+        Query pageQuery = Query.of(publicQuery).with(pageRequest);
+
+        List<BaseProductResponse> items = mongoTemplate
+                .find(pageQuery, Product.class)
                 .stream()
                 .map(productMapper::toBaseResponse)
                 .toList();
 
         int totalPages = totalElements == 0
                 ? 0
-                : (int) Math.ceil((double) totalElements / pagingOptions.size());
+                : (int) Math.ceil(
+                (double) totalElements / pagingOptions.size()
+        );
 
         return new ProductPageResponse(
                 items,
@@ -146,4 +178,47 @@ public class ProductPageRequestService {
             Sort.Direction direction
     ) {
     }
+
+    public String normalizeRequired(String value, String fieldName) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(
+                    fieldName + " must not be blank"
+            );
+        }
+
+        String trimmed = value.trim();
+
+        if (trimmed.length() > 100) {
+            throw new IllegalArgumentException(
+                    fieldName + " cannot exceed 100 characters"
+            );
+        }
+
+        return trimmed;
+    }
+
+    public String normalizeAndValidateFilter(
+            String value,
+            String fieldName,
+            int maxLength
+    ) {
+        if (value == null) {
+            return null;
+        }
+
+        String trimmed = value.trim();
+
+        if (trimmed.isEmpty()) {
+            return null;
+        }
+
+        if (trimmed.length() > maxLength) {
+            throw new IllegalArgumentException(
+                    fieldName + " cannot exceed " + maxLength + " characters"
+            );
+        }
+
+        return trimmed;
+    }
+
 }

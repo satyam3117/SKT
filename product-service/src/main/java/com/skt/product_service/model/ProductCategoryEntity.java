@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -16,6 +18,17 @@ import java.time.Instant;
 @Document(collection = "product_category")
 @Getter
 @Setter
+@CompoundIndexes({
+        @CompoundIndex(
+                name = "parent_active_sort_idx",
+                def = "{'parent_id': 1, 'active': 1, 'sort_order': 1}"
+        ),
+
+        @CompoundIndex(
+                name = "active_level_sort_name_idx",
+                def = "{'active': 1, 'level': 1, 'sort_order': 1, 'name': 1}"
+        )
+})
 public class ProductCategoryEntity {
 
     @Id

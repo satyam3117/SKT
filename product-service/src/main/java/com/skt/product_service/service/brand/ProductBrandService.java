@@ -9,6 +9,9 @@ import com.skt.product_service.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import com.skt.product_service.config.RedisConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
@@ -25,6 +28,10 @@ public class ProductBrandService {
     // CREATE
     // ============================================================
 
+    @CacheEvict(
+            value = RedisConfig.BRAND_CACHE,
+            allEntries = true
+    )
     public ProductBrandResponse createBrand(
             ProductBrandCreateRequest request
     ) {
@@ -36,7 +43,7 @@ public class ProductBrandService {
         );
 
         String name = request.getName().trim();
-        String slug = request.getSlug().trim();
+        String slug = normalizeSlug(request.getSlug());
 
         validateName(name);
         validateSlug(slug);
@@ -103,9 +110,11 @@ public class ProductBrandService {
     // ============================================================
     // GET ACTIVE
     // ============================================================
-
+    @Cacheable(
+            value = RedisConfig.BRAND_CACHE,
+            key = "'active::brands'"
+    )
     public List<ProductBrandResponse> getActiveBrands() {
-
         return productBrandRepository
                 .findByActiveTrueOrderBySortOrderAscNameAsc()
                 .stream()
@@ -118,9 +127,11 @@ public class ProductBrandService {
     // GET BY ID
     // ============================================================
 
-    public ProductBrandResponse getBrandById(
-            String id
-    ) {
+    @Cacheable(
+            value = RedisConfig.BRAND_CACHE,
+            key = "'id::' + #id"
+    )
+    public ProductBrandResponse getBrandById(String id) {
 
         return toResponse(
                 getEntityById(id)
@@ -132,11 +143,17 @@ public class ProductBrandService {
     // GET BY SLUG
     // ============================================================
 
+    @Cacheable(
+            value = RedisConfig.BRAND_CACHE,
+            key = "'slug::' + #slug"
+    )
     public ProductBrandResponse getBySlug(
             String slug
     ) {
 
-        if (slug == null || slug.isBlank()) {
+        String normalizedSlug = normalizeSlug(slug);
+
+        if (normalizedSlug == null || normalizedSlug.isBlank()) {
             throw new IllegalArgumentException(
                     "Brand slug cannot be blank"
             );
@@ -144,7 +161,7 @@ public class ProductBrandService {
 
         ProductBrand brand =
                 productBrandRepository
-                        .findBySlug(slug.trim())
+                        .findBySlug(normalizedSlug)
                         .orElseThrow(() ->
                                 new IllegalArgumentException(
                                         "Brand not found with slug: "
@@ -160,6 +177,10 @@ public class ProductBrandService {
     // GET BY NAME
     // ============================================================
 
+    @Cacheable(
+            value = RedisConfig.BRAND_CACHE,
+            key = "'name::'  #name.toLowerCase()"
+    )
     public ProductBrandResponse getByName(
             String name
     ) {
@@ -188,6 +209,10 @@ public class ProductBrandService {
     // UPDATE
     // ============================================================
 
+    @CacheEvict(
+            value = RedisConfig.BRAND_CACHE,
+            allEntries = true
+    )
     public ProductBrandResponse updateBrand(
             String id,
             ProductBrandUpdateRequest request
@@ -202,8 +227,7 @@ public class ProductBrandService {
                 getEntityById(id);
 
         String name = request.getName().trim();
-        String slug = request.getSlug().trim();
-
+        String slug = normalizeSlug(request.getSlug());
         validateName(name);
         validateSlug(slug);
 
@@ -261,6 +285,10 @@ public class ProductBrandService {
     // ============================================================
     // DELETE
     // ============================================================
+    @CacheEvict(
+            value = RedisConfig.BRAND_CACHE,
+            allEntries = true
+    )
     public void deleteBrand(String id) {
 
         ProductBrand brand =
@@ -396,6 +424,15 @@ public class ProductBrandService {
         }
 
         return brand;
+    }
+
+    private String normalizeSlug(String slug) {
+
+        if (slug == null) {
+            return null;
+        }
+
+        return slug.trim().toLowerCase(java.util.Locale.ROOT);
     }
 
 

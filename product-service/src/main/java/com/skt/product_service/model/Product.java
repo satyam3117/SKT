@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
@@ -25,17 +25,36 @@ import java.util.List;
 @TypeAlias("product")
 @Document(collection = "product")
 @CompoundIndexes({
+        // Catalog listing
         @CompoundIndex(
                 name = "category_created_idx",
                 def = "{'categoryId': 1, 'createdAt': -1}"
         ),
+
         @CompoundIndex(
                 name = "brand_created_idx",
                 def = "{'brandId': 1, 'createdAt': -1}"
         ),
+
         @CompoundIndex(
                 name = "product_category_created_idx",
                 def = "{'productCategory': 1, 'createdAt': -1}"
+        ),
+
+        // Price-filtered catalog queries
+        @CompoundIndex(
+                name = "category_price_idx",
+                def = "{'categoryId': 1, 'price': 1}"
+        ),
+
+        @CompoundIndex(
+                name = "brand_price_idx",
+                def = "{'brandId': 1, 'price': 1}"
+        ),
+
+        @CompoundIndex(
+                name = "product_category_price_idx",
+                def = "{'productCategory': 1, 'price': 1}"
         )
 })
 @JsonTypeInfo(
@@ -51,7 +70,10 @@ public class Product {
 
     @Id
     private String id;
+    @TextIndexed(weight = 10)
     private String name;
+
+    @TextIndexed(weight = 3)
     private String description;
     private BigDecimal price;
 
@@ -70,4 +92,5 @@ public class Product {
     private Instant createdAt;
     @LastModifiedDate
     private Instant updatedAt;
+    private ProductStatus status;
 }

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 
 import org.springframework.security.config.Customizer;
@@ -24,7 +24,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @Profile("dev")
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class DevSecurityConfig {
+
+    private final SecurityExceptionHandlers securityExceptionHandlers;
 
     @Bean
     public SecurityFilterChain securityFilterChain(
@@ -61,7 +64,15 @@ public class DevSecurityConfig {
 
                 // DEV ONLY: Basic Authentication
                 .httpBasic(Customizer.withDefaults())
-
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling
+                                .authenticationEntryPoint(
+                                        securityExceptionHandlers
+                                )
+                                .accessDeniedHandler(
+                                        securityExceptionHandlers
+                                )
+                )
                 .build();
     }
 

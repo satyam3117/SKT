@@ -72,4 +72,34 @@ public class ProductUtil {
 
         return productImages;
     }
+
+    public void deleteProductImages(
+            List<ProductImage> images,
+            String skuCode,
+            String categoryId
+    ) {
+        if (images == null || images.isEmpty()) {
+            return;
+        }
+
+        for (ProductImage image : images) {
+
+            if (image == null || image.getImageUrl() == null) {
+                continue;
+            }
+
+            try {
+                localImageStorageService.delete(
+                        image.getImageUrl(),
+                        skuCode,
+                        categoryId
+                );
+            } catch (IOException ex) {
+                throw new ProductCreationException(
+                        "Failed to delete old product image",
+                        ex
+                );
+            }
+        }
+    }
 }

@@ -18,11 +18,23 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
+
+@Tag(
+        name = "Products",
+        description = "Product catalog management APIs"
+)
 @RestController
 @RequestMapping("/api/product")
 @RequiredArgsConstructor
@@ -34,8 +46,25 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public ProductResponse createProduct(@Valid @ModelAttribute ProductRequest productRequest,
+    @Operation(
+            summary = "Get paginated products",
+            description = """
+                Returns active products using pagination.
+                Supports filtering by category, brand and price,
+                plus sorting.
+                """
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Products fetched successfully"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid pagination or filter parameters"
+            )
+    })
+    public ResponseEntity<ProductResponse> createProduct(@Valid @ModelAttribute ProductRequest productRequest,
                                          @RequestParam("productImages") List<MultipartFile> productImages){
 
         log.info("[CREATE] Request received to create product: {}", productRequest.name());
@@ -44,22 +73,22 @@ public class ProductController {
         ProductResponse response = productService.createProduct(productRequest, productImages);
 
         log.info("[CREATE] Product created successfully with id: {}", response.id());
-        return response;
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<BaseProductResponse> getAllProducts(){
-
-        log.info(" [GET ALL] Fetching all products");
-
-        List<BaseProductResponse> products = productService.getAllProducts();
-
-        log.info("[GET ALL] Total products fetched: {}", products.size());
-        log.debug(" [GET ALL] Product list: {}", products);
-
-        return products;
-    }
+//    @GetMapping
+//    @ResponseStatus(HttpStatus.OK)
+//    public List<BaseProductResponse> getAllProducts(){
+//
+//        log.info(" [GET ALL] Fetching all products");
+//
+//        List<BaseProductResponse> products = productService.getAllProducts();
+//
+//        log.info("[GET ALL] Total products fetched: {}", products.size());
+//        log.debug(" [GET ALL] Product list: {}", products);
+//
+//        return products;
+//    }
 
     @GetMapping(params = {"page", "size"})
     @ResponseStatus(HttpStatus.OK)
@@ -170,29 +199,48 @@ public class ProductController {
 
         return ResponseEntity.ok(productResponse);
     }
-    
+
     @GetMapping("/category/{productCategory}")
-    public ResponseEntity<List<BaseProductResponse>> getProductsByCategory(@PathVariable String productCategory) {
+    public ProductPageResponse getProductsByCategory(
+            @PathVariable String productCategory,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) String direction
+    ) {
         log.info("[GET] Fetching products with Product Category: {}", productCategory);
 
-        List<BaseProductResponse> products = productService.getProductsByCategory(productCategory);
-
         log.info("[GET] Products fetched successfully for Product Category: {}", productCategory);
-        log.debug("[GET] Product list: {}", products);
 
-        return ResponseEntity.ok(products);
+        return productService.getProductsByCategory(
+                productCategory,
+                page,
+                size,
+                sort,
+                direction
+        );
     }
 
     @GetMapping("/brand/{productBrand}")
-    public ResponseEntity<List<BaseProductResponse>> getProductsByBrand(@PathVariable String productBrand) {
+    public ProductPageResponse getProductsByBrand(
+            @PathVariable String productBrand,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) String direction
+    ) {
         log.info("[GET] Fetching products with Product Brand: {}", productBrand);
 
-        List<BaseProductResponse> products = productService.getProductByBrand(productBrand);
 
         log.info("[GET] Products fetched successfully for Product Brand: {}", productBrand);
-        log.debug("[GET] Product list: {}", products);
 
-        return ResponseEntity.ok(products);
+        return productService.getProductsByBrand(
+                productBrand,
+                page,
+                size,
+                sort,
+                direction
+        );
     }
 
     @GetMapping("/images/{skuCode}/{filename:.+}")
@@ -235,11 +283,7 @@ public class ProductController {
         return switch (extension) {
             case "jpg", "jpeg" -> MediaType.IMAGE_JPEG;
             case "png" -> MediaType.IMAGE_PNG;
-            case "gif" -> MediaType.IMAGE_GIF;
             case "webp" -> MediaType.parseMediaType("image/webp");
-            case "svg" -> MediaType.parseMediaType("image/svg+xml");
-            case "bmp" -> MediaType.parseMediaType("image/bmp");
-            case "avif" -> MediaType.parseMediaType("image/avif");
             default -> MediaType.APPLICATION_OCTET_STREAM;
         };
     }

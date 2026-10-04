@@ -1,5 +1,6 @@
 package com.skt.product_service.service.category;
 
+import com.skt.product_service.config.RedisConfig;
 import com.skt.product_service.dto.category.ProductCategoryCreateRequest;
 import com.skt.product_service.dto.category.ProductCategoryResponse;
 import com.skt.product_service.dto.category.ProductCategoryUpdateRequest;
@@ -15,6 +16,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import com.skt.product_service.repository.ProductRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -22,12 +24,16 @@ import java.util.Set;
 public class ProductCategoryService {
 
     private final ProductCategoryRepository productCategoryRepository;
+    private final ProductRepository productRepository;
 
 
     // ============================================================
     // CREATE
     // ============================================================
-    @CacheEvict(value = "productCategory", allEntries = true)
+    @CacheEvict(
+        value = RedisConfig.CATEGORY_CACHE,
+        allEntries = true
+    )
     public ProductCategoryResponse createCategory(
             ProductCategoryCreateRequest request
     ) {
@@ -39,12 +45,14 @@ public class ProductCategoryService {
         );
 
         validateName(request.getName());
-        validateSlug(request.getSlug());
+        String slug = normalizeSlug(request.getSlug());
+
+        validateSlug(slug);
 
         /*
          * Slug must be globally unique.
          */
-        if (productCategoryRepository.existsBySlug(request.getSlug())) {
+        if (productCategoryRepository.existsBySlug(slug)) {
             throw new IllegalArgumentException(
                     "Category with slug '" +
                             request.getSlug() +
@@ -159,8 +167,10 @@ public class ProductCategoryService {
     // ============================================================
     // GET ALL
     // ============================================================
-    @Cacheable(value = "productCategory", key = "'all'")
-    public List<ProductCategoryResponse> getAllCategories() {
+    @Cacheable(
+            value = RedisConfig.CATEGORY_CACHE,
+            key = "'all::categories'"
+    )    public List<ProductCategoryResponse> getAllCategories() {
 
         return productCategoryRepository
                 .findAll()
@@ -173,7 +183,10 @@ public class ProductCategoryService {
     // ============================================================
     // GET BY ID
     // ============================================================
-    @Cacheable(value = "productCategory", key = "#id")
+    @Cacheable(
+            value = RedisConfig.CATEGORY_CACHE,
+            key = "'id::' + #id"
+    )
     public ProductCategoryResponse getCategoryById(
             String id
     ) {
@@ -183,7 +196,10 @@ public class ProductCategoryService {
         );
     }
 
-    @Cacheable(value = "productCategory", key = "#categoryId")
+    @Cacheable(
+            value = RedisConfig.CATEGORY_CACHE,
+            key = "'hierarchy::' + #categoryId"
+    )
     public List<String> getCategoryHierarchyNames(
             String categoryId
     ) {
@@ -221,7 +237,10 @@ public class ProductCategoryService {
     // ============================================================
     // GET ROOT CATEGORIES
     // ============================================================
-    @Cacheable(value = "productCategory", key = "'root'")
+    @Cacheable(
+            value = RedisConfig.CATEGORY_CACHE,
+            key = "'root::categories'"
+    )
     public List<ProductCategoryResponse> getRootCategories() {
 
         return productCategoryRepository
@@ -236,7 +255,10 @@ public class ProductCategoryService {
     // GET CHILDREN
     // ============================================================
 
-    @Cacheable(value = "productCategory", key = "#parentId")
+    @Cacheable(
+            value = RedisConfig.CATEGORY_CACHE,
+            key = "'parent::' + #parentId"
+    )
     public List<ProductCategoryResponse> getChildren(
             String parentId
     ) {
@@ -260,7 +282,10 @@ public class ProductCategoryService {
     // GET BY SLUG
     // ============================================================
 
-    @Cacheable(value = "productCategory", key = "#slug")
+    @Cacheable(
+            value = RedisConfig.CATEGORY_CACHE,
+            key = "'slug::' + #slug"
+    )
     public ProductCategoryResponse getBySlug(
             String slug
     ) {
@@ -283,7 +308,10 @@ public class ProductCategoryService {
     // UPDATE
     // ============================================================
 
-    @CacheEvict(value = "productCategory", allEntries = true)
+    @CacheEvict(
+        value = RedisConfig.CATEGORY_CACHE,
+        allEntries = true
+)
     public ProductCategoryResponse updateCategory(
             String id,
             ProductCategoryUpdateRequest request
@@ -299,20 +327,22 @@ public class ProductCategoryService {
                 getEntityById(id);
 
         validateName(request.getName());
-        validateSlug(request.getSlug());
+        String slug = normalizeSlug(request.getSlug());
+
+        validateSlug(slug);
 
         /*
          * Check slug belongs to another category.
          */
         productCategoryRepository
-                .findBySlug(request.getSlug().trim())
+                .findBySlug(slug)
                 .ifPresent(category -> {
 
                     if (!category.getId().equals(id)) {
 
                         throw new IllegalArgumentException(
                                 "Category with slug '" +
-                                        request.getSlug() +
+                                        slug +
                                         "' already exists"
                         );
                     }
@@ -486,35 +516,35 @@ public class ProductCategoryService {
     // ============================================================
     // DELETE
     // ============================================================
-
-    @CacheEvict(value = "productCategory", allEntries = true)
+    @CacheEvict(
+            value = RedisConfig.CATEGORY_CACHE,
+            allEntries = true
+    )
     public void deleteCategory(String id) {
+        ProductCategoryEntity category = getEntityById(id);
 
-        ProductCategoryEntity category =
-                getEntityById(id);
-
-        /*
-         * Do not allow deleting a category that has children.
-         */
         List<ProductCategoryEntity> children =
                 productCategoryRepository.findByParentId(id);
 
         if (!children.isEmpty()) {
-
             throw new IllegalArgumentException(
-                    "Cannot delete category '" +
-                            category.getName() +
-                            "' because it has child categories"
+                    "Cannot delete category '" + category.getName()
+                            + "' because it has child categories"
+            );
+        }
+
+        if (productRepository.existsByCategoryId(id)) {
+            throw new IllegalArgumentException(
+                    "Cannot delete category '" + category.getName()
+                            + "' because products reference it"
             );
         }
 
         productCategoryRepository.deleteById(id);
 
-        log.info(
-                "[CATEGORY DELETE] Deleted category id={}",
-                id
-        );
+        log.info("[CATEGORY DELETE] Deleted category id={}", id);
     }
+
 
 
     // ============================================================
@@ -663,5 +693,30 @@ public class ProductCategoryService {
                             + "Example: gaming-laptops"
             );
         }
+    }
+
+    public ProductCategoryEntity validateActiveCategory(String categoryId) {
+        if (categoryId == null || categoryId.isBlank()) {
+            throw new IllegalArgumentException("Category ID cannot be blank");
+        }
+
+        ProductCategoryEntity category = getEntityById(categoryId.trim());
+
+        if (!Boolean.TRUE.equals(category.getActive())) {
+            throw new IllegalArgumentException(
+                    "Category '" + category.getName() + "' is inactive"
+            );
+        }
+
+        return category;
+    }
+
+    private String normalizeSlug(String slug) {
+
+        if (slug == null) {
+            return null;
+        }
+
+        return slug.trim().toLowerCase(java.util.Locale.ROOT);
     }
 }
