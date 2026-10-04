@@ -21,7 +21,6 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import org.springframework.security.web.SecurityFilterChain;
 
-
 @Configuration
 @Profile("dev")
 @EnableMethodSecurity
@@ -33,77 +32,42 @@ public class DevSecurityConfig {
     ) throws Exception {
 
         return http
-                // -------------------------------------------------
-                // CSRF
-                // -------------------------------------------------
                 .csrf(csrf -> csrf.disable())
 
-                // -------------------------------------------------
-                // AUTHORIZATION
-                // -------------------------------------------------
                 .authorizeHttpRequests(auth -> auth
-
-                        // =========================================
-                        // PUBLIC ACTUATOR ENDPOINTS
-                        // =========================================
+                        // Public actuator endpoints
                         .requestMatchers(
                                 "/actuator/health",
                                 "/actuator/info",
                                 "/actuator/prometheus"
                         ).permitAll()
 
-                        // =========================================
-                        // PUBLIC API DOCUMENTATION
-                        // =========================================
+                        // Swagger
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**"
                         ).permitAll()
 
-                        // =========================================
-                        // PUBLIC PRODUCT READ APIs
-                        // =========================================
+                        // Public product GET APIs
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/product/**"
                         ).permitAll()
 
-                        // =========================================
-                        // ALL OTHER APIs
-                        // =========================================
+                        // Everything else requires authentication
                         .anyRequest().authenticated()
                 )
 
-                // -------------------------------------------------
-                // JWT / KEYCLOAK
-                // -------------------------------------------------
-                .oauth2ResourceServer(oauth2 ->
-                        oauth2.jwt(Customizer.withDefaults())
-                )
-
-                // -------------------------------------------------
-                // BASIC AUTH
-                // DEV ONLY
-                // -------------------------------------------------
+                // DEV ONLY: Basic Authentication
                 .httpBasic(Customizer.withDefaults())
 
                 .build();
     }
 
-
-    /**
-     * Local development admin user.
-     *
-     * Credentials are provided through environment variables:
-     *
-     * PRODUCT_ADMIN_USERNAME
-     * PRODUCT_ADMIN_PASSWORD
-     */
     @Bean
     public InMemoryUserDetailsManager userDetailsService(
             @Value("${app.security.username}") String username,
-
             @Value("${app.security.password}") String password
     ) {
 
