@@ -16,7 +16,9 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableMethodSecurity
-public class SecurityConfig {
+public class ProdSecurityConfig {
+
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(
@@ -92,9 +94,10 @@ public class SecurityConfig {
         UserDetails user =
                 User.withUsername(username)
                         .password(passwordEncoder.encode(password))
-                        .roles("PRODUCT_RW")
+                        .roles("ADMIN")
                         .build();
 
         return new InMemoryUserDetailsManager(user);
     }
+
 }
