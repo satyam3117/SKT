@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -23,6 +24,19 @@ public class LocalImageStorageService implements ImageStorageService {
 
     private final Path uploadDir = Paths.get("uploads");
     private final ProductCategoryService productCategoryService;
+
+    private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of(
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+    );
+
+    private static final Set<String> ALLOWED_EXTENSIONS = Set.of(
+            ".jpg",
+            ".jpeg",
+            ".png",
+            ".webp"
+    );
 
     @Override
     public String upload(
@@ -34,6 +48,8 @@ public class LocalImageStorageService implements ImageStorageService {
         if (file == null || file.isEmpty()) {
             throw new IOException("File is empty");
         }
+
+        validateImageType(file);
 
         if (skuCode == null || skuCode.isBlank()) {
             throw new IllegalArgumentException("SKU code cannot be null or blank");
@@ -127,6 +143,8 @@ public class LocalImageStorageService implements ImageStorageService {
             String skuCode,
             String categoryId
     ) throws IOException {
+
+        validateImageFilename(filename);
 
         Path productDir = buildProductDirectory(skuCode, categoryId);
 
@@ -223,5 +241,52 @@ public class LocalImageStorageService implements ImageStorageService {
         return filename.substring(
                 filename.lastIndexOf(".")
         );
+    }
+
+    private void validateImageType(MultipartFile file) {
+
+        String contentType = file.getContentType();
+
+        if (contentType == null
+                || !ALLOWED_CONTENT_TYPES.contains(contentType.toLowerCase(Locale.ROOT))) {
+            throw new IllegalArgumentException(
+                    "Unsupported image type. Allowed types: JPEG, PNG, WebP"
+            );
+        }
+
+        String originalFilename = file.getOriginalFilename();
+
+        if (originalFilename == null || originalFilename.isBlank()) {
+            throw new IllegalArgumentException("Image filename is required");
+        }
+
+        String extension = getExtension(originalFilename)
+                .toLowerCase(Locale.ROOT);
+
+        if (!ALLOWED_EXTENSIONS.contains(extension)) {
+            throw new IllegalArgumentException(
+                    "Unsupported image extension. Allowed extensions: .jpg, .jpeg, .png, .webp"
+            );
+        }
+    }
+
+    private void validateImageFilename(String filename) {
+
+        if (filename == null || filename.isBlank()) {
+            throw new IllegalArgumentException("Filename is required");
+        }
+
+        Path path = Paths.get(filename);
+
+        if (path.getNameCount() != 1) {
+            throw new IllegalArgumentException("Invalid image filename");
+        }
+
+        String extension = getExtension(filename)
+                .toLowerCase(Locale.ROOT);
+
+        if (!ALLOWED_EXTENSIONS.contains(extension)) {
+            throw new IllegalArgumentException("Unsupported image type");
+        }
     }
 }

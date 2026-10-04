@@ -47,19 +47,19 @@ public class ProductController {
         return response;
     }
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<BaseProductResponse> getAllProducts(){
-
-        log.info(" [GET ALL] Fetching all products");
-
-        List<BaseProductResponse> products = productService.getAllProducts();
-
-        log.info("[GET ALL] Total products fetched: {}", products.size());
-        log.debug(" [GET ALL] Product list: {}", products);
-
-        return products;
-    }
+//    @GetMapping
+//    @ResponseStatus(HttpStatus.OK)
+//    public List<BaseProductResponse> getAllProducts(){
+//
+//        log.info(" [GET ALL] Fetching all products");
+//
+//        List<BaseProductResponse> products = productService.getAllProducts();
+//
+//        log.info("[GET ALL] Total products fetched: {}", products.size());
+//        log.debug(" [GET ALL] Product list: {}", products);
+//
+//        return products;
+//    }
 
     @GetMapping(params = {"page", "size"})
     @ResponseStatus(HttpStatus.OK)
@@ -170,29 +170,48 @@ public class ProductController {
 
         return ResponseEntity.ok(productResponse);
     }
-    
+
     @GetMapping("/category/{productCategory}")
-    public ResponseEntity<List<BaseProductResponse>> getProductsByCategory(@PathVariable String productCategory) {
+    public ProductPageResponse getProductsByCategory(
+            @PathVariable String productCategory,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) String direction
+    ) {
         log.info("[GET] Fetching products with Product Category: {}", productCategory);
 
-        List<BaseProductResponse> products = productService.getProductsByCategory(productCategory);
-
         log.info("[GET] Products fetched successfully for Product Category: {}", productCategory);
-        log.debug("[GET] Product list: {}", products);
 
-        return ResponseEntity.ok(products);
+        return productService.getProductsByCategory(
+                productCategory,
+                page,
+                size,
+                sort,
+                direction
+        );
     }
 
     @GetMapping("/brand/{productBrand}")
-    public ResponseEntity<List<BaseProductResponse>> getProductsByBrand(@PathVariable String productBrand) {
+    public ProductPageResponse getProductsByBrand(
+            @PathVariable String productBrand,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) String direction
+    ) {
         log.info("[GET] Fetching products with Product Brand: {}", productBrand);
 
-        List<BaseProductResponse> products = productService.getProductByBrand(productBrand);
 
         log.info("[GET] Products fetched successfully for Product Brand: {}", productBrand);
-        log.debug("[GET] Product list: {}", products);
 
-        return ResponseEntity.ok(products);
+        return productService.getProductsByBrand(
+                productBrand,
+                page,
+                size,
+                sort,
+                direction
+        );
     }
 
     @GetMapping("/images/{skuCode}/{filename:.+}")
@@ -235,11 +254,7 @@ public class ProductController {
         return switch (extension) {
             case "jpg", "jpeg" -> MediaType.IMAGE_JPEG;
             case "png" -> MediaType.IMAGE_PNG;
-            case "gif" -> MediaType.IMAGE_GIF;
             case "webp" -> MediaType.parseMediaType("image/webp");
-            case "svg" -> MediaType.parseMediaType("image/svg+xml");
-            case "bmp" -> MediaType.parseMediaType("image/bmp");
-            case "avif" -> MediaType.parseMediaType("image/avif");
             default -> MediaType.APPLICATION_OCTET_STREAM;
         };
     }

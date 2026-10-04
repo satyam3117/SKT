@@ -21,6 +21,10 @@ public class ProductPageRequestService {
     private static final int MAX_PAGE_SIZE = 100;
     private static final String DEFAULT_SORT_FIELD = "createdAt";
     private static final String DEFAULT_SORT_DIRECTION = "desc";
+    private static final int MAX_CATEGORY_ID_LENGTH = 100;
+    private static final int MAX_BRAND_LENGTH = 100;
+    private static final int MAX_SEARCH_QUERY_LENGTH = 100;
+
     private static final Set<String> ALLOWED_SORT_FIELDS = Set.of(
             "name",
             "price",
@@ -50,6 +54,7 @@ public class ProductPageRequestService {
         }
 
         String trimmed = value.trim();
+
         return trimmed.isEmpty() ? null : trimmed;
     }
 
@@ -146,4 +151,47 @@ public class ProductPageRequestService {
             Sort.Direction direction
     ) {
     }
+
+    public String normalizeRequired(String value, String fieldName) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException(
+                    fieldName + " must not be blank"
+            );
+        }
+
+        String trimmed = value.trim();
+
+        if (trimmed.length() > 100) {
+            throw new IllegalArgumentException(
+                    fieldName + " cannot exceed 100 characters"
+            );
+        }
+
+        return trimmed;
+    }
+
+    public String normalizeAndValidateFilter(
+            String value,
+            String fieldName,
+            int maxLength
+    ) {
+        if (value == null) {
+            return null;
+        }
+
+        String trimmed = value.trim();
+
+        if (trimmed.isEmpty()) {
+            return null;
+        }
+
+        if (trimmed.length() > maxLength) {
+            throw new IllegalArgumentException(
+                    fieldName + " cannot exceed " + maxLength + " characters"
+            );
+        }
+
+        return trimmed;
+    }
+
 }

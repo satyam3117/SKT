@@ -664,4 +664,20 @@ public class ProductCategoryService {
             );
         }
     }
+
+    public ProductCategoryEntity validateActiveCategory(String categoryId) {
+        if (categoryId == null || categoryId.isBlank()) {
+            throw new IllegalArgumentException("Category ID cannot be blank");
+        }
+
+        ProductCategoryEntity category = getEntityById(categoryId.trim());
+
+        if (!Boolean.TRUE.equals(category.getActive())) {
+            throw new IllegalArgumentException(
+                    "Category '" + category.getName() + "' is inactive"
+            );
+        }
+
+        return category;
+    }
 }
