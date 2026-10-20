@@ -82,21 +82,30 @@ public class GlobalExceptionHandler {
     // BAD REQUEST
     // =========================================================
 
-    @ExceptionHandler(IllegalArgumentException.class)
+    @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ApiError> handleBadRequest(
-            IllegalArgumentException ex,
+            BadRequestException ex,
             HttpServletRequest request
     ) {
-
-        log.warn(
-                "[ERROR] Bad request path={}, message={}",
-                request.getRequestURI(),
-                ex.getMessage()
-        );
 
         return buildError(
                 HttpStatus.BAD_REQUEST,
                 "BAD_REQUEST",
+                ex.getMessage(),
+                request,
+                List.of()
+        );
+    }
+
+    @ExceptionHandler(ResourceConflictException.class)
+    public ResponseEntity<ApiError> handleConflict(
+            ResourceConflictException ex,
+            HttpServletRequest request
+    ) {
+
+        return buildError(
+                HttpStatus.CONFLICT,
+                "RESOURCE_CONFLICT",
                 ex.getMessage(),
                 request,
                 List.of()
@@ -264,6 +273,7 @@ public class GlobalExceptionHandler {
                 List.of()
         );
     }
+
 
     // =========================================================
     // ERROR RESPONSE BUILDER

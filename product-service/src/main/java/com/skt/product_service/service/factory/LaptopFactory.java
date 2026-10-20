@@ -1,6 +1,7 @@
 package com.skt.product_service.service.factory;
 
 import com.skt.product_service.dto.ProductRequest;
+import com.skt.product_service.exception.BadRequestException;
 import com.skt.product_service.model.Laptop;
 import com.skt.product_service.model.Product;
 import com.skt.product_service.model.ProductCategory;
@@ -32,7 +33,7 @@ public class LaptopFactory implements ProductFactory {
     @Override
     public Product update(Product existingProduct, ProductRequest request) {
         if (!(existingProduct instanceof Laptop existingLaptop)) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Product id " + existingProduct.getId() + " is not a laptop record"
             );
         }

@@ -1,11 +1,11 @@
 package com.skt.product_service.controller;
 
-import com.skt.product_service.dto.BaseProductResponse;
 import com.skt.product_service.dto.ProductFormConfig;
 import com.skt.product_service.dto.ProductPageResponse;
 import com.skt.product_service.dto.ProductRequest;
 import com.skt.product_service.dto.ProductResponse;
 import com.skt.product_service.service.LocalImageStorageService;
+import com.skt.product_service.service.ProductFormConfigService;
 import com.skt.product_service.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,6 +39,7 @@ public class ProductController {
 
     private final ProductService productService;
     private final LocalImageStorageService localImageStorageService;
+    private final ProductFormConfigService productFormConfigService;
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -78,11 +75,11 @@ public class ProductController {
 
 //    @GetMapping
 //    @ResponseStatus(HttpStatus.OK)
-//    public List<BaseProductResponse> getAllProducts(){
+//    public List<ProductResponse> getAllProducts(){
 //
 //        log.info(" [GET ALL] Fetching all products");
 //
-//        List<BaseProductResponse> products = productService.getAllProducts();
+//        List<ProductResponse> products = productService.getAllProducts();
 //
 //        log.info("[GET ALL] Total products fetched: {}", products.size());
 //        log.debug(" [GET ALL] Product list: {}", products);
@@ -90,11 +87,11 @@ public class ProductController {
 //        return products;
 //    }
 
-    @GetMapping(params = {"page", "size"})
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ProductPageResponse getProductsPage(
-            @RequestParam int page,
-            @RequestParam int size,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) String categoryId,
             @RequestParam(required = false) String brand,
             @RequestParam(required = false) BigDecimal minPrice,
@@ -102,9 +99,7 @@ public class ProductController {
             @RequestParam(required = false) String sort,
             @RequestParam(required = false) String direction
     ) {
-        log.info("[GET PAGE] Fetching products page={}, size={}", page, size);
-
-        ProductPageResponse response = productService.getProductsPage(
+        return productService.getProductsPage(
                 page,
                 size,
                 categoryId,
@@ -114,9 +109,6 @@ public class ProductController {
                 sort,
                 direction
         );
-
-        log.info("[GET PAGE] Returned {} items (total={})", response.items().size(), response.totalElements());
-        return response;
     }
 
     @GetMapping("/search")
@@ -243,28 +235,48 @@ public class ProductController {
         );
     }
 
-    @GetMapping("/images/{skuCode}/{filename:.+}")
+    @GetMapping(
+            value = "/images/{skuCode}/{filename:.+}",
+            produces = {
+                    MediaType.IMAGE_JPEG_VALUE,
+                    MediaType.IMAGE_PNG_VALUE,
+                    "image/webp"
+            }
+    )
     public ResponseEntity<Resource> getProductImage(
             @PathVariable String skuCode,
             @PathVariable String filename,
             @RequestParam String categoryId
     ) {
+
         try {
-            Resource resource = localImageStorageService.loadAsResource(
-                    filename,
-                    skuCode,
-                    categoryId
-            );
+
+            Resource resource =
+                    localImageStorageService.loadAsResource(
+                            filename,
+                            skuCode,
+                            categoryId
+                    );
 
             return ResponseEntity.ok()
-                    .contentType(resolveMediaType(filename))
+                    .contentType(
+                            resolveMediaType(filename)
+                    )
+                    .cacheControl(
+                            org.springframework.http.CacheControl
+                                    .maxAge(
+                                            7,
+                                            java.util.concurrent.TimeUnit.DAYS
+                                    )
+                                    .cachePublic()
+                    )
                     .body(resource);
 
         } catch (IOException ex) {
+
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    "Image not found",
-                    ex
+                    "Image not found"
             );
         }
     }
@@ -286,5 +298,14 @@ public class ProductController {
             case "webp" -> MediaType.parseMediaType("image/webp");
             default -> MediaType.APPLICATION_OCTET_STREAM;
         };
+    }
+
+    @GetMapping("/form-config/{productCategory}")
+    public ProductFormConfig getFormConfig(
+            @PathVariable String productCategory
+    ) {
+        return productFormConfigService.getProductFormConfig(
+                productCategory
+        );
     }
 }

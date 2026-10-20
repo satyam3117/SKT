@@ -3,6 +3,7 @@ package com.skt.product_service.service.brand;
 import com.skt.product_service.dto.brand.ProductBrandCreateRequest;
 import com.skt.product_service.dto.brand.ProductBrandResponse;
 import com.skt.product_service.dto.brand.ProductBrandUpdateRequest;
+import com.skt.product_service.exception.BadRequestException;
 import com.skt.product_service.model.ProductBrand;
 import com.skt.product_service.repository.ProductBrandRepository;
 import com.skt.product_service.repository.ProductRepository;
@@ -53,7 +54,7 @@ public class ProductBrandService {
          */
         if (productBrandRepository.existsByNameIgnoreCase(name)) {
 
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Brand '" + name + "' already exists"
             );
         }
@@ -63,7 +64,7 @@ public class ProductBrandService {
          */
         if (productBrandRepository.existsBySlug(slug)) {
 
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Brand with slug '" + slug + "' already exists"
             );
         }
@@ -154,7 +155,7 @@ public class ProductBrandService {
         String normalizedSlug = normalizeSlug(slug);
 
         if (normalizedSlug == null || normalizedSlug.isBlank()) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Brand slug cannot be blank"
             );
         }
@@ -163,7 +164,7 @@ public class ProductBrandService {
                 productBrandRepository
                         .findBySlug(normalizedSlug)
                         .orElseThrow(() ->
-                                new IllegalArgumentException(
+                                new BadRequestException(
                                         "Brand not found with slug: "
                                                 + slug
                                 )
@@ -186,7 +187,7 @@ public class ProductBrandService {
     ) {
 
         if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Brand name cannot be blank"
             );
         }
@@ -195,7 +196,7 @@ public class ProductBrandService {
                 productBrandRepository
                         .findByNameIgnoreCase(name.trim())
                         .orElseThrow(() ->
-                                new IllegalArgumentException(
+                                new BadRequestException(
                                         "Brand not found with name: "
                                                 + name
                                 )
@@ -237,7 +238,7 @@ public class ProductBrandService {
         if (productBrandRepository
                 .existsByNameIgnoreCaseAndIdNot(name, id)) {
 
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Brand '" + name + "' already exists"
             );
         }
@@ -251,7 +252,7 @@ public class ProductBrandService {
 
                     if (!existingSlug.getId().equals(id)) {
 
-                        throw new IllegalArgumentException(
+                        throw new BadRequestException(
                                 "Brand with slug '" +
                                         slug +
                                         "' already exists"
@@ -296,7 +297,7 @@ public class ProductBrandService {
 
         if (productRepository.existsByBrandId(id)) {
 
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Cannot delete brand '" +
                             brand.getName() +
                             "' because products are using it"
@@ -322,7 +323,7 @@ public class ProductBrandService {
 
         if (id == null || id.isBlank()) {
 
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Brand ID cannot be blank"
             );
         }
@@ -330,7 +331,7 @@ public class ProductBrandService {
         return productBrandRepository
                 .findById(id.trim())
                 .orElseThrow(() ->
-                        new IllegalArgumentException(
+                        new BadRequestException(
                                 "Brand not found with id: " + id
                         )
                 );
@@ -347,14 +348,14 @@ public class ProductBrandService {
 
         if (name == null || name.isBlank()) {
 
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Brand name cannot be blank"
             );
         }
 
         if (name.length() > 150) {
 
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Brand name cannot exceed 150 characters"
             );
         }
@@ -367,21 +368,21 @@ public class ProductBrandService {
 
         if (slug == null || slug.isBlank()) {
 
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Brand slug cannot be blank"
             );
         }
 
         if (slug.length() > 150) {
 
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Brand slug cannot exceed 150 characters"
             );
         }
 
         if (!slug.matches("^[a-z0-9]+(?:-[a-z0-9]+)*$")) {
 
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Brand slug must contain only lowercase letters, " +
                             "numbers and hyphens"
             );
@@ -416,7 +417,7 @@ public class ProductBrandService {
 
         if (!Boolean.TRUE.equals(brand.getActive())) {
 
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Brand '" +
                             brand.getName() +
                             "' is inactive"

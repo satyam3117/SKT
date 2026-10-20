@@ -1,84 +1,119 @@
+
 import axios from "axios";
+import keycloak from "../auth/keycloak";
 
-export const API_BASE_URL = "http://localhost:7070";
+const DEFAULT_API_BASE_URL = "http://localhost:7070";
 
-function getStoredAccessToken() {
-  const tokenKeys = ["access_token", "token", "authToken", "jwt", "keycloakToken"];
-
-  for (const key of tokenKeys) {
-    const value = localStorage.getItem(key);
-    if (typeof value === "string" && value.trim().length > 0) {
-      return value.trim();
-    }
-  }
-
-  const authPayload = localStorage.getItem("auth");
-  if (!authPayload) {
-    return null;
-  }
-
-  try {
-    const parsed = JSON.parse(authPayload);
-    const token = parsed?.accessToken || parsed?.token;
-
-    return typeof token === "string" && token.trim().length > 0
-      ? token.trim()
-      : null;
-  } catch {
-    return null;
-  }
+function normalizeBaseUrl(value) {
+    return String(value || DEFAULT_API_BASE_URL)
+        .trim()
+        .replace(/\/+$/, "");
 }
+
+export const API_BASE_URL = normalizeBaseUrl(
+    import.meta.env.VITE_API_BASE_URL
+);
 
 const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 10000,
+    baseURL: API_BASE_URL,
+    timeout: 20000,
+    headers: {
+        Accept: "application/json",
+    },
 });
 
-export async function getBearerToken(keycloak) {
-  if (!keycloak) {
-    throw new Error("Authentication is not ready yet.");
-  }
+// Attach a valid Keycloak token to authenticated requests.
+// Public endpoints can still be called without logging in.
+apiClient.interceptors.request.use(
+    async (config) => {
+        config.headers = config.headers || {};
 
-  await keycloak.updateToken(30);
-  return keycloak.token;
-}
+        // Avoid sending an expired or missing token.
+        if (!keycloak.authenticated) {
+            delete config.headers.Authorization;
+            return config;
+        }
 
-apiClient.interceptors.request.use((config) => {
-  const headers = config.headers || {};
-  const hasAuthorization = Boolean(headers.Authorization || headers.authorization);
-  const requestUrl = String(config.url || "");
-  const isProductApiRequest =
-    requestUrl === "/api/product" ||
-    requestUrl.startsWith("/api/product/");
+        try {
+            await keycloak.updateToken(30);
 
-  if (!hasAuthorization && !isProductApiRequest) {
-    const token = getStoredAccessToken();
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
-    }
-  }
+            if (!keycloak.token) {
+                throw new Error("Keycloak access token is missing.");
+            }
 
-  return {
-    ...config,
-    headers,
-  };
-});
+            config.headers.Authorization = `Bearer ${keycloak.token}`;
+            return config;
+        } catch (error) {
+            console.error("Unable to refresh Keycloak token:", error);
 
+            const authError = new Error(
+                "Your login session has expired. Please sign in again."
+            );
+
+            authError.status = 401;
+            authError.code = "KEYCLOAK_TOKEN_ERROR";
+            authError.original = error;
+
+            return Promise.reject(authError);
+        }
+    },
+    (error) => Promise.reject(error)
+);
+
+// Normalize errors while retaining the HTTP status and response body.
 apiClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const fallbackMessage = "Request failed. Please try again.";
-    const serverMessage = error?.response?.data;
-    const message = typeof serverMessage === "string" && serverMessage.trim().length > 0
-      ? serverMessage
-      : (error.message || fallbackMessage);
-    const wrappedError = new Error(message);
+    (response) => response,
+    (error) => {
+        // Token-refresh errors are already normalized above.
+        if (error?.code === "KEYCLOAK_TOKEN_ERROR") {
+            return Promise.reject(error);
+        }
 
-    wrappedError.status = error?.response?.status;
-    wrappedError.statusText = error?.response?.statusText;
+        const status = error?.response?.status;
+        const body = error?.response?.data;
 
-    return Promise.reject(wrappedError);
-  }
+        let message = "The request failed. Please try again.";
+
+        if (typeof body === "string" && body.trim()) {
+            message = body;
+        } else if (body?.message) {
+            message = body.message;
+        } else if (body?.detail) {
+            message = body.detail;
+        } else if (Array.isArray(body?.fieldErrors) && body.fieldErrors.length) {
+            message = body.fieldErrors
+                .map((field) => `${field.field || "Field"}: ${field.message || "Invalid value"}`)
+                .join("\n");
+        } else if (status === 400) {
+            message = "Invalid request. Check the submitted fields.";
+        } else if (status === 401) {
+            message = "Authentication is required. Please sign in again.";
+        } else if (status === 403) {
+            message = "You do not have permission to perform this operation.";
+        } else if (status === 404) {
+            message = "The requested API endpoint or resource was not found.";
+        } else if (status === 413) {
+            message = "The uploaded file or request is too large.";
+        } else if (status === 415) {
+            message = "The server does not support this request content type.";
+        } else if (status >= 500) {
+            message = "The server encountered an error. Check the backend logs.";
+        } else if (!error?.response) {
+            message =
+                `Cannot connect to the API at ${API_BASE_URL}. ` +
+                "Check that the API gateway is running.";
+        } else if (error?.message) {
+            message = error.message;
+        }
+
+        const normalizedError = new Error(message);
+        normalizedError.name = "ApiError";
+        normalizedError.status = status;
+        normalizedError.data = body;
+        normalizedError.original = error;
+
+        return Promise.reject(normalizedError);
+    }
 );
 
 export default apiClient;

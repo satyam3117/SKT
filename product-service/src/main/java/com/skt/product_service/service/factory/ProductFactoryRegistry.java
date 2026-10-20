@@ -1,5 +1,6 @@
 package com.skt.product_service.service.factory;
 
+import com.skt.product_service.exception.BadRequestException;
 import com.skt.product_service.model.ProductCategory;
 import org.springframework.stereotype.Component;
 
@@ -29,19 +30,19 @@ public class ProductFactoryRegistry {
 
     public ProductFactory getFactory(ProductCategory productCategory) {
         if (productCategory == null) {
-            throw new IllegalArgumentException("productCategory is required");
+            throw new BadRequestException("productCategory is required");
         }
         return factoryMap.getOrDefault(productCategory.name().toLowerCase(Locale.ROOT), baseFactory);
     }
 
     public ProductFactory getFactory(String productCategory) {
         if (productCategory == null || productCategory.isBlank()) {
-            throw new IllegalArgumentException("productCategory is required");
+            throw new BadRequestException("productCategory is required");
         }
         try {
             ProductCategory parsed = ProductCategory.valueOf(productCategory.trim().toUpperCase(Locale.ROOT));
             return getFactory(parsed);
-        } catch (IllegalArgumentException ignored) {
+        } catch (BadRequestException ignored) {
             return baseFactory;
         }
     }

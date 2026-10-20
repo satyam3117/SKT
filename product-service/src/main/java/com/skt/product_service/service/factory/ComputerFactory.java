@@ -1,6 +1,7 @@
 package com.skt.product_service.service.factory;
 
 import com.skt.product_service.dto.ProductRequest;
+import com.skt.product_service.exception.BadRequestException;
 import com.skt.product_service.model.Computer;
 import com.skt.product_service.model.Product;
 import com.skt.product_service.model.ProductCategory;
@@ -34,7 +35,7 @@ public class ComputerFactory implements ProductFactory {
     @Override
     public Product update(Product existingProduct, ProductRequest request) {
         if (!(existingProduct instanceof Computer existingComputer)) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Product id " + existingProduct.getId() + " is not a computer record"
             );
         }

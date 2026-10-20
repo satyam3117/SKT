@@ -4,6 +4,7 @@ import com.skt.product_service.config.RedisConfig;
 import com.skt.product_service.dto.category.ProductCategoryCreateRequest;
 import com.skt.product_service.dto.category.ProductCategoryResponse;
 import com.skt.product_service.dto.category.ProductCategoryUpdateRequest;
+import com.skt.product_service.exception.BadRequestException;
 import com.skt.product_service.model.ProductCategoryEntity;
 import com.skt.product_service.repository.ProductCategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,7 @@ public class ProductCategoryService {
          * Slug must be globally unique.
          */
         if (productCategoryRepository.existsBySlug(slug)) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Category with slug '" +
                             request.getSlug() +
                             "' already exists"
@@ -92,7 +93,7 @@ public class ProductCategoryService {
                             request.getName().trim()
                     )) {
 
-                throw new IllegalArgumentException(
+                throw new BadRequestException(
                         "Root category '" +
                                 request.getName() +
                                 "' already exists"
@@ -117,7 +118,7 @@ public class ProductCategoryService {
              */
             if (!Boolean.TRUE.equals(parent.getActive())) {
 
-                throw new IllegalArgumentException(
+                throw new BadRequestException(
                         "Cannot create category under inactive parent: "
                                 + parent.getName()
                 );
@@ -132,7 +133,7 @@ public class ProductCategoryService {
                             parentId
                     )) {
 
-                throw new IllegalArgumentException(
+                throw new BadRequestException(
                         "Category '" +
                                 request.getName() +
                                 "' already exists under parent '" +
@@ -205,7 +206,7 @@ public class ProductCategoryService {
     ) {
 
         if (categoryId == null || categoryId.isBlank()) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Product category not found: " + categoryId
             );
         }
@@ -294,7 +295,7 @@ public class ProductCategoryService {
                 productCategoryRepository
                         .findBySlug(slug)
                         .orElseThrow(() ->
-                                new IllegalArgumentException(
+                                new BadRequestException(
                                         "Category not found with slug: "
                                                 + slug
                                 )
@@ -340,7 +341,7 @@ public class ProductCategoryService {
 
                     if (!category.getId().equals(id)) {
 
-                        throw new IllegalArgumentException(
+                        throw new BadRequestException(
                                 "Category with slug '" +
                                         slug +
                                         "' already exists"
@@ -377,7 +378,7 @@ public class ProductCategoryService {
                                         );
 
                 if (!sameName) {
-                    throw new IllegalArgumentException(
+                    throw new BadRequestException(
                             "Root category '" +
                                     request.getName() +
                                     "' already exists"
@@ -401,7 +402,7 @@ public class ProductCategoryService {
              */
             if (id.equals(newParentId)) {
 
-                throw new IllegalArgumentException(
+                throw new BadRequestException(
                         "A category cannot be its own parent"
                 );
             }
@@ -417,7 +418,7 @@ public class ProductCategoryService {
              */
             if (!Boolean.TRUE.equals(parent.getActive())) {
 
-                throw new IllegalArgumentException(
+                throw new BadRequestException(
                         "Cannot move category under inactive parent: "
                                 + parent.getName()
                 );
@@ -436,7 +437,7 @@ public class ProductCategoryService {
              */
             if (isDescendant(id, newParentId)) {
 
-                throw new IllegalArgumentException(
+                throw new BadRequestException(
                         "Invalid parent. Circular category hierarchy detected"
                 );
             }
@@ -464,7 +465,7 @@ public class ProductCategoryService {
                 if (duplicate == null ||
                         !duplicate.getId().equals(id)) {
 
-                    throw new IllegalArgumentException(
+                    throw new BadRequestException(
                             "Category '" +
                                     request.getName() +
                                     "' already exists under parent '"
@@ -527,14 +528,14 @@ public class ProductCategoryService {
                 productCategoryRepository.findByParentId(id);
 
         if (!children.isEmpty()) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Cannot delete category '" + category.getName()
                             + "' because it has child categories"
             );
         }
 
         if (productRepository.existsByCategoryId(id)) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Cannot delete category '" + category.getName()
                             + "' because products reference it"
             );
@@ -630,7 +631,7 @@ public class ProductCategoryService {
         return productCategoryRepository
                 .findById(id)
                 .orElseThrow(() ->
-                        new IllegalArgumentException(
+                        new BadRequestException(
                                 "Product category not found: " + id
                         )
                 );
@@ -667,7 +668,7 @@ public class ProductCategoryService {
 
         if (name == null || name.isBlank()) {
 
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Category name cannot be blank"
             );
         }
@@ -678,7 +679,7 @@ public class ProductCategoryService {
 
         if (slug == null || slug.isBlank()) {
 
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Category slug cannot be blank"
             );
         }
@@ -687,7 +688,7 @@ public class ProductCategoryService {
                 "^[a-z0-9]+(?:-[a-z0-9]+)*$"
         )) {
 
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Invalid slug. Use lowercase letters, "
                             + "numbers and hyphens only. "
                             + "Example: gaming-laptops"
@@ -697,13 +698,13 @@ public class ProductCategoryService {
 
     public ProductCategoryEntity validateActiveCategory(String categoryId) {
         if (categoryId == null || categoryId.isBlank()) {
-            throw new IllegalArgumentException("Category ID cannot be blank");
+            throw new BadRequestException("Category ID cannot be blank");
         }
 
         ProductCategoryEntity category = getEntityById(categoryId.trim());
 
         if (!Boolean.TRUE.equals(category.getActive())) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Category '" + category.getName() + "' is inactive"
             );
         }

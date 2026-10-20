@@ -30,7 +30,7 @@ public class ProductBrand {
      * Apple
      */
     @NotBlank(message = "Brand name cannot be blank")
-    @Field("name")
+    @Field("brand_name")
     private String name;
 
     /**
