@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 function HeroBanner({ hero }) {
   return (
     <section className="mb-16">
-      <div className="relative overflow-hidden rounded-2xl border border-zinc-200 bg-gradient-to-r from-white via-zinc-100 to-zinc-200 p-8 md:p-16">
+      <div className="relative overflow-hidden rounded-2xl border border-[#D8DFD1] bg-gradient-to-r from-white via-zinc-100 to-zinc-200 p-8 md:p-16">
         <div className="max-w-2xl">
           <span className="mb-4 inline-block rounded-full bg-brand px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">
             {hero.badge}

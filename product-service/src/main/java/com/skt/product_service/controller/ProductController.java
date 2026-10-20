@@ -90,7 +90,7 @@ public class ProductController {
 //        return products;
 //    }
 
-    @GetMapping(params = {"page", "size"})
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ProductPageResponse getProductsPage(
             @RequestParam int page,

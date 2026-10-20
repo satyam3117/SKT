@@ -19,7 +19,7 @@ function PopularProductsSlider({ products }) {
         <button
           type="button"
           onClick={() => slideBy(-320)}
-          className="absolute -left-4 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-brand shadow-md transition hover:bg-brand hover:text-white md:flex"
+          className="absolute -left-4 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#FFFDF7] text-brand shadow-md transition hover:bg-brand hover:text-white md:flex"
         >
           <ChevronLeft size={18} />
         </button>
@@ -28,7 +28,7 @@ function PopularProductsSlider({ products }) {
           {products.map((product) => (
             <article
               key={product.id}
-              className="flex w-[280px] min-w-[280px] flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white"
+              className="flex w-[280px] min-w-[280px] flex-col overflow-hidden rounded-xl border border-[#D8DFD1] bg-[#FFFDF7]"
             >
               <div className="relative flex h-44 items-center justify-center bg-zinc-100">
                 {product.badge && (
@@ -68,7 +68,7 @@ function PopularProductsSlider({ products }) {
         <button
           type="button"
           onClick={() => slideBy(320)}
-          className="absolute -right-4 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white text-brand shadow-md transition hover:bg-brand hover:text-white md:flex"
+          className="absolute -right-4 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-[#FFFDF7] text-brand shadow-md transition hover:bg-brand hover:text-white md:flex"
         >
           <ChevronRight size={18} />
         </button>

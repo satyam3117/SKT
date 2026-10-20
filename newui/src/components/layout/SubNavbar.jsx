@@ -56,7 +56,7 @@ function CategoryLevel({
     }
 
     return (
-        <div className="w-64 border-l border-zinc-200 p-2">
+        <div className="w-64 border-l border-[#D8DFD1] p-2">
             {items.map((category) => (
                 <CategoryMenuItem
                     key={category.id}
@@ -128,7 +128,7 @@ function SubNavbar({
         .sort((a, b) => a.sortOrder - b.sortOrder);
 
     return (
-        <div className="relative hidden border-b border-zinc-200/70 bg-white md:block">
+        <div className="relative hidden border-b border-[#D8DFD1]/70 bg-[#FFFDF7] md:block">
             <div className="mx-auto flex max-w-container items-center gap-8 px-16 py-3">
 
                 {/* Categories */}
@@ -159,7 +159,7 @@ function SubNavbar({
                     </button>
 
                     {showCategories && (
-                        <div className="absolute left-0 top-12 z-30 flex rounded-lg border border-zinc-200 bg-white shadow-xl">
+                        <div className="absolute left-0 top-12 z-30 flex rounded-lg border border-[#D8DFD1] bg-[#FFFDF7] shadow-xl">
 
                             {/* Loading */}
                             {categoriesLoading && (

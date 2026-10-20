@@ -2,7 +2,7 @@ import { Heart, Search, ShoppingCart, User } from "lucide-react";
 
 function TopNavbar() {
   return (
-    <div className="border-b border-zinc-200/70 bg-background/90 backdrop-blur-xl">
+    <div className="border-b border-[#D8DFD1]/70 bg-background/90 backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-container items-center justify-between gap-4 px-5 py-4 md:px-16">
         <a href="#" className="font-['Manrope'] text-2xl font-extrabold tracking-tight text-ink">
           SKT
@@ -13,7 +13,7 @@ function TopNavbar() {
           <input
             type="text"
             placeholder="Search products, brands, parts..."
-            className="w-full rounded-full border border-zinc-300 bg-white py-3 pl-12 pr-4 text-sm outline-none transition focus:border-brand focus:ring-1 focus:ring-brand"
+            className="w-full rounded-full border border-zinc-300 bg-[#FFFDF7] py-3 pl-12 pr-4 text-sm outline-none transition focus:border-brand focus:ring-1 focus:ring-brand"
           />
         </div>
 

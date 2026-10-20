@@ -1,84 +1,112 @@
 import axios from "axios";
+import keycloak from "../auth/keycloak";
 
-export const API_BASE_URL = "http://localhost:7070";
-
-function getStoredAccessToken() {
-  const tokenKeys = ["access_token", "token", "authToken", "jwt", "keycloakToken"];
-
-  for (const key of tokenKeys) {
-    const value = localStorage.getItem(key);
-    if (typeof value === "string" && value.trim().length > 0) {
-      return value.trim();
-    }
-  }
-
-  const authPayload = localStorage.getItem("auth");
-  if (!authPayload) {
-    return null;
-  }
-
-  try {
-    const parsed = JSON.parse(authPayload);
-    const token = parsed?.accessToken || parsed?.token;
-
-    return typeof token === "string" && token.trim().length > 0
-      ? token.trim()
-      : null;
-  } catch {
-    return null;
-  }
-}
+export const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:7070";
 
 const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 10000,
+    baseURL: API_BASE_URL,
+    timeout: 15000,
+    headers: {
+        Accept: "application/json",
+    },
 });
 
-export async function getBearerToken(keycloak) {
-  if (!keycloak) {
-    throw new Error("Authentication is not ready yet.");
-  }
+/**
+ * Compatibility helper for existing API service functions.
+ * The request interceptor below replaces this token with the
+ * current Keycloak token before sending an authenticated request.
+ */
+export function withBearerToken(token) {
+    if (!token) {
+        throw new Error("An access token is required for this operation.");
+    }
 
-  await keycloak.updateToken(30);
-  return keycloak.token;
+    return {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    };
 }
 
-apiClient.interceptors.request.use((config) => {
-  const headers = config.headers || {};
-  const hasAuthorization = Boolean(headers.Authorization || headers.authorization);
-  const requestUrl = String(config.url || "");
-  const isProductApiRequest =
-    requestUrl === "/api/product" ||
-    requestUrl.startsWith("/api/product/");
+/**
+ * Always use the current Keycloak access token for authenticated
+ * requests. Refresh it when it is close to expiring.
+ */
+apiClient.interceptors.request.use(
+    async (config) => {
+        const hasExplicitToken = Boolean(
+            config.headers?.Authorization ||
+            config.headers?.authorization
+        );
 
-  if (!hasAuthorization && !isProductApiRequest) {
-    const token = getStoredAccessToken();
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
-    }
-  }
+        if (keycloak.authenticated) {
+            await keycloak.updateToken(30);
 
-  return {
-    ...config,
-    headers,
-  };
-});
+            if (!keycloak.token) {
+                throw new Error(
+                    "Keycloak did not provide an access token. Please sign in again."
+                );
+            }
 
+            config.headers = config.headers || {};
+            config.headers.Authorization = `Bearer ${keycloak.token}`;
+        } else if (hasExplicitToken) {
+            delete config.headers.Authorization;
+            delete config.headers.authorization;
+
+            throw new Error(
+                "Your login session is no longer active. Please sign in again."
+            );
+        }
+
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+
+/**
+ * Normalize API errors.
+ */
 apiClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const fallbackMessage = "Request failed. Please try again.";
-    const serverMessage = error?.response?.data;
-    const message = typeof serverMessage === "string" && serverMessage.trim().length > 0
-      ? serverMessage
-      : (error.message || fallbackMessage);
-    const wrappedError = new Error(message);
+    (response) => response,
+    (error) => {
+        const status = error.response?.status;
+        const body = error.response?.data;
 
-    wrappedError.status = error?.response?.status;
-    wrappedError.statusText = error?.response?.statusText;
+        let message = "The request failed. Please try again.";
 
-    return Promise.reject(wrappedError);
-  }
+        if (typeof body === "string" && body.trim()) {
+            message = body;
+        } else if (body?.message) {
+            message = body.message;
+        } else if (body?.detail) {
+            message = body.detail;
+        } else if (error.code === "ECONNABORTED") {
+            message = "The server took too long to respond.";
+        } else if (!error.response && error.message?.includes("Keycloak")) {
+            message = error.message;
+        } else if (!error.response) {
+            message =
+                "Cannot connect to API Gateway at http://localhost:7070. Make sure API Gateway is running.";
+        } else if (status === 401) {
+            message =
+                "Authentication failed. Please sign in again and retry.";
+        } else if (status === 403) {
+            message =
+                "You do not have permission to perform this operation.";
+        } else if (status === 404) {
+            message = "The requested API endpoint was not found.";
+        } else if (status >= 500) {
+            message = "The backend server returned an error.";
+        }
+
+        const wrappedError = new Error(message);
+        wrappedError.status = status;
+        wrappedError.data = body;
+
+        return Promise.reject(wrappedError);
+    }
 );
 
 export default apiClient;
