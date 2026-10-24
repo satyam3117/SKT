@@ -1,4 +1,3 @@
-import apiClient, { withBearerToken } from "./apiClient";
 
 /*
 |--------------------------------------------------------------------------
@@ -271,57 +270,53 @@ return response.data;
  *
  * ADMIN only.
  */
-export async function createCategory(request, token) {
+export async function createCategory(request) {
     const response = await apiClient.post(
         "/api/product/categories",
-        request,
-        withBearerToken(token)
+        request
     );
 
     return response.data;
 }
 
-
-/**
- * PUT /api/product/categories/{id}
- *
- * ADMIN only.
- */
-export async function updateCategory(
-    id,
-    request,
-    token
-) {
-    if (!id) {
-        throw new Error("Category ID is required.");
-    }
-
+export async function updateCategory(id, request) {
     const response = await apiClient.put(
         `/api/product/categories/${encodeURIComponent(id)}`,
-        request,
-        withBearerToken(token)
+        request
     );
 
     return response.data;
 }
 
-
-/**
- * DELETE /api/product/categories/{id}
- *
- * ADMIN only.
- */
-export async function deleteCategory(id, token) {
-    if (!id) {
-        throw new Error("Category ID is required.");
-    }
-
+export async function deleteCategory(id) {
     await apiClient.delete(
-        `/api/product/categories/${encodeURIComponent(id)}`,
-        withBearerToken(token)
+        `/api/product/categories/${encodeURIComponent(id)}`
     );
 }
 
+export async function createBrand(request) {
+    const response = await apiClient.post(
+        "/api/product/brands",
+        request
+    );
+
+    return response.data;
+}
+
+export async function updateBrand(id, request) {
+    const response = await apiClient.put(
+        `/api/product/brands/${encodeURIComponent(id)}`,
+        request
+    );
+
+    return response.data;
+}
+
+export async function deleteBrand(id) {
+    await apiClient.delete(
+        `/api/product/brands/${encodeURIComponent(id)}`
+    );
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -374,56 +369,6 @@ export async function getBrand(id) {
  *
  * ADMIN only.
  */
-export async function createBrand(request, token) {
-    const response = await apiClient.post(
-        "/api/product/brands",
-        request,
-        withBearerToken(token)
-    );
-
-    return response.data;
-}
-
-
-/**
- * PUT /api/product/brands/{id}
- *
- * ADMIN only.
- */
-export async function updateBrand(
-    id,
-    request,
-    token
-) {
-    if (!id) {
-        throw new Error("Brand ID is required.");
-    }
-
-    const response = await apiClient.put(
-        `/api/product/brands/${encodeURIComponent(id)}`,
-        request,
-        withBearerToken(token)
-    );
-
-    return response.data;
-}
-
-
-/**
- * DELETE /api/product/brands/{id}
- *
- * ADMIN only.
- */
-export async function deleteBrand(id, token) {
-    if (!id) {
-        throw new Error("Brand ID is required.");
-    }
-
-    await apiClient.delete(
-        `/api/product/brands/${encodeURIComponent(id)}`,
-        withBearerToken(token)
-    );
-}
 
 
 /*
@@ -470,97 +415,59 @@ export async function getProductFormConfig(
  * productRequest fields +
  * productImages[]
  */
-export async function createProduct(
-    formData,
-    token
-) {
+export async function createProduct(formData) {
     if (!(formData instanceof FormData)) {
-        throw new Error(
-            "createProduct requires a FormData object."
-        );
+        throw new Error("createProduct requires FormData.");
     }
 
     const response = await apiClient.post(
         "/api/product",
-        formData,
-        withBearerToken(token)
+        formData
     );
 
     return response.data;
 }
 
-
-/**
- * PUT /api/product/{id}
- */
-export async function updateProduct(
-    id,
-    formData,
-    token
-) {
+export async function updateProduct(id, formData) {
     if (!id) {
         throw new Error("Product ID is required.");
     }
 
     if (!(formData instanceof FormData)) {
-        throw new Error(
-            "updateProduct requires a FormData object."
-        );
+        throw new Error("updateProduct requires FormData.");
     }
 
     const response = await apiClient.put(
         `/api/product/${encodeURIComponent(id)}`,
-        formData,
-        withBearerToken(token)
+        formData
     );
 
     return response.data;
 }
 
-
-/**
- * DELETE /api/product/{id}
- */
-export async function deleteProduct(
-    id,
-    token
-) {
+export async function deleteProduct(id) {
     if (!id) {
         throw new Error("Product ID is required.");
     }
 
     await apiClient.delete(
-        `/api/product/${encodeURIComponent(id)}`,
-        withBearerToken(token)
+        `/api/product/${encodeURIComponent(id)}`
     );
 }
-
 
 /*
 |--------------------------------------------------------------------------
 | PRODUCT IMAGE
 |--------------------------------------------------------------------------
 */
-
-/**
- * ProductController:
- *
- * GET /api/product/images/{skuCode}/{filename}?categoryId=...
- */
-export function getProductImageUrl(
-    skuCode,
-    filename,
-    categoryId
-) {
-    if (!skuCode || !filename || !categoryId) {
+export function resolveImageUrl(imageUrl) {
+    if (!imageUrl) {
         return "";
     }
 
-    return `${apiClient.defaults.baseURL}/api/product/images/${encodeURIComponent(
-        skuCode
-    )}/${encodeURIComponent(
-        filename
-    )}?categoryId=${encodeURIComponent(
-        categoryId
-    )}`;
+    if (/^https?:\/\//i.test(imageUrl)) {
+        return imageUrl;
+    }
+
+    return `${API_BASE_URL.replace(/\/$/, "")}/${imageUrl.replace(/^\//, "")}`;
 }

@@ -45,7 +45,6 @@ function errorMessage(error) {
 }
 
 export default function InventoryManagement() {
-    const { getAccessToken } = useAuth();
 
     const [skuCode, setSkuCode] = useState("");
     const [warehouse, setWarehouse] = useState("KOLKATA-WH-01");
@@ -71,7 +70,6 @@ export default function InventoryManagement() {
         setNotice("");
 
         try {
-            const token = await getAccessToken();
             const result = await action(token);
 
             if (result && typeof result === "object" && "skuCode" in result) {
@@ -191,7 +189,6 @@ export default function InventoryManagement() {
         setAvailability(null);
 
         try {
-            const token = await getAccessToken();
             const result = await checkAvailability(skuCode.trim(), requested, token);
             setAvailability(result);
         } catch (err) {

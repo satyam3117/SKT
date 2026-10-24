@@ -1,5 +1,6 @@
 package com.skt.product_service.service;
 
+import com.skt.product_service.exception.BadRequestException;
 import com.skt.product_service.service.category.ProductCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -52,11 +53,11 @@ public class LocalImageStorageService implements ImageStorageService {
         validateImageType(file);
 
         if (skuCode == null || skuCode.isBlank()) {
-            throw new IllegalArgumentException("SKU code cannot be null or blank");
+            throw new BadRequestException("SKU code cannot be null or blank");
         }
 
         if (categoryId == null || categoryId.isBlank()) {
-            throw new IllegalArgumentException("Category ID cannot be null or blank");
+            throw new BadRequestException("Category ID cannot be null or blank");
         }
 
         /*
@@ -90,10 +91,7 @@ public class LocalImageStorageService implements ImageStorageService {
         );
 
         // Return URL/path relative to the application's static resource root
-        return "/" + productDir
-                .resolve(filename)
-                .toString()
-                .replace("\\", "/");
+        return filename;
     }
 
     @Override
@@ -108,11 +106,11 @@ public class LocalImageStorageService implements ImageStorageService {
         }
 
         if (skuCode == null || skuCode.isBlank()) {
-            throw new IllegalArgumentException("SKU code cannot be null or blank");
+            throw new BadRequestException("SKU code cannot be null or blank");
         }
 
         if (categoryId == null || categoryId.isBlank()) {
-            throw new IllegalArgumentException("Category ID cannot be null or blank");
+            throw new BadRequestException("Category ID cannot be null or blank");
         }
 
         Path productDir = buildProductDirectory(skuCode, categoryId);
@@ -213,7 +211,7 @@ public class LocalImageStorageService implements ImageStorageService {
     private String sanitizePathSegment(String value) {
 
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Path segment cannot be null or blank"
             );
         }
@@ -224,7 +222,7 @@ public class LocalImageStorageService implements ImageStorageService {
                 .replace("\\", "_");
 
         if (sanitized.equals(".") || sanitized.equals("..")) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Invalid path segment: " + value
             );
         }
@@ -249,7 +247,7 @@ public class LocalImageStorageService implements ImageStorageService {
 
         if (contentType == null
                 || !ALLOWED_CONTENT_TYPES.contains(contentType.toLowerCase(Locale.ROOT))) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Unsupported image type. Allowed types: JPEG, PNG, WebP"
             );
         }
@@ -257,14 +255,14 @@ public class LocalImageStorageService implements ImageStorageService {
         String originalFilename = file.getOriginalFilename();
 
         if (originalFilename == null || originalFilename.isBlank()) {
-            throw new IllegalArgumentException("Image filename is required");
+            throw new BadRequestException("Image filename is required");
         }
 
         String extension = getExtension(originalFilename)
                 .toLowerCase(Locale.ROOT);
 
         if (!ALLOWED_EXTENSIONS.contains(extension)) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Unsupported image extension. Allowed extensions: .jpg, .jpeg, .png, .webp"
             );
         }
@@ -273,20 +271,20 @@ public class LocalImageStorageService implements ImageStorageService {
     private void validateImageFilename(String filename) {
 
         if (filename == null || filename.isBlank()) {
-            throw new IllegalArgumentException("Filename is required");
+            throw new BadRequestException("Filename is required");
         }
 
         Path path = Paths.get(filename);
 
         if (path.getNameCount() != 1) {
-            throw new IllegalArgumentException("Invalid image filename");
+            throw new BadRequestException("Invalid image filename");
         }
 
         String extension = getExtension(filename)
                 .toLowerCase(Locale.ROOT);
 
         if (!ALLOWED_EXTENSIONS.contains(extension)) {
-            throw new IllegalArgumentException("Unsupported image type");
+            throw new BadRequestException("Unsupported image type");
         }
     }
 }

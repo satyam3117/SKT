@@ -1,21 +1,18 @@
+
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import {
-    ArrowLeft,
-    ImagePlus,
-    LoaderCircle,
-    Save,
-} from "lucide-react";
+import { ArrowLeft, ImagePlus, LoaderCircle, Save } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext.jsx";
 import {
     createProduct,
     getBrands,
     getProduct,
     getProductCategories,
+    getProductFormConfig,
     updateProduct,
 } from "../../services/productApi.js";
 
-const initialForm = {
+const INITIAL_FORM = {
     name: "",
     description: "",
     price: "",
@@ -31,7 +28,17 @@ const initialForm = {
     keyboard: "",
 };
 
-const inputStyle = {
+const SPECIFICATION_KEYS = new Set([
+    "processor",
+    "ramGb",
+    "storageGb",
+    "graphics",
+    "screenSize",
+    "mouse",
+    "keyboard",
+]);
+
+const INPUT_STYLE = {
     width: "100%",
     boxSizing: "border-box",
     padding: "11px 12px",
@@ -42,7 +49,7 @@ const inputStyle = {
     background: "#fff",
 };
 
-const labelStyle = {
+const LABEL_STYLE = {
     display: "block",
     fontSize: 13,
     fontWeight: 650,
@@ -50,9 +57,7 @@ const labelStyle = {
     color: "#334155",
 };
 
-const fieldStyle = { minWidth: 0 };
-
-const panelStyle = {
+const PANEL_STYLE = {
     background: "#fff",
     border: "1px solid #e5e9f2",
     borderRadius: 14,
@@ -61,11 +66,7 @@ const panelStyle = {
 };
 
 function getId(item) {
-    return item?.id ??
-        item?._id ??
-        item?.categoryId ??
-        item?.brandId ??
-        "";
+    return item?.id ?? item?._id ?? item?.categoryId ?? item?.brandId ?? "";
 }
 
 function normalizeId(value) {
@@ -82,12 +83,7 @@ function getLevel(category) {
 }
 
 function displayCategory(category) {
-    return (
-        category?.name ||
-        category?.displayName ||
-        category?.slug ||
-        getId(category)
-    );
+    return category?.name || category?.displayName || category?.slug || getId(category);
 }
 
 function normalizeCategoryName(value) {
@@ -98,15 +94,6 @@ function normalizeCategoryName(value) {
         .replace(/\s+/g, " ");
 }
 
-/*
- * The category hierarchy comes from the database.
- *
- * productCategory is also sent separately because the current
- * backend model uses values such as LAPTOP and COMPUTER.
- *
- * Update this mapping if your backend ProductCategory enum uses
- * different names.
- */
 function toProductCategory(category) {
     const text = normalizeCategoryName(
         `${category?.name || ""} ${category?.slug || ""}`
@@ -119,8 +106,7 @@ function toProductCategory(category) {
     if (
         text.includes("computer") ||
         text.includes("desktop") ||
-        text.includes("workstation") ||
-        text.includes("personal computer")
+        text.includes("workstation")
     ) {
         return "COMPUTER";
     }
@@ -132,11 +118,9 @@ function toProductCategory(category) {
 }
 
 function getErrorMessage(error) {
-    const data = error?.response?.data;
+    const data = error?.response?.data ?? error?.data;
 
-    if (typeof data === "string") {
-        return data;
-    }
+    if (typeof data === "string") return data;
 
     return (
         data?.message ||
@@ -146,66 +130,84 @@ function getErrorMessage(error) {
     );
 }
 
-function Field({
-    label,
-    name,
-    value,
-    onChange,
-    required = false,
-    type = "text",
-    placeholder,
-    help,
-}) {
+function getItems(data) {
+    if (Array.isArray(data)) return data;
+    if (Array.isArray(data?.items)) return data.items;
+    if (Array.isArray(data?.content)) return data.content;
+    return [];
+}
+
+function Field({ field, value, onChange }) {
+    const id = `product-${field.name}`;
+    const type = String(field.type || "text").toLowerCase();
+    const isSelect = type === "select";
+    const isTextarea = type === "textarea";
+    const isNumber = type === "number";
+
+    const commonProps = {
+        id,
+        name: field.name,
+        value: value ?? "",
+        onChange,
+        required: Boolean(field.required),
+        style: INPUT_STYLE,
+    };
+
     return (
-        <div style={fieldStyle}>
-            <label htmlFor={name} style={labelStyle}>
-                {label}
-                {required ? " *" : ""}
+        <div style={{ minWidth: 0 }}>
+            <label htmlFor={id} style={LABEL_STYLE}>
+                {field.label || field.name}
+                {field.required ? " *" : ""}
             </label>
 
-            <input
-                id={name}
-                name={name}
-                type={type}
-                value={value}
-                onChange={onChange}
-                required={required}
-                placeholder={placeholder}
-                min={type === "number" ? "0" : undefined}
-                step={type === "number" ? "any" : undefined}
-                style={inputStyle}
-            />
+            {isSelect ? (
+                <select {...commonProps}>
+                    <option value="">Select {field.label || field.name}</option>
+                    {(field.options || []).map((option) => (
+                        <option key={option.value} value={option.value}>
+                            {option.label || option.value}
+                        </option>
+                    ))}
+                </select>
+            ) : isTextarea ? (
+                <textarea
+                    {...commonProps}
+                    rows={4}
+                    style={{ ...INPUT_STYLE, resize: "vertical", fontFamily: "inherit" }}
+                />
+            ) : (
+                <input
+                    {...commonProps}
+                    type={isNumber ? "number" : "text"}
+                    min={field.min ?? (isNumber ? 0 : undefined)}
+                    max={field.max}
+                    step={isNumber ? "any" : undefined}
+                    placeholder={field.placeholder || ""}
+                />
+            )}
 
-            {help && (
-                <div
-                    style={{
-                        color: "#64748b",
-                        fontSize: 12,
-                        marginTop: 6,
-                    }}
-                >
-                    {help}
-                </div>
+            {field.helpText && (
+                <small style={{ display: "block", color: "#64748b", marginTop: 5 }}>
+                    {field.helpText}
+                </small>
             )}
         </div>
     );
 }
 
 function CategorySelect({
-    id,
-    label,
-    value,
-    options,
-    onChange,
-    placeholder,
-    disabled = false,
-    required = false,
-}) {
+                            id,
+                            label,
+                            value,
+                            options,
+                            onChange,
+                            placeholder,
+                            disabled = false,
+                        }) {
     return (
-        <div style={fieldStyle}>
-            <label htmlFor={id} style={labelStyle}>
-                {label}
-                {required ? " *" : ""}
+        <div style={{ minWidth: 0 }}>
+            <label htmlFor={id} style={LABEL_STYLE}>
+                {label} *
             </label>
 
             <select
@@ -213,25 +215,20 @@ function CategorySelect({
                 name={id}
                 value={value}
                 onChange={onChange}
+                required
                 disabled={disabled}
-                required={required}
                 style={{
-                    ...inputStyle,
+                    ...INPUT_STYLE,
                     cursor: disabled ? "not-allowed" : "pointer",
                     opacity: disabled ? 0.65 : 1,
                 }}
             >
                 <option value="">{placeholder}</option>
-
-                {options.map((category) => {
-                    const categoryId = normalizeId(getId(category));
-
+                {options.map((item) => {
+                    const itemId = normalizeId(getId(item));
                     return (
-                        <option
-                            key={categoryId}
-                            value={categoryId}
-                        >
-                            {displayCategory(category)}
+                        <option key={itemId} value={itemId}>
+                            {displayCategory(item)}
                         </option>
                     );
                 })}
@@ -246,101 +243,71 @@ export default function ProductForm() {
     const navigate = useNavigate();
     const { getAccessToken } = useAuth();
 
-    const [form, setForm] = useState(initialForm);
+    const [form, setForm] = useState(INITIAL_FORM);
     const [categories, setCategories] = useState([]);
     const [brands, setBrands] = useState([]);
     const [images, setImages] = useState([]);
     const [existingProduct, setExistingProduct] = useState(null);
 
-    const [selectedTopCategoryId, setSelectedTopCategoryId] =
-        useState("");
+    const [selectedTopCategoryId, setSelectedTopCategoryId] = useState("");
+    const [selectedTypeCategoryId, setSelectedTypeCategoryId] = useState("");
 
-    const [selectedTypeCategoryId, setSelectedTypeCategoryId] =
-        useState("");
-
+    const [formConfig, setFormConfig] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [configLoading, setConfigLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState("");
-    const [notice, setNotice] = useState("");
+    const [configError, setConfigError] = useState("");
 
-    /*
-     * Load database categories, brands and (when editing) product.
-     */
+    // Load categories, brands and product details for edit mode.
     useEffect(() => {
         let active = true;
 
-        async function loadForm() {
+        async function loadPage() {
             setLoading(true);
             setError("");
 
             try {
-                const [categoryData, brandData, productData] =
-                    await Promise.all([
-                        getProductCategories(),
-                        getBrands(),
-                        editing ? getProduct(id) : Promise.resolve(null),
-                    ]);
+                const [categoryData, brandData, productData] = await Promise.all([
+                    getProductCategories(),
+                    getBrands(),
+                    editing ? getProduct(id) : Promise.resolve(null),
+                ]);
 
                 if (!active) return;
 
-                const categoryList = Array.isArray(categoryData)
-                    ? categoryData
-                    : Array.isArray(categoryData?.content)
-                        ? categoryData.content
-                        : Array.isArray(categoryData?.items)
-                            ? categoryData.items
-                            : [];
-
-                const brandList = Array.isArray(brandData)
-                    ? brandData
-                    : Array.isArray(brandData?.content)
-                        ? brandData.content
-                        : Array.isArray(brandData?.items)
-                            ? brandData.items
-                            : [];
-
+                const categoryList = getItems(categoryData);
                 setCategories(categoryList);
-                setBrands(brandList);
+                setBrands(getItems(brandData));
 
                 if (productData) {
                     setExistingProduct(productData);
 
-                    const savedCategoryId = normalizeId(
-                        productData.categoryId
-                    );
-
+                    const savedCategoryId = normalizeId(productData.categoryId);
                     const savedLeaf = categoryList.find(
-                        (category) =>
-                            normalizeId(getId(category)) ===
-                            savedCategoryId
+                        (item) => normalizeId(getId(item)) === savedCategoryId
                     );
 
                     const savedType = savedLeaf
                         ? categoryList.find(
-                            (category) =>
-                                normalizeId(getId(category)) ===
-                                getParentId(savedLeaf)
+                            (item) =>
+                                normalizeId(getId(item)) === getParentId(savedLeaf)
                         )
                         : null;
 
                     const savedTop = savedType
                         ? categoryList.find(
-                            (category) =>
-                                normalizeId(getId(category)) ===
-                                getParentId(savedType)
+                            (item) =>
+                                normalizeId(getId(item)) === getParentId(savedType)
                         )
                         : null;
 
-                    setSelectedTopCategoryId(
-                        savedTop ? normalizeId(getId(savedTop)) : ""
-                    );
-
-                    setSelectedTypeCategoryId(
-                        savedType ? normalizeId(getId(savedType)) : ""
-                    );
+                    setSelectedTopCategoryId(savedTop ? normalizeId(getId(savedTop)) : "");
+                    setSelectedTypeCategoryId(savedType ? normalizeId(getId(savedType)) : "");
 
                     setForm({
-                        ...initialForm,
+                        ...INITIAL_FORM,
+                        ...productData,
                         name: productData.name ?? "",
                         description: productData.description ?? "",
                         price: productData.price ?? "",
@@ -349,113 +316,118 @@ export default function ProductForm() {
                         ).toUpperCase(),
                         brandId: normalizeId(productData.brandId),
                         categoryId: savedCategoryId,
-                        processor: productData.processor ?? "",
-                        ramGb: productData.ramGb ?? "",
-                        storageGb: productData.storageGb ?? "",
-                        graphics: productData.graphics ?? "",
-                        screenSize: productData.screenSize ?? "",
-                        mouse: productData.mouse ?? "",
-                        keyboard: productData.keyboard ?? "",
                     });
                 }
             } catch (err) {
-                if (active) {
-                    setError(getErrorMessage(err));
-                }
+                if (active) setError(getErrorMessage(err));
             } finally {
-                if (active) {
-                    setLoading(false);
-                }
+                if (active) setLoading(false);
             }
         }
 
-        loadForm();
+        loadPage();
 
         return () => {
             active = false;
         };
     }, [id, editing]);
 
-    /*
-     * Only active database categories should be selectable.
-     */
+    // Fetch the form schema whenever the backend product type changes.
+    useEffect(() => {
+        if (!form.productCategory) {
+            setFormConfig(null);
+            setConfigError("");
+            return undefined;
+        }
+
+        let active = true;
+
+        async function loadConfig() {
+            setConfigLoading(true);
+            setConfigError("");
+
+            try {
+                const result = await getProductFormConfig(form.productCategory);
+
+                if (active) {
+                    setFormConfig(result);
+                }
+            } catch (err) {
+                if (active) {
+                    setFormConfig(null);
+                    setConfigError(
+                        `Could not load fields for ${form.productCategory}: ${getErrorMessage(err)}`
+                    );
+                }
+            } finally {
+                if (active) setConfigLoading(false);
+            }
+        }
+
+        loadConfig();
+
+        return () => {
+            active = false;
+        };
+    }, [form.productCategory]);
+
     const availableCategories = useMemo(
-        () =>
-            categories.filter(
-                (category) => category?.active !== false
-            ),
+        () => categories.filter((item) => item?.active !== false),
         [categories]
     );
 
-    /*
-     * Level 0: Main category.
-     */
     const topCategories = useMemo(
         () =>
             availableCategories
-                .filter((category) => getLevel(category) === 0)
-                .sort(
-                    (a, b) =>
-                        Number(a.sortOrder ?? 0) -
-                        Number(b.sortOrder ?? 0)
-                ),
+                .filter((item) => getLevel(item) === 0)
+                .sort((a, b) => Number(a.sortOrder ?? 0) - Number(b.sortOrder ?? 0)),
         [availableCategories]
     );
 
-    /*
-     * Level 1: Product type under the selected main category.
-     */
     const typeCategories = useMemo(
         () =>
             availableCategories
                 .filter(
-                    (category) =>
-                        getLevel(category) === 1 &&
-                        getParentId(category) === selectedTopCategoryId
+                    (item) =>
+                        getLevel(item) === 1 &&
+                        getParentId(item) === selectedTopCategoryId
                 )
-                .sort(
-                    (a, b) =>
-                        Number(a.sortOrder ?? 0) -
-                        Number(b.sortOrder ?? 0)
-                ),
+                .sort((a, b) => Number(a.sortOrder ?? 0) - Number(b.sortOrder ?? 0)),
         [availableCategories, selectedTopCategoryId]
     );
 
-    /*
-     * Level 2: Leaf category under the selected product type.
-     */
     const leafCategories = useMemo(
         () =>
             availableCategories
                 .filter(
-                    (category) =>
-                        getLevel(category) === 2 &&
-                        getParentId(category) === selectedTypeCategoryId
+                    (item) =>
+                        getLevel(item) === 2 &&
+                        getParentId(item) === selectedTypeCategoryId
                 )
-                .sort(
-                    (a, b) =>
-                        Number(a.sortOrder ?? 0) -
-                        Number(b.sortOrder ?? 0)
-                ),
+                .sort((a, b) => Number(a.sortOrder ?? 0) - Number(b.sortOrder ?? 0)),
         [availableCategories, selectedTypeCategoryId]
     );
 
+    // The backend supplies the specification field definitions.
+    // Basic fields, brand, and the category hierarchy have dedicated UI controls.
+    const specificationFields = useMemo(() => {
+        const fields = Array.isArray(formConfig?.fields) ? formConfig.fields : [];
+
+        return fields.filter(
+            (field) =>
+                SPECIFICATION_KEYS.has(field.name) &&
+                field.name !== "categoryId"
+        );
+    }, [formConfig]);
+
     function changeField(event) {
         const { name, value } = event.target;
-
-        setForm((current) => ({
-            ...current,
-            [name]: value,
-        }));
+        setForm((current) => ({ ...current, [name]: value }));
+        setError("");
     }
 
-    /*
-     * Changing a parent clears all child selections.
-     */
     function changeTopCategory(event) {
-        const nextTopId = event.target.value;
-
-        setSelectedTopCategoryId(nextTopId);
+        setSelectedTopCategoryId(event.target.value);
         setSelectedTypeCategoryId("");
 
         setForm((current) => ({
@@ -469,10 +441,8 @@ export default function ProductForm() {
 
     function changeTypeCategory(event) {
         const nextTypeId = event.target.value;
-
         const selectedType = availableCategories.find(
-            (category) =>
-                normalizeId(getId(category)) === nextTypeId
+            (item) => normalizeId(getId(item)) === nextTypeId
         );
 
         setSelectedTypeCategoryId(nextTypeId);
@@ -480,25 +450,34 @@ export default function ProductForm() {
         setForm((current) => ({
             ...current,
             categoryId: "",
-            productCategory: selectedType
-                ? toProductCategory(selectedType)
-                : "",
+            productCategory: selectedType ? toProductCategory(selectedType) : "",
         }));
 
         setError("");
     }
 
     function changeLeafCategory(event) {
-        setForm((current) => ({
-            ...current,
-            categoryId: event.target.value,
-        }));
-
+        setForm((current) => ({ ...current, categoryId: event.target.value }));
         setError("");
     }
 
     function changeImages(event) {
         const selected = Array.from(event.target.files || []);
+
+        if (selected.length > 8) {
+            setError("Select no more than 8 images.");
+            event.target.value = "";
+            return;
+        }
+
+        const validTypes = ["image/jpeg", "image/png", "image/webp"];
+        const invalidImage = selected.find((image) => !validTypes.includes(image.type));
+
+        if (invalidImage) {
+            setError("Only JPEG, PNG, and WebP images are supported.");
+            event.target.value = "";
+            return;
+        }
 
         setImages(selected);
         setError("");
@@ -507,83 +486,67 @@ export default function ProductForm() {
     async function handleSubmit(event) {
         event.preventDefault();
         setError("");
-        setNotice("");
-
-        if (!form.categoryId) {
-            setError("Select a leaf category before saving.");
-            return;
-        }
-
-        const selectedLeaf = leafCategories.find(
-            (category) =>
-                normalizeId(getId(category)) ===
-                normalizeId(form.categoryId)
-        );
-
-        if (!selectedLeaf && !editing) {
-            setError(
-                "The selected category is invalid. Select the main category, product type and leaf category again."
-            );
-            return;
-        }
 
         if (!form.productCategory) {
             setError("Select a valid product type.");
             return;
         }
 
+        if (!form.categoryId) {
+            setError("Select a leaf category before saving.");
+            return;
+        }
+
+        if (!form.brandId) {
+            setError("Select a brand before saving.");
+            return;
+        }
+
         if (!editing && images.length === 0) {
-            setError(
-                "Select at least one product image before creating a product."
-            );
+            setError("Select at least one product image before creating a product.");
             return;
         }
 
-        if (images.length > 8) {
-            setError("Select no more than 8 images.");
+        if (configLoading) {
+            setError("Wait for the product fields to finish loading.");
             return;
         }
 
-        if (
-            images.some(
-                (image) =>
-                    ![
-                        "image/jpeg",
-                        "image/png",
-                        "image/webp",
-                    ].includes(image.type)
-            )
-        ) {
-            setError("Only JPEG, PNG, and WebP images are supported.");
+        if (configError) {
+            setError("The product form configuration did not load. Resolve that error before saving.");
+            return;
+        }
+
+        const requiredFields = (formConfig?.fields || []).filter(
+            (field) => field.required && SPECIFICATION_KEYS.has(field.name)
+        );
+
+        const missingField = requiredFields.find(
+            (field) => !String(form[field.name] ?? "").trim()
+        );
+
+        if (missingField) {
+            setError(`${missingField.label || missingField.name} is required.`);
             return;
         }
 
         const payload = new FormData();
 
-        const fields = [
+        // Only send fields currently supported by ProductRequest.
+        const allowedFields = [
             "name",
             "description",
             "price",
             "productCategory",
             "brandId",
             "categoryId",
-            "processor",
-            "ramGb",
-            "storageGb",
-            "graphics",
-            "screenSize",
-            "mouse",
-            "keyboard",
+            ...SPECIFICATION_KEYS,
         ];
 
-        fields.forEach((key) => {
+        for (const key of allowedFields) {
             const value = form[key];
 
-            if (
-                value !== undefined &&
-                value !== null &&
-                String(value).trim() !== ""
-            ) {
+            if (value !== undefined && value !== null && String(value).trim() !== "") {
                 payload.append(
                     key,
                     key === "productCategory"
@@ -591,11 +554,9 @@ export default function ProductForm() {
                         : String(value).trim()
                 );
             }
-        });
+        }
 
-        images.forEach((image) => {
-            payload.append("productImages", image);
-        });
+        images.forEach((image) => payload.append("productImages", image));
 
         setSaving(true);
 
@@ -604,12 +565,8 @@ export default function ProductForm() {
 
             if (editing) {
                 await updateProduct(id, payload, token);
-
-                setNotice("Product updated successfully.");
             } else {
                 await createProduct(payload, token);
-
-                setNotice("Product created successfully.");
             }
 
             navigate("/admin/products", {
@@ -634,9 +591,9 @@ export default function ProductForm() {
         gap: 8,
         padding: "11px 15px",
         borderRadius: 9,
-        background: "#172554",
+        background: "#176b52",
         color: "#fff",
-        border: "1px solid #172554",
+        border: "1px solid #176b52",
         textDecoration: "none",
         fontSize: 14,
         fontWeight: 650,
@@ -651,23 +608,16 @@ export default function ProductForm() {
         borderColor: "#dbe2ee",
     };
 
+    const gridStyle = {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 260px), 1fr))",
+        gap: 18,
+    };
+
     if (loading) {
         return (
-            <main
-                style={{
-                    minHeight: "100vh",
-                    display: "grid",
-                    placeItems: "center",
-                    background: "#f5f7fb",
-                }}
-            >
-                <p>
-                    <LoaderCircle
-                        size={18}
-                        style={{ verticalAlign: "middle" }}
-                    />{" "}
-                    Loading product form…
-                </p>
+            <main style={{ minHeight: "100vh", display: "grid", placeItems: "center" }}>
+                <p><LoaderCircle size={18} /> Loading product form…</p>
             </main>
         );
     }
@@ -676,7 +626,7 @@ export default function ProductForm() {
         <div
             style={{
                 minHeight: "100vh",
-                background: "#f5f7fb",
+                background: "#f6f8f3",
                 color: "#172033",
                 fontFamily: "Inter, system-ui, sans-serif",
             }}
@@ -694,424 +644,137 @@ export default function ProductForm() {
                 }}
             >
                 <div>
-                    <div style={{ fontSize: 18, fontWeight: 800 }}>
-                        {editing ? "Edit product" : "Create product"}
-                    </div>
-
+                    <strong>{editing ? "Edit product" : "Create product"}</strong>
                     <div style={{ color: "#64748b", fontSize: 12 }}>
                         SKT · Product catalogue
                     </div>
                 </div>
 
                 <Link to="/admin/products" style={secondaryStyle}>
-                    <ArrowLeft size={16} />
-                    Back to products
+                    <ArrowLeft size={16} /> Back to products
                 </Link>
             </header>
 
-            <main
-                style={{
-                    width: "min(1000px, 92%)",
-                    margin: "0 auto",
-                    padding: "28px 0 48px",
-                }}
-            >
-                <h1
-                    style={{
-                        fontSize: 30,
-                        letterSpacing: "-.04em",
-                        margin: "0 0 8px",
-                    }}
-                >
-                    {editing
-                        ? "Update product details"
-                        : "Add a new product"}
+            <main style={{ width: "min(1000px, 92%)", margin: "0 auto", padding: "28px 0 48px" }}>
+                <h1 style={{ fontSize: 30, letterSpacing: "-.04em", margin: "0 0 8px" }}>
+                    {editing ? "Update product details" : "Add a new product"}
                 </h1>
 
-                <p
-                    style={{
-                        color: "#64748b",
-                        lineHeight: 1.6,
-                        marginTop: 0,
-                    }}
-                >
-                    Enter product details, choose the category hierarchy,
-                    and verify the brand before saving.
+                <p style={{ color: "#64748b", lineHeight: 1.6 }}>
+                    Select a product type to load its fields from the backend.
                 </p>
 
                 {error && (
-                    <div
-                        role="alert"
-                        style={{
-                            padding: 14,
-                            borderRadius: 10,
-                            background: "#fff1f2",
-                            color: "#9f1239",
-                            border: "1px solid #fecdd3",
-                            marginBottom: 16,
-                            whiteSpace: "pre-wrap",
-                        }}
-                    >
+                    <div role="alert" style={{ padding: 14, borderRadius: 10, background: "#fff1f2", color: "#9f1239", border: "1px solid #fecdd3", marginBottom: 16 }}>
                         {error}
                     </div>
                 )}
 
-                {notice && (
-                    <div
-                        role="status"
-                        style={{
-                            padding: 14,
-                            borderRadius: 10,
-                            background: "#ecfdf5",
-                            color: "#065f46",
-                            marginBottom: 16,
-                        }}
-                    >
-                        {notice}
-                    </div>
-                )}
-
                 <form onSubmit={handleSubmit}>
-                    <section style={panelStyle}>
-                        <h2
-                            style={{
-                                fontSize: 18,
-                                margin: "0 0 18px",
-                            }}
-                        >
-                            Basic information
-                        </h2>
+                    <section style={PANEL_STYLE}>
+                        <h2 style={{ fontSize: 18, margin: "0 0 18px" }}>Basic information</h2>
 
-                        <div
-                            style={{
-                                display: "grid",
-                                gridTemplateColumns:
-                                    "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
-                                gap: 18,
-                            }}
-                        >
-                            <Field
-                                label="Product name"
-                                name="name"
-                                value={form.name}
-                                onChange={changeField}
-                                required
-                                placeholder="e.g. ASUS ROG Strix G15"
-                            />
+                        <div style={gridStyle}>
+                            <div>
+                                <label htmlFor="name" style={LABEL_STYLE}>Product name *</label>
+                                <input id="name" name="name" value={form.name} onChange={changeField} required maxLength={50} style={INPUT_STYLE} placeholder="e.g. ASUS ROG Strix G15" />
+                            </div>
 
-                            <Field
-                                label="Price (INR)"
-                                name="price"
-                                type="number"
-                                value={form.price}
-                                onChange={changeField}
-                                required
-                                placeholder="e.g. 84999.00"
-                            />
+                            <div>
+                                <label htmlFor="price" style={LABEL_STYLE}>Price (INR) *</label>
+                                <input id="price" name="price" type="number" min="0.01" step="0.01" value={form.price} onChange={changeField} required style={INPUT_STYLE} placeholder="84999.00" />
+                            </div>
 
-                            <CategorySelect
-                                id="mainCategory"
-                                label="Main category (Level 0)"
-                                value={selectedTopCategoryId}
-                                options={topCategories}
-                                onChange={changeTopCategory}
-                                placeholder="Select main category"
-                                required
-                            />
+                            <CategorySelect id="mainCategory" label="Main category (Level 0)" value={selectedTopCategoryId} options={topCategories} onChange={changeTopCategory} placeholder="Select main category" />
 
-                            <CategorySelect
-                                id="productType"
-                                label="Product type (Level 1)"
-                                value={selectedTypeCategoryId}
-                                options={typeCategories}
-                                onChange={changeTypeCategory}
-                                placeholder={
-                                    selectedTopCategoryId
-                                        ? "Select product type"
-                                        : "Select main category first"
-                                }
-                                disabled={!selectedTopCategoryId}
-                                required
-                            />
+                            <CategorySelect id="productType" label="Product type (Level 1)" value={selectedTypeCategoryId} options={typeCategories} onChange={changeTypeCategory} placeholder="Select product type first" disabled={!selectedTopCategoryId} />
 
-                            <CategorySelect
-                                id="categoryId"
-                                label="Leaf category (Level 2)"
-                                value={form.categoryId}
-                                options={leafCategories}
-                                onChange={changeLeafCategory}
-                                placeholder={
-                                    selectedTypeCategoryId
-                                        ? "Select leaf category"
-                                        : "Select product type first"
-                                }
-                                disabled={!selectedTypeCategoryId}
-                                required
-                            />
+                            <CategorySelect id="categoryId" label="Leaf category (Level 2)" value={form.categoryId} options={leafCategories} onChange={changeLeafCategory} placeholder="Select leaf category" disabled={!selectedTypeCategoryId} />
 
-                            <div style={fieldStyle}>
-                                <label
-                                    htmlFor="brandId"
-                                    style={labelStyle}
-                                >
-                                    Brand *
-                                </label>
-
-                                <select
-                                    id="brandId"
-                                    name="brandId"
-                                    value={form.brandId}
-                                    onChange={changeField}
-                                    required
-                                    style={inputStyle}
-                                >
-                                    <option value="">
-                                        Select a brand
-                                    </option>
-
+                            <div>
+                                <label htmlFor="brandId" style={LABEL_STYLE}>Brand *</label>
+                                <select id="brandId" name="brandId" value={form.brandId} onChange={changeField} required style={INPUT_STYLE}>
+                                    <option value="">Select a brand</option>
                                     {brands.map((brand) => {
-                                        const brandId = getId(brand);
-
+                                        const brandId = normalizeId(getId(brand));
                                         return (
-                                            <option
-                                                key={
-                                                    normalizeId(brandId) ||
-                                                    brand.name
-                                                }
-                                                value={brandId}
-                                            >
-                                                {brand.name ||
-                                                    brand.displayName ||
-                                                    brandId}
+                                            <option key={brandId || brand.name} value={brandId}>
+                                                {brand.name || brand.displayName || brandId}
                                             </option>
                                         );
                                     })}
                                 </select>
-
                                 {brands.length === 0 && (
-                                    <div
-                                        style={{
-                                            color: "#b45309",
-                                            fontSize: 12,
-                                            marginTop: 6,
-                                        }}
-                                    >
-                                        No active brands were returned by
-                                        the API.
-                                    </div>
+                                    <small style={{ display: "block", marginTop: 6, color: "#b45309" }}>
+                                        No brands were returned by the API.
+                                    </small>
                                 )}
                             </div>
                         </div>
 
                         <div style={{ marginTop: 18 }}>
-                            <label
-                                htmlFor="description"
-                                style={labelStyle}
-                            >
-                                Description *
-                            </label>
-
-                            <textarea
-                                id="description"
-                                name="description"
-                                value={form.description}
-                                onChange={changeField}
-                                required
-                                rows={4}
-                                maxLength={300}
-                                placeholder="Describe the product and its key features."
-                                style={{
-                                    ...inputStyle,
-                                    resize: "vertical",
-                                    fontFamily: "inherit",
-                                }}
-                            />
-
-                            <div
-                                style={{
-                                    color: "#64748b",
-                                    fontSize: 12,
-                                    textAlign: "right",
-                                    marginTop: 4,
-                                }}
-                            >
-                                {form.description.length}/300
+                            <label htmlFor="description" style={LABEL_STYLE}>Description *</label>
+                            <textarea id="description" name="description" value={form.description} onChange={changeField} required maxLength={300} rows={4} style={{ ...INPUT_STYLE, resize: "vertical", fontFamily: "inherit" }} />
+                            <div style={{ textAlign: "right", color: "#64748b", fontSize: 12 }}>
+                                {String(form.description || "").length}/300
                             </div>
                         </div>
+                    </section>
 
-                        <div
-                            style={{
-                                marginTop: 14,
-                                padding: 12,
-                                background: "#f8fafc",
-                                border: "1px solid #e2e8f0",
-                                borderRadius: 9,
-                                fontSize: 13,
-                                color: "#475569",
-                            }}
-                        >
-                            <strong>Selected backend product type:</strong>{" "}
-                            {form.productCategory || "Not selected"}
-                            <br />
-                            <strong>Selected category ID:</strong>{" "}
-                            {form.categoryId || "Not selected"}
-                        </div>
+                    <section style={PANEL_STYLE}>
+                        <h2 style={{ fontSize: 18, margin: "0 0 8px" }}>Technical specifications</h2>
+                        <p style={{ color: "#64748b", fontSize: 13 }}>
+                            These fields are loaded from the form-config endpoint for the selected product type.
+                        </p>
 
-                        {categories.length === 0 && (
-                            <div
-                                style={{
-                                    color: "#b45309",
-                                    fontSize: 13,
-                                    marginTop: 12,
-                                }}
-                            >
-                                No categories were returned by the API.
-                                Check GET /api/product/categories and
-                                confirm that the gateway can reach
-                                product-service.
+                        {configLoading && (
+                            <p><LoaderCircle size={16} /> Loading product-specific fields…</p>
+                        )}
+
+                        {configError && (
+                            <div role="alert" style={{ padding: 12, background: "#fff7ed", color: "#9a3412", borderRadius: 8 }}>
+                                {configError}
                             </div>
                         )}
-                    </section>
 
-                    <section style={panelStyle}>
-                        <h2
-                            style={{
-                                fontSize: 18,
-                                margin: "0 0 6px",
-                            }}
-                        >
-                            Technical specifications
-                        </h2>
+                        {!configLoading && !configError && formConfig && (
+                            specificationFields.length > 0 ? (
+                                <div style={gridStyle}>
+                                    {specificationFields.map((field) => (
+                                        <Field
+                                            key={field.name}
+                                            field={field}
+                                            value={form[field.name] ?? ""}
+                                            onChange={changeField}
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <p style={{ color: "#64748b", fontSize: 13 }}>
+                                    No technical specification fields are configured for this product type yet.
+                                </p>
+                            )
+                        )}
 
-                        <p
-                            style={{
-                                color: "#64748b",
-                                fontSize: 13,
-                                margin: "0 0 18px",
-                            }}
-                        >
-                            Fill in the specifications relevant to this
-                            product. Leave fields blank when they do not
-                            apply.
-                        </p>
-
-                        <div
-                            style={{
-                                display: "grid",
-                                gridTemplateColumns:
-                                    "repeat(auto-fit, minmax(min(100%, 260px), 1fr))",
-                                gap: 18,
-                            }}
-                        >
-                            <Field
-                                label="Processor"
-                                name="processor"
-                                value={form.processor}
-                                onChange={changeField}
-                                placeholder="e.g. Intel Core i7"
-                            />
-
-                            <Field
-                                label="RAM (GB)"
-                                name="ramGb"
-                                type="number"
-                                value={form.ramGb}
-                                onChange={changeField}
-                                placeholder="e.g. 16"
-                            />
-
-                            <Field
-                                label="Storage (GB)"
-                                name="storageGb"
-                                type="number"
-                                value={form.storageGb}
-                                onChange={changeField}
-                                placeholder="e.g. 1024"
-                            />
-
-                            <Field
-                                label="Graphics"
-                                name="graphics"
-                                value={form.graphics}
-                                onChange={changeField}
-                                placeholder="e.g. NVIDIA RTX 4060"
-                            />
-
-                            <Field
-                                label="Screen size (inches)"
-                                name="screenSize"
-                                type="number"
-                                value={form.screenSize}
-                                onChange={changeField}
-                                placeholder="e.g. 15.6"
-                            />
-
-                            <Field
-                                label="Mouse included"
-                                name="mouse"
-                                value={form.mouse}
-                                onChange={changeField}
-                                placeholder="Optional"
-                            />
-
-                            <Field
-                                label="Keyboard included"
-                                name="keyboard"
-                                value={form.keyboard}
-                                onChange={changeField}
-                                placeholder="Optional"
-                            />
+                        <div style={{ marginTop: 14, padding: 12, background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 9, fontSize: 13 }}>
+                            <strong>Backend product type:</strong> {form.productCategory || "Not selected"}
                         </div>
                     </section>
 
-                    <section style={panelStyle}>
-                        <h2
-                            style={{
-                                fontSize: 18,
-                                margin: "0 0 6px",
-                            }}
-                        >
-                            Product images
-                        </h2>
-
-                        <p
-                            style={{
-                                color: "#64748b",
-                                fontSize: 13,
-                                margin: "0 0 16px",
-                            }}
-                        >
-                            JPEG, PNG, and WebP are accepted by this UI.
-                            The backend must also validate file content,
-                            file size and image count.
+                    <section style={PANEL_STYLE}>
+                        <h2 style={{ fontSize: 18, margin: "0 0 8px" }}>Product images</h2>
+                        <p style={{ color: "#64748b", fontSize: 13 }}>
+                            JPEG, PNG and WebP are supported. Select up to 8 images.
                         </p>
 
-                        {editing &&
-                            existingProduct?.productImages?.length > 0 && (
-                                <p
-                                    style={{
-                                        fontSize: 13,
-                                        color: "#475569",
-                                    }}
-                                >
-                                    This product currently has{" "}
-                                    {existingProduct.productImages.length}{" "}
-                                    image(s). Leave the upload empty if
-                                    your backend preserves existing images
-                                    when no new files are submitted.
-                                </p>
-                            )}
+                        {editing && existingProduct?.productImages?.length > 0 && (
+                            <p style={{ color: "#475569", fontSize: 13 }}>
+                                Existing images: {existingProduct.productImages.length}. Leave uploads empty if your backend preserves existing images.
+                            </p>
+                        )}
 
-                        <label
-                            htmlFor="productImages"
-                            style={{
-                                ...secondaryStyle,
-                                display: "inline-flex",
-                                width: "fit-content",
-                            }}
-                        >
-                            <ImagePlus size={17} />
-                            Choose images
+                        <label htmlFor="productImages" style={secondaryStyle}>
+                            <ImagePlus size={17} /> Choose images
                         </label>
 
                         <input
@@ -1120,75 +783,27 @@ export default function ProductForm() {
                             accept="image/jpeg,image/png,image/webp"
                             multiple
                             onChange={changeImages}
-                            style={{
-                                display: "block",
-                                marginTop: 12,
-                                maxWidth: "100%",
-                            }}
+                            style={{ display: "block", marginTop: 12 }}
                         />
 
-                        <div
-                            style={{
-                                color: "#64748b",
-                                fontSize: 13,
-                                marginTop: 8,
-                            }}
-                        >
-                            {images.length
-                                ? `${images.length} new image(s) selected`
-                                : "No new images selected"}
-                        </div>
+                        <ul style={{ fontSize: 13, color: "#475569", paddingLeft: 20 }}>
+                            {images.map((image, index) => (
+                                <li key={`${image.name}-${index}`}>
+                                    {image.name} ({Math.ceil(image.size / 1024)} KB)
+                                </li>
+                            ))}
+                        </ul>
 
-                        {images.length > 0 && (
-                            <ul
-                                style={{
-                                    fontSize: 13,
-                                    color: "#475569",
-                                    paddingLeft: 20,
-                                }}
-                            >
-                                {images.map((image, index) => (
-                                    <li key={`${image.name}-${index}`}>
-                                        {image.name} (
-                                        {Math.ceil(image.size / 1024)} KB)
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
+                        {!images.length && <p style={{ color: "#64748b", fontSize: 13 }}>No new images selected.</p>}
                     </section>
 
-                    <div
-                        style={{
-                            display: "flex",
-                            justifyContent: "flex-end",
-                            gap: 10,
-                            flexWrap: "wrap",
-                        }}
-                    >
-                        <Link
-                            to="/admin/products"
-                            style={secondaryStyle}
-                        >
-                            Cancel
-                        </Link>
-
-                        <button
-                            type="submit"
-                            disabled={saving}
-                            style={buttonStyle}
-                        >
-                            {saving ? (
-                                <LoaderCircle size={17} />
-                            ) : (
-                                <Save size={17} />
-                            )}
-
-                            {saving
-                                ? "Saving…"
-                                : editing
-                                    ? "Save changes"
-                                    : "Create product"}
+                    <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+                        <button type="submit" disabled={saving || configLoading} style={buttonStyle}>
+                            {saving ? <LoaderCircle size={16} /> : <Save size={16} />}
+                            {saving ? "Saving…" : editing ? "Save changes" : "Create product"}
                         </button>
+
+                        <Link to="/admin/products" style={secondaryStyle}>Cancel</Link>
                     </div>
                 </form>
             </main>

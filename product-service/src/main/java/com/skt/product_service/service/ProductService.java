@@ -1,12 +1,12 @@
 package com.skt.product_service.service;
 
-import com.skt.product_service.dto.BaseProductResponse;
 import com.skt.product_service.dto.CachedProduct;
 import com.skt.product_service.dto.ProductFormConfig;
 import com.skt.product_service.dto.ProductPageResponse;
 import com.skt.product_service.dto.ProductRequest;
 import com.skt.product_service.dto.ProductResponse;
 import com.skt.product_service.event.ProductCreatedEvent;
+import com.skt.product_service.exception.BadRequestException;
 import com.skt.product_service.exception.ProductCreationException;
 import com.skt.product_service.exception.ProductNotFoundException;
 import com.skt.product_service.model.ProductImage;
@@ -51,6 +51,7 @@ public class ProductService {
     private final ProductFormConfigService productFormConfigService;
     private final ProductBrandService productBrandService;
     private final ProductCategoryService productCategoryService;
+    private final ProductRequestValidator productRequestValidator;
 
     @Value("${app.product.images.max-count:8}")
     private int maxImageCount;
@@ -110,7 +111,7 @@ public class ProductService {
             return productMapper.toProductResponse(
                     productMapper.toCachedProduct(savedProduct)
             );
-        } catch (IllegalArgumentException ex) {
+        } catch (BadRequestException ex) {
             throw ex;
         } catch (RuntimeException ex) {
             throw new ProductCreationException("Error in creating product", ex);
@@ -186,7 +187,8 @@ public class ProductService {
 
         productBrandService.validateActiveBrand(effectiveBrandId);
 
-        ProductFactory factory = factoryRegistry.getFactory(effectiveCategoryId);
+        ProductFactory factory =
+                factoryRegistry.getFactory(productRequest.productCategory());
         Product updatedProduct = factory.update(existingProduct, productRequest);
         updatedProduct.setStatus(existingProduct.getStatus());
         updatedProduct.setSkuCode(existingProduct.getSkuCode());
@@ -286,19 +288,19 @@ public class ProductService {
         );
     }
 
-    public List<BaseProductResponse> getProductByBrand(String productBrand) {
+    public List<ProductResponse> getProductByBrand(String productBrand) {
         return productRepository.findAllBybrandIdIgnoreCase(productBrand)
                 .stream()
                 .filter(product -> product.getStatus() == ProductStatus.ACTIVE)
-                .map(productMapper::toBaseResponse)
+                .map(productMapper::toProductResponse)
                 .toList();
     }
 
-    public List<BaseProductResponse> getAllProducts() {
+    public List<ProductResponse> getAllProducts() {
         return productRepository.findAll()
                 .stream()
                 .filter(product -> product.getStatus() == ProductStatus.ACTIVE)
-                .map(productMapper::toBaseResponse)
+                .map(productMapper::toProductResponse)
                 .toList();
     }
 
@@ -456,115 +458,70 @@ public class ProductService {
         return factory.create(request);
     }
 
-    private void validateCreateRequest(ProductRequest request, List<MultipartFile> productImages) {
-        if (request.name() == null || request.name().isBlank()) {
-            throw new IllegalArgumentException("name is required");
-        }
-        if (request.description() == null || request.description().isBlank()) {
-            throw new IllegalArgumentException("description is required");
-        }
-        if (request.price() == null) {
-            throw new IllegalArgumentException("price is required");
-        }
-        if (request.categoryId() == null || request.categoryId().isBlank()) {
-            throw new IllegalArgumentException("categoryId is required");
-        }
-        if (request.brandId() == null || request.brandId().isBlank()) {
-            throw new IllegalArgumentException("brandId is required");
-        }
 
-        validateProductImages(productImages);
-        validateCategorySpecificFields(request);
-    }
 
     private void validateUpdateRequest(ProductRequest request) {
-        if (request.productCategory() == null) {
-            throw new IllegalArgumentException("productCategory is required");
-        }
+        productRequestValidator.validate(request);
     }
 
-    private void validateCategorySpecificFields(ProductRequest request) {
-        List<String> missingFields = new java.util.ArrayList<>();
 
-        if (request.productCategory() == ProductCategory.LAPTOP) {
-            addMissing(missingFields, "processor", request.processor());
-            addMissing(missingFields, "ramGb", request.ramGb());
-            addMissing(missingFields, "storageGb", request.storageGb());
-            addMissing(missingFields, "screenSize", request.screenSize());
-            addMissing(missingFields, "graphics", request.graphics());
-        }
 
-        if (request.productCategory() == ProductCategory.COMPUTER) {
-            addMissing(missingFields, "processor", request.processor());
-            addMissing(missingFields, "ramGb", request.ramGb());
-            addMissing(missingFields, "storageGb", request.storageGb());
-            addMissing(missingFields, "screenSize", request.screenSize());
-            addMissing(missingFields, "graphics", request.graphics());
-            addMissing(missingFields, "mouse", request.mouse());
-            addMissing(missingFields, "keyboard", request.keyboard());
-        }
-
-        if (!missingFields.isEmpty()) {
-            throw new IllegalArgumentException("Missing required fields for "
-                    + request.productCategory().name().toLowerCase(java.util.Locale.ROOT)
-                    + ": " + String.join(", ", missingFields));
-        }
-    }
-
-    private void addMissing(List<String> missingFields, String fieldName, String value) {
-        if (value == null || value.isBlank()) {
-            missingFields.add(fieldName);
-        }
-    }
 
     private static final BigDecimal MAX_PRODUCT_PRICE =
             new BigDecimal("100000000.00");
 
     private void validatePrice(BigDecimal price) {
         if (price == null) {
-            throw new IllegalArgumentException("Price is required");
+            throw new BadRequestException("Price is required");
         }
 
         if (price.signum() <= 0) {
-            throw new IllegalArgumentException("Price must be greater than 0");
+            throw new BadRequestException("Price must be greater than 0");
         }
 
         if (price.compareTo(MAX_PRODUCT_PRICE) > 0) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Price cannot exceed " + MAX_PRODUCT_PRICE
             );
         }
 
         if (price.scale() > 2) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     "Price can have at most 2 decimal places"
             );
         }
     }
 
-    private void validateProductImages(List<MultipartFile> productImages) {
+    private void validateProductImages(
+            List<MultipartFile> images
+    ) {
 
-        if (productImages == null || productImages.isEmpty()) {
-            throw new IllegalArgumentException("productImages are required");
-        }
-
-        if (productImages.size() > maxImageCount) {
-            throw new IllegalArgumentException(
-                    "Maximum " + maxImageCount + " images are allowed"
+        if (images == null || images.isEmpty()) {
+            throw new BadRequestException(
+                    "At least one product image is required"
             );
         }
 
-        for (MultipartFile image : productImages) {
+        if (images.size() > maxImageCount) {
+            throw new BadRequestException(
+                    "Maximum " + maxImageCount +
+                            " images are allowed"
+            );
+        }
+
+        for (MultipartFile image : images) {
 
             if (image == null || image.isEmpty()) {
-                throw new IllegalArgumentException("Image cannot be empty");
+                throw new BadRequestException(
+                        "Product image cannot be empty"
+                );
             }
 
             if (image.getSize() > maxImageSizeBytes) {
-                throw new IllegalArgumentException(
-                        "Image size cannot exceed "
-                                + (maxImageSizeBytes / (1024 * 1024))
-                                + " MB"
+                throw new BadRequestException(
+                        "Each image must be smaller than "
+                                + maxImageSizeBytes
+                                + " bytes"
                 );
             }
         }
@@ -601,5 +558,17 @@ public class ProductService {
                 query,
                 pagingOptions
         );
+    }
+
+    private void validateCreateRequest(
+            ProductRequest request,
+            List<MultipartFile> productImages
+    ) {
+
+        productRequestValidator.validate(request);
+
+        validateProductImages(productImages);
+
+        validatePrice(request.price());
     }
 }

@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import keycloak from "../auth/keycloak";
 
@@ -12,100 +13,77 @@ const apiClient = axios.create({
     },
 });
 
-/**
- * Compatibility helper for existing API service functions.
- * The request interceptor below replaces this token with the
- * current Keycloak token before sending an authenticated request.
- */
-export function withBearerToken(token) {
-    if (!token) {
-        throw new Error("An access token is required for this operation.");
-    }
-
-    return {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    };
-}
-
-/**
- * Always use the current Keycloak access token for authenticated
- * requests. Refresh it when it is close to expiring.
- */
+// Attach a Keycloak token when the user is authenticated.
 apiClient.interceptors.request.use(
     async (config) => {
-        const hasExplicitToken = Boolean(
-            config.headers?.Authorization ||
-            config.headers?.authorization
-        );
+        if (!keycloak.authenticated) {
+            return config;
+        }
 
-        if (keycloak.authenticated) {
+        try {
             await keycloak.updateToken(30);
 
             if (!keycloak.token) {
-                throw new Error(
-                    "Keycloak did not provide an access token. Please sign in again."
-                );
+                throw new Error("No Keycloak access token available.");
             }
 
             config.headers = config.headers || {};
             config.headers.Authorization = `Bearer ${keycloak.token}`;
-        } else if (hasExplicitToken) {
-            delete config.headers.Authorization;
-            delete config.headers.authorization;
 
-            throw new Error(
-                "Your login session is no longer active. Please sign in again."
+            return config;
+        } catch (error) {
+            console.error("Keycloak token refresh failed:", error);
+
+            const authError = new Error(
+                "Your login session has expired. Please sign in again."
             );
-        }
+            authError.status = 401;
+            authError.original = error;
 
-        return config;
+            return Promise.reject(authError);
+        }
     },
     (error) => Promise.reject(error)
 );
 
-/**
- * Normalize API errors.
- */
+// Normalize errors without losing useful status and response details.
 apiClient.interceptors.response.use(
     (response) => response,
     (error) => {
         const status = error.response?.status;
         const body = error.response?.data;
 
-        let message = "The request failed. Please try again.";
+        let message =
+            body?.message ||
+            body?.detail ||
+            error.message ||
+            "The request failed. Please try again.";
 
-        if (typeof body === "string" && body.trim()) {
-            message = body;
-        } else if (body?.message) {
-            message = body.message;
-        } else if (body?.detail) {
-            message = body.detail;
-        } else if (error.code === "ECONNABORTED") {
-            message = "The server took too long to respond.";
-        } else if (!error.response && error.message?.includes("Keycloak")) {
-            message = error.message;
+        if (Array.isArray(body?.fieldErrors) && body.fieldErrors.length) {
+            message = body.fieldErrors
+                .map((field) => `${field.field}: ${field.message}`)
+                .join("\n");
+        } else if (status === 400) {
+            message = body?.message || "Invalid request.";
+        } else if (status === 401) {
+            message = "Your session has expired or authentication is required.";
+        } else if (status === 403) {
+            message = "You do not have permission to perform this operation.";
+        } else if (status === 404) {
+            message = "The requested resource was not found.";
+        } else if (status >= 500) {
+            message = body?.message || "The server encountered an unexpected error.";
         } else if (!error.response) {
             message =
-                "Cannot connect to API Gateway at http://localhost:7070. Make sure API Gateway is running.";
-        } else if (status === 401) {
-            message =
-                "Authentication failed. Please sign in again and retry.";
-        } else if (status === 403) {
-            message =
-                "You do not have permission to perform this operation.";
-        } else if (status === 404) {
-            message = "The requested API endpoint was not found.";
-        } else if (status >= 500) {
-            message = "The backend server returned an error.";
+                "Cannot connect to the API. Check the gateway URL and whether the gateway is running.";
         }
 
-        const wrappedError = new Error(message);
-        wrappedError.status = status;
-        wrappedError.data = body;
+        const normalizedError = new Error(message);
+        normalizedError.status = status;
+        normalizedError.data = body;
+        normalizedError.original = error;
 
-        return Promise.reject(wrappedError);
+        return Promise.reject(normalizedError);
     }
 );
 

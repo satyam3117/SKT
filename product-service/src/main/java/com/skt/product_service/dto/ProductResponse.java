@@ -5,18 +5,27 @@ import com.skt.product_service.model.ProductImage;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
-public sealed interface ProductResponse
-        permits BaseProductResponse, LaptopResponse {
+public record ProductResponse(
+        String id,
+        String skuCode,
+        Instant createdAt,
+        Instant updatedAt,
 
-    String id();
-    String skuCode();
-    Instant createdAt();
-    Instant updatedAt();
-    String name();
-    String description();
-    BigDecimal price();
-    String productCategory();
-    String categoryId();
-    List<ProductImage> productImages();
+        String name,
+        String description,
+        BigDecimal price,
+
+        String productCategory,
+
+        String brandId,
+        String categoryId,
+
+        String status,
+
+        List<ProductImage> productImages,
+
+        Map<String, Object> attributes
+) {
 }

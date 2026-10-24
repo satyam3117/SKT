@@ -1,7 +1,8 @@
 package com.skt.product_service.service;
 
-import com.skt.product_service.dto.BaseProductResponse;
 import com.skt.product_service.dto.ProductPageResponse;
+import com.skt.product_service.dto.ProductResponse;
+import com.skt.product_service.exception.BadRequestException;
 import com.skt.product_service.model.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -93,10 +94,10 @@ public class ProductPageRequestService {
 
         Query pageQuery = Query.of(publicQuery).with(pageRequest);
 
-        List<BaseProductResponse> items = mongoTemplate
+        List<ProductResponse> items = mongoTemplate
                 .find(pageQuery, Product.class)
                 .stream()
-                .map(productMapper::toBaseResponse)
+                .map(productMapper::toProductResponse)
                 .toList();
 
         int totalPages = totalElements == 0
@@ -125,35 +126,35 @@ public class ProductPageRequestService {
             String direction
     ) {
         if (page < 0) {
-            throw new IllegalArgumentException("page must be greater than or equal to 0");
+            throw new BadRequestException("page must be greater than or equal to 0");
         }
 
         if (size < 1 || size > MAX_PAGE_SIZE) {
-            throw new IllegalArgumentException("size must be between 1 and " + MAX_PAGE_SIZE);
+            throw new BadRequestException("size must be between 1 and " + MAX_PAGE_SIZE);
         }
 
         if (minPrice != null && minPrice.signum() < 0) {
-            throw new IllegalArgumentException("minPrice must be greater than or equal to 0");
+            throw new BadRequestException("minPrice must be greater than or equal to 0");
         }
 
         if (maxPrice != null && maxPrice.signum() < 0) {
-            throw new IllegalArgumentException("maxPrice must be greater than or equal to 0");
+            throw new BadRequestException("maxPrice must be greater than or equal to 0");
         }
 
         if (minPrice != null && maxPrice != null && minPrice.compareTo(maxPrice) > 0) {
-            throw new IllegalArgumentException("minPrice must be less than or equal to maxPrice");
+            throw new BadRequestException("minPrice must be less than or equal to maxPrice");
         }
 
         String normalizedSort = normalizeOptional(sort);
         if (normalizedSort != null && !ALLOWED_SORT_FIELDS.contains(normalizedSort)) {
-            throw new IllegalArgumentException("sort must be one of: " + String.join(", ", ALLOWED_SORT_FIELDS));
+            throw new BadRequestException("sort must be one of: " + String.join(", ", ALLOWED_SORT_FIELDS));
         }
 
         String normalizedDirection = normalizeOptional(direction);
         if (normalizedDirection != null
                 && !normalizedDirection.equalsIgnoreCase("asc")
                 && !normalizedDirection.equalsIgnoreCase("desc")) {
-            throw new IllegalArgumentException("direction must be asc or desc");
+            throw new BadRequestException("direction must be asc or desc");
         }
     }
 
@@ -181,7 +182,7 @@ public class ProductPageRequestService {
 
     public String normalizeRequired(String value, String fieldName) {
         if (value == null || value.isBlank()) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     fieldName + " must not be blank"
             );
         }
@@ -189,7 +190,7 @@ public class ProductPageRequestService {
         String trimmed = value.trim();
 
         if (trimmed.length() > 100) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     fieldName + " cannot exceed 100 characters"
             );
         }
@@ -213,7 +214,7 @@ public class ProductPageRequestService {
         }
 
         if (trimmed.length() > maxLength) {
-            throw new IllegalArgumentException(
+            throw new BadRequestException(
                     fieldName + " cannot exceed " + maxLength + " characters"
             );
         }

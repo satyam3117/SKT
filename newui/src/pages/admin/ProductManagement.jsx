@@ -20,6 +20,10 @@ import {
 } from "../../services/productApi.js";
 import { API_BASE_URL } from "../../services/apiClient.js";
 
+import {
+    resolveImageUrl
+} from "../../services/productApi.js";
+
 const PAGE_SIZE = 10;
 
 const styles = {
@@ -176,8 +180,10 @@ function getItems(result) {
 }
 
 function imageFor(product) {
-    const images = product?.productImages;
-    const first = Array.isArray(images)
+    const image =
+        resolveImageUrl(
+            product?.productImages?.[0]?.imageUrl
+        );    const first = Array.isArray(images)
         ? images.find((image) => image?.imageUrl || image?.url)
         : null;
     const path = first?.imageUrl || first?.url;
