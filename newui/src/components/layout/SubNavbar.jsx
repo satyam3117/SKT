@@ -1,64 +1,103 @@
-import { ChevronDown, ChevronRight, Menu } from "lucide-react";
+import {
+    ChevronDown,
+    ChevronRight,
+    Menu,
+} from "lucide-react";
+
 import { useEffect, useRef, useState } from "react";
 
-function CategoryMenuItem({
-                              category,
-                              categories,
-                              activePath,
-                              setActivePath,
-                              level,
-                          }) {
+function CategoryItem({
+                          category,
+                          categories,
+                          activePath,
+                          setActivePath,
+                          level,
+                      }) {
     const children = categories
-        .filter((item) => item.parentId === category.id)
-        .sort((a, b) => a.sortOrder - b.sortOrder);
+        .filter(
+            (item) =>
+                String(item.parentId) === String(category.id)
+        )
+        .sort(
+            (a, b) =>
+                (a.sortOrder ?? 0) -
+                (b.sortOrder ?? 0)
+        );
 
-    const isActive = activePath[level] === category.id;
+    const hasChildren = children.length > 0;
 
-    const handleMouseEnter = () => {
-        setActivePath((prev) => [
-            ...prev.slice(0, level),
+    const isActive =
+        activePath[level] === category.id;
+
+    function handleMouseEnter() {
+        if (!hasChildren) {
+            setActivePath((previous) =>
+                previous.slice(0, level)
+            );
+
+            return;
+        }
+
+        setActivePath((previous) => [
+            ...previous.slice(0, level),
             category.id,
         ]);
-    };
+    }
 
     return (
         <div>
             <button
                 type="button"
                 onMouseEnter={handleMouseEnter}
-                className={`flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm transition ${
+                className={`flex w-full items-center justify-between gap-4 rounded-md px-3 py-2.5 text-left text-sm transition ${
                     isActive
-                        ? "bg-zinc-100 text-brand"
-                        : "text-zinc-700 hover:bg-zinc-100 hover:text-brand"
+                        ? "bg-[#E5EBDD] font-semibold text-[#245C45]"
+                        : "text-zinc-700 hover:bg-[#F1F3ED] hover:text-[#245C45]"
                 }`}
             >
                 <span>{category.name}</span>
 
-                {children.length > 0 && <ChevronRight size={15} />}
+                {hasChildren && (
+                    <ChevronRight
+                        size={15}
+                        className="shrink-0"
+                    />
+                )}
             </button>
         </div>
     );
 }
 
-function CategoryLevel({
-                           categories,
-                           parentId,
-                           activePath,
-                           setActivePath,
-                           level,
-                       }) {
+function CategoryColumn({
+                            categories,
+                            parentId,
+                            activePath,
+                            setActivePath,
+                            level,
+                        }) {
     const items = categories
-        .filter((category) => category.parentId === parentId)
-        .sort((a, b) => a.sortOrder - b.sortOrder);
+        .filter(
+            (category) =>
+                parentId === null
+                    ? category.parentId === null
+                    : String(category.parentId) ===
+                    String(parentId)
+        )
+        .sort(
+            (a, b) =>
+                (a.sortOrder ?? 0) -
+                (b.sortOrder ?? 0)
+        );
 
     if (items.length === 0) {
         return null;
     }
 
     return (
-        <div className="w-64 border-l border-[#D8DFD1] p-2">
+        <div className="w-64 p-2">
+
             {items.map((category) => (
-                <CategoryMenuItem
+                <CategoryItem
                     key={category.id}
                     category={category}
                     categories={categories}
@@ -67,186 +106,329 @@ function CategoryLevel({
                     level={level}
                 />
             ))}
+
         </div>
     );
 }
 
 function SubNavbar({
-                       navLinks,
-                       categories,
-                       categoriesLoading,
-                       categoriesError,
+                       categories = [],
+                       categoriesLoading = false,
+                       categoriesError = "",
+                       onCategorySelect,
                    }) {
-    const [showCategories, setShowCategories] = useState(false);
+    const [open, setOpen] =
+        useState(false);
 
-    // [parentId, childId, grandChildId, ...]
-    const [activePath, setActivePath] = useState([]);
+    const [activePath, setActivePath] =
+        useState([]);
 
-    // Reference for the entire Categories area
-    // including button + dropdown
-    const categoriesRef = useRef(null);
+    const menuRef = useRef(null);
 
-    // Close Categories when clicking/tapping outside
     useEffect(() => {
-        function handleClickOutside(event) {
+        function handleOutsideClick(event) {
             if (
-                categoriesRef.current &&
-                !categoriesRef.current.contains(event.target)
+                menuRef.current &&
+                !menuRef.current.contains(event.target)
             ) {
-                setShowCategories(false);
+                setOpen(false);
                 setActivePath([]);
             }
         }
 
-        // Mouse click
         document.addEventListener(
             "mousedown",
-            handleClickOutside
-        );
-
-        // Touch/tap
-        document.addEventListener(
-            "touchstart",
-            handleClickOutside
+            handleOutsideClick
         );
 
         return () => {
             document.removeEventListener(
                 "mousedown",
-                handleClickOutside
-            );
-
-            document.removeEventListener(
-                "touchstart",
-                handleClickOutside
+                handleOutsideClick
             );
         };
     }, []);
 
     const rootCategories = categories
-        .filter((category) => category.parentId === null)
-        .sort((a, b) => a.sortOrder - b.sortOrder);
+        .filter(
+            (category) =>
+                category.parentId === null &&
+                category.active !== false
+        )
+        .sort(
+            (a, b) =>
+                (a.sortOrder ?? 0) -
+                (b.sortOrder ?? 0)
+        );
+
+    function handleCategoryClick(category) {
+        setOpen(false);
+        setActivePath([]);
+
+        if (onCategorySelect) {
+            onCategorySelect(category);
+        }
+    }
 
     return (
-        <div className="relative hidden border-b border-[#D8DFD1]/70 bg-[#FFFDF7] md:block">
-            <div className="mx-auto flex max-w-container items-center gap-8 px-16 py-3">
+        <div className="relative hidden border-b border-[#D8DFD1] bg-white md:block">
+
+            <div className="mx-auto flex max-w-7xl items-center gap-7 px-4 sm:px-6 lg:px-8">
 
                 {/* Categories */}
                 <div
-                    ref={categoriesRef}
+                    ref={menuRef}
                     className="relative"
                 >
+
                     <button
                         type="button"
                         onClick={() => {
-                            setShowCategories((prev) => !prev);
+                            setOpen(
+                                (previous) =>
+                                    !previous
+                            );
+
                             setActivePath([]);
                         }}
-                        className="flex items-center gap-2 rounded-md bg-brand/10 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-brand transition hover:bg-brand/20"
+                        className={`flex items-center gap-2 px-1 py-4 text-sm font-semibold transition ${
+                            open
+                                ? "text-[#245C45]"
+                                : "text-[#26372D] hover:text-[#245C45]"
+                        }`}
                     >
-                        <Menu size={16} />
+                        <Menu size={18} />
 
-                        Categories
+                        <span>Categories</span>
 
                         <ChevronDown
                             size={16}
-                            className={
-                                showCategories
-                                    ? "rotate-180 transition"
-                                    : "transition"
-                            }
+                            className={`transition ${
+                                open
+                                    ? "rotate-180"
+                                    : ""
+                            }`}
                         />
                     </button>
 
-                    {showCategories && (
-                        <div className="absolute left-0 top-12 z-30 flex rounded-lg border border-[#D8DFD1] bg-[#FFFDF7] shadow-xl">
+                    {open && (
+                        <div className="absolute left-0 top-full z-50 flex overflow-hidden rounded-b-xl border border-[#D8DFD1] bg-[#FFFDF7] shadow-2xl">
 
-                            {/* Loading */}
+                            {/* Root Categories */}
                             {categoriesLoading && (
-                                <div className="w-64 p-4 text-sm text-zinc-500">
+                                <div className="w-64 p-5 text-sm text-zinc-500">
                                     Loading categories...
                                 </div>
                             )}
 
-                            {/* Error */}
                             {categoriesError && (
-                                <div className="w-64 p-4 text-sm text-red-500">
-                                    Failed to load categories.
+                                <div className="w-64 p-5 text-sm text-red-600">
+                                    Unable to load categories.
                                 </div>
                             )}
 
-                            {/* Categories */}
                             {!categoriesLoading &&
                                 !categoriesError && (
                                     <>
-                                        {/* Level 0 */}
-                                        <div className="w-64 p-2">
-                                            {rootCategories.map((category) => (
-                                                <CategoryMenuItem
-                                                    key={category.id}
-                                                    category={category}
-                                                    categories={categories}
-                                                    activePath={activePath}
-                                                    setActivePath={setActivePath}
-                                                    level={0}
-                                                />
-                                            ))}
+                                        <div className="w-64 border-r border-[#D8DFD1] p-2">
+
+                                            {rootCategories.map(
+                                                (
+                                                    category
+                                                ) => (
+                                                    <CategoryItem
+                                                        key={
+                                                            category.id
+                                                        }
+                                                        category={
+                                                            category
+                                                        }
+                                                        categories={
+                                                            categories
+                                                        }
+                                                        activePath={
+                                                            activePath
+                                                        }
+                                                        setActivePath={
+                                                            setActivePath
+                                                        }
+                                                        level={
+                                                            0
+                                                        }
+                                                    />
+                                                )
+                                            )}
+
                                         </div>
 
-                                        {/* Level 1+ */}
+                                        {/* Dynamic child columns */}
                                         {activePath.map(
-                                            (parentId, index) => {
-                                                const children = categories
-                                                    .filter(
-                                                        (category) =>
-                                                            category.parentId ===
-                                                            parentId
-                                                    )
-                                                    .sort(
-                                                        (a, b) =>
-                                                            a.sortOrder -
-                                                            b.sortOrder
+                                            (
+                                                parentId,
+                                                index
+                                            ) => {
+                                                const children =
+                                                    categories.filter(
+                                                        (
+                                                            category
+                                                        ) =>
+                                                            String(
+                                                                category.parentId
+                                                            ) ===
+                                                            String(
+                                                                parentId
+                                                            )
                                                     );
 
-                                                if (children.length === 0) {
+                                                if (
+                                                    children.length ===
+                                                    0
+                                                ) {
                                                     return null;
                                                 }
 
                                                 return (
-                                                    <CategoryLevel
+                                                    <div
                                                         key={`${parentId}-${index}`}
-                                                        categories={categories}
-                                                        parentId={parentId}
-                                                        activePath={activePath}
-                                                        setActivePath={
-                                                            setActivePath
-                                                        }
-                                                        level={index + 1}
-                                                    />
+                                                        className="border-r border-[#D8DFD1]"
+                                                    >
+                                                        <CategoryColumn
+                                                            categories={
+                                                                categories
+                                                            }
+                                                            parentId={
+                                                                parentId
+                                                            }
+                                                            activePath={
+                                                                activePath
+                                                            }
+                                                            setActivePath={
+                                                                setActivePath
+                                                            }
+                                                            level={
+                                                                index +
+                                                                1
+                                                            }
+                                                        />
+                                                    </div>
                                                 );
                                             }
                                         )}
                                     </>
                                 )}
+
                         </div>
                     )}
                 </div>
 
-                {/* Navigation Links */}
-                <nav className="flex items-center gap-8 overflow-x-auto whitespace-nowrap text-xs uppercase tracking-wider text-zinc-600 hide-scrollbar">
-                    {navLinks.map((link, index) => (
-                        <a
-                            key={link}
-                            href="#"
-                            className={
-                                index === 0
-                                    ? "border-b-2 border-brand pb-1 font-bold text-brand"
-                                    : "transition hover:text-brand"
+                {/* Main Navigation */}
+                <nav className="flex h-full items-center gap-7 overflow-x-auto whitespace-nowrap hide-scrollbar">
+
+                    <a
+                        href="/"
+                        className="border-b-2 border-[#245C45] py-4 text-sm font-semibold text-[#245C45]"
+                    >
+                        Home
+                    </a>
+
+                    <button
+                        type="button"
+                        onClick={() => {
+                            const category =
+                                rootCategories.find(
+                                    (item) =>
+                                        item.name
+                                            ?.toLowerCase()
+                                            .includes(
+                                                "electronic"
+                                            )
+                                );
+
+                            if (category) {
+                                handleCategoryClick(
+                                    category
+                                );
                             }
-                        >
-                            {link}
-                        </a>
-                    ))}
+                        }}
+                        className="py-4 text-sm text-zinc-600 transition hover:text-[#245C45]"
+                    >
+                        Electronics
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => {
+                            const category =
+                                rootCategories.find(
+                                    (item) =>
+                                        item.name
+                                            ?.toLowerCase()
+                                            .includes(
+                                                "computer"
+                                            ) ||
+                                        item.name
+                                            ?.toLowerCase()
+                                            .includes(
+                                                "laptop"
+                                            )
+                                );
+
+                            if (category) {
+                                handleCategoryClick(
+                                    category
+                                );
+                            }
+                        }}
+                        className="py-4 text-sm text-zinc-600 transition hover:text-[#245C45]"
+                    >
+                        Computers
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={() => {
+                            const category =
+                                rootCategories.find(
+                                    (item) =>
+                                        item.name
+                                            ?.toLowerCase()
+                                            .includes(
+                                                "gaming"
+                                            )
+                                );
+
+                            if (category) {
+                                handleCategoryClick(
+                                    category
+                                );
+                            }
+                        }}
+                        className="py-4 text-sm text-zinc-600 transition hover:text-[#245C45]"
+                    >
+                        Gaming
+                    </button>
+
+                    <a
+                        href="#products"
+                        className="py-4 text-sm text-zinc-600 transition hover:text-[#245C45]"
+                    >
+                        Deals
+                    </a>
+
+                    <a
+                        href="#products"
+                        className="py-4 text-sm text-zinc-600 transition hover:text-[#245C45]"
+                    >
+                        New Arrivals
+                    </a>
+
+                    <a
+                        href="#products"
+                        className="py-4 text-sm text-zinc-600 transition hover:text-[#245C45]"
+                    >
+                        Best Sellers
+                    </a>
+
                 </nav>
 
             </div>
