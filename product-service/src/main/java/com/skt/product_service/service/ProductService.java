@@ -308,20 +308,36 @@ public class ProductService {
             int page,
             int size,
             String categoryId,
+            String categoryIds,
             String brand,
             BigDecimal minPrice,
             BigDecimal maxPrice,
             String sort,
             String direction
     ) {
+
         ProductPageRequestService.ProductPagingOptions pagingOptions =
-                productPageRequestService.resolvePagingOptions(page, size, minPrice, maxPrice, sort, direction);
+                productPageRequestService.resolvePagingOptions(
+                        page,
+                        size,
+                        minPrice,
+                        maxPrice,
+                        sort,
+                        direction
+                );
 
         String normalizedCategoryId =
                 productPageRequestService.normalizeAndValidateFilter(
                         categoryId,
                         "categoryId",
                         100
+                );
+
+        String normalizedCategoryIds =
+                productPageRequestService.normalizeAndValidateFilter(
+                        categoryIds,
+                        "categoryIds",
+                        5000
                 );
 
         String normalizedBrand =
@@ -332,31 +348,120 @@ public class ProductService {
                 );
 
         Query query = new Query();
-        List<Criteria> criteriaList = new ArrayList<>();
 
-        if (normalizedCategoryId != null) {
-            criteriaList.add(Criteria.where("categoryId").is(normalizedCategoryId));
+        List<Criteria> criteriaList =
+                new ArrayList<>();
+
+        /*
+         * ----------------------------------------------------------------------
+         * Category filtering
+         * ----------------------------------------------------------------------
+         *
+         * categoryIds is used by the storefront category page.
+         *
+         * Example:
+         *
+         * categoryIds =
+         * electronicsId,
+         * laptopId,
+         * gamingLaptopId,
+         * businessLaptopId
+         *
+         * This allows the parent category page to show products
+         * from all descendants.
+         */
+
+        if (normalizedCategoryIds != null) {
+
+            List<String> ids =
+                    java.util.Arrays.stream(
+                                    normalizedCategoryIds.split(",")
+                            )
+                            .map(String::trim)
+                            .filter(id -> !id.isEmpty())
+                            .distinct()
+                            .toList();
+
+            if (!ids.isEmpty()) {
+
+                criteriaList.add(
+                        Criteria.where("categoryId")
+                                .in(ids)
+                );
+            }
+
+        } else if (normalizedCategoryId != null) {
+
+            /*
+             * Keep the existing single-category API behaviour.
+             */
+            criteriaList.add(
+                    Criteria.where("categoryId")
+                            .is(normalizedCategoryId)
+            );
         }
+
+        /*
+         * ----------------------------------------------------------------------
+         * Brand
+         * ----------------------------------------------------------------------
+         */
 
         if (normalizedBrand != null) {
-            criteriaList.add(Criteria.where("brandId").is(normalizedBrand));
+
+            criteriaList.add(
+                    Criteria.where("brandId")
+                            .is(normalizedBrand)
+            );
         }
 
-        if (minPrice != null || maxPrice != null) {
-            Criteria priceCriteria = Criteria.where("price");
+        /*
+         * ----------------------------------------------------------------------
+         * Price
+         * ----------------------------------------------------------------------
+         */
+
+        if (
+                minPrice != null ||
+                        maxPrice != null
+        ) {
+
+            Criteria priceCriteria =
+                    Criteria.where("price");
+
             if (minPrice != null) {
-                priceCriteria.gte(minPrice);
+
+                priceCriteria.gte(
+                        minPrice
+                );
             }
 
             if (maxPrice != null) {
-                priceCriteria.lte(maxPrice);
+
+                priceCriteria.lte(
+                        maxPrice
+                );
             }
-            criteriaList.add(priceCriteria);
+
+            criteriaList.add(
+                    priceCriteria
+            );
         }
 
-        criteriaList.forEach(query::addCriteria);
+        /*
+         * ----------------------------------------------------------------------
+         * Apply criteria
+         * ----------------------------------------------------------------------
+         */
 
-        return productPageRequestService.fetchPage(query, pagingOptions);
+        criteriaList.forEach(
+                query::addCriteria
+        );
+
+        return productPageRequestService.fetchPage(
+                query,
+                pagingOptions
+        );
     }
 
 
@@ -391,6 +496,7 @@ public class ProductService {
     public ProductPageResponse searchProducts(
             String q,
             String categoryId,
+            String categoryIds,
             String brand,
             BigDecimal minPrice,
             BigDecimal maxPrice,
@@ -406,8 +512,15 @@ public class ProductService {
         ProductPageRequestService.ProductPagingOptions pagingOptions =
                 productPageRequestService.resolvePagingOptions(page, size, minPrice, maxPrice, sort, direction);
         normalizedQ = q.trim();
-        String normalizedCategoryId = productPageRequestService.normalizeOptional(categoryId);
-        String normalizedBrand = productPageRequestService.normalizeOptional(brand);
+        String normalizedCategoryId =
+                productPageRequestService.normalizeOptional(
+                        categoryId
+                );
+
+        String normalizedCategoryIds =
+                productPageRequestService.normalizeOptional(
+                        categoryIds
+                );        String normalizedBrand = productPageRequestService.normalizeOptional(brand);
 
         Query query = new Query();
         List<Criteria> criteriaList = new ArrayList<>();
@@ -419,8 +532,31 @@ public class ProductService {
                 Criteria.where("brandId").regex(Pattern.quote(normalizedQ), "i")
         ));
 
-        if (normalizedCategoryId != null) {
-            criteriaList.add(Criteria.where("categoryId").is(normalizedCategoryId));
+        if (normalizedCategoryIds != null) {
+
+            List<String> ids =
+                    java.util.Arrays.stream(
+                                    normalizedCategoryIds.split(",")
+                            )
+                            .map(String::trim)
+                            .filter(id -> !id.isEmpty())
+                            .distinct()
+                            .toList();
+
+            if (!ids.isEmpty()) {
+
+                criteriaList.add(
+                        Criteria.where("categoryId")
+                                .in(ids)
+                );
+            }
+
+        } else if (normalizedCategoryId != null) {
+
+            criteriaList.add(
+                    Criteria.where("categoryId")
+                            .is(normalizedCategoryId)
+            );
         }
 
         if (normalizedBrand != null) {

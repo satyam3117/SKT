@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import {
+    useCallback,
+    useEffect,
+    useState,
+} from "react";
+
+import { useNavigate } from "react-router-dom";
 import {
     ChevronLeft,
     ChevronRight,
@@ -198,6 +204,8 @@ function App() {
 
     const [categoriesError, setCategoriesError] =
         useState("");
+
+    const navigate = useNavigate();
 
     /* ---------------------------------------------------------------------- */
     /* Products                                                                */
@@ -530,48 +538,20 @@ function App() {
     /* Category selection                                                      */
     /* ---------------------------------------------------------------------- */
 
-    function handleCategorySelect(
-        category
-    ) {
+    function handleCategorySelect(category) {
 
         if (!category?.id) {
             return;
         }
 
-        /*
-         * Use the backend category ID.
-         *
-         * This means:
-         *
-         * User clicks GPU
-         *       ↓
-         * categoryId = GPU category ID
-         *       ↓
-         * GET /api/product?categoryId=...
-         */
-
-        setCategoryId(
-            String(category.id)
+        navigate(
+            `/products/${category.id}`
         );
 
-        setPage(0);
-
-        /*
-         * Scroll to products.
-         */
-
-        setTimeout(() => {
-
-            document
-                .getElementById(
-                    "products"
-                )
-                ?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                });
-
-        }, 50);
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
     }
 
     /* ---------------------------------------------------------------------- */

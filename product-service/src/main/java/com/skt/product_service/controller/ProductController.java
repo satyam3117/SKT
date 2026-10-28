@@ -93,16 +93,17 @@ public class ProductController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) String categoryId,
+            @RequestParam(required = false) String categoryIds,
             @RequestParam(required = false) String brand,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
             @RequestParam(required = false) String sort,
-            @RequestParam(required = false) String direction
-    ) {
+            @RequestParam(required = false) String direction) {
         return productService.getProductsPage(
                 page,
                 size,
                 categoryId,
+                categoryIds,
                 brand,
                 minPrice,
                 maxPrice,
@@ -116,6 +117,7 @@ public class ProductController {
     public ProductPageResponse searchProducts(
             @RequestParam String q,
             @RequestParam(required = false) String categoryId,
+            @RequestParam(required = false) String categoryIds,
             @RequestParam(required = false) String brand,
             @RequestParam(required = false) BigDecimal minPrice,
             @RequestParam(required = false) BigDecimal maxPrice,
@@ -124,21 +126,34 @@ public class ProductController {
             @RequestParam(required = false) String sort,
             @RequestParam(required = false) String direction
     ) {
-        log.info("[SEARCH] q='{}', page={}, size={}", q, page, size);
 
-        ProductPageResponse response = productService.searchProducts(
+        log.info(
+                "[SEARCH] q='{}', page={}, size={}",
                 q,
-                categoryId,
-                brand,
-                minPrice,
-                maxPrice,
                 page,
-                size,
-                sort,
-                direction
+                size
         );
 
-        log.info("[SEARCH] Returned {} items (total={})", response.items().size(), response.totalElements());
+        ProductPageResponse response =
+                productService.searchProducts(
+                        q,
+                        categoryId,
+                        categoryIds,
+                        brand,
+                        minPrice,
+                        maxPrice,
+                        page,
+                        size,
+                        sort,
+                        direction
+                );
+
+        log.info(
+                "[SEARCH] Returned {} items (total={})",
+                response.items().size(),
+                response.totalElements()
+        );
+
         return response;
     }
 

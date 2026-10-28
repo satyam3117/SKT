@@ -12,6 +12,7 @@ function CategoryItem({
                           activePath,
                           setActivePath,
                           level,
+                          onCategoryClick,
                       }) {
     const children = categories
         .filter(
@@ -49,6 +50,11 @@ function CategoryItem({
             <button
                 type="button"
                 onMouseEnter={handleMouseEnter}
+                onClick={() => {
+                    if (onCategoryClick) {
+                        onCategoryClick(category);
+                    }
+                }}
                 className={`flex w-full items-center justify-between gap-4 rounded-md px-3 py-2.5 text-left text-sm transition ${
                     isActive
                         ? "bg-[#E5EBDD] font-semibold text-[#245C45]"
@@ -74,6 +80,7 @@ function CategoryColumn({
                             activePath,
                             setActivePath,
                             level,
+                            onCategoryClick,
                         }) {
     const items = categories
         .filter(
@@ -104,6 +111,9 @@ function CategoryColumn({
                     activePath={activePath}
                     setActivePath={setActivePath}
                     level={level}
+                    onCategoryClick={
+                        onCategoryClick
+                    }
                 />
             ))}
 
@@ -237,23 +247,14 @@ function SubNavbar({
                                                     category
                                                 ) => (
                                                     <CategoryItem
-                                                        key={
-                                                            category.id
-                                                        }
-                                                        category={
-                                                            category
-                                                        }
-                                                        categories={
-                                                            categories
-                                                        }
-                                                        activePath={
-                                                            activePath
-                                                        }
-                                                        setActivePath={
-                                                            setActivePath
-                                                        }
-                                                        level={
-                                                            0
+                                                        key={category.id}
+                                                        category={category}
+                                                        categories={categories}
+                                                        activePath={activePath}
+                                                        setActivePath={setActivePath}
+                                                        level={0}
+                                                        onCategoryClick={
+                                                            handleCategoryClick
                                                         }
                                                     />
                                                 )
@@ -308,6 +309,9 @@ function SubNavbar({
                                                             level={
                                                                 index +
                                                                 1
+                                                            }
+                                                            onCategoryClick={
+                                                                handleCategoryClick
                                                             }
                                                         />
                                                     </div>

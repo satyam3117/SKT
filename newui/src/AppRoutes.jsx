@@ -11,6 +11,8 @@ import ProductForm from "./pages/admin/ProductForm";
 import InventoryManagement from "./pages/InventoryManagement";
 import ProductBrands from "./pages/ProductBrands";
 import ProductCategories from "./pages/ProductCategories";
+import CategoryProductsPage from "./pages/CategoryProductsPage";
+
 export default function AppRoutes() {
     return (
         <AuthProvider>
@@ -18,6 +20,10 @@ export default function AppRoutes() {
                 <Routes>
                     {/* Public storefront */}
                     <Route path="/" element={<App />} />
+                    <Route
+                        path="/products/:categoryId"
+                        element={<CategoryProductsPage />}
+                    />
                     <Route path="/login" element={<LoginPage />} />
 
                     {/* Admin-only pages */}

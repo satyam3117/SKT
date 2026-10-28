@@ -17,18 +17,60 @@ function withPagination(params = {}) {
     return {
         page: params.page ?? 0,
         size: params.size ?? 20,
-        ...(params.categoryId ? { categoryId: params.categoryId } : {}),
-        ...(params.brand ? { brand: params.brand } : {}),
-        ...(params.minPrice !== undefined && params.minPrice !== ""
-            ? { minPrice: params.minPrice }
+
+        ...(params.categoryId
+            ? {
+                categoryId:
+                params.categoryId,
+            }
             : {}),
-        ...(params.maxPrice !== undefined && params.maxPrice !== ""
-            ? { maxPrice: params.maxPrice }
+
+        ...(params.categoryIds
+            ? {
+                categoryIds:
+                params.categoryIds,
+            }
             : {}),
-        ...(params.sort ? { sort: params.sort } : {}),
-        ...(params.direction ? { direction: params.direction } : {}),
+
+        ...(params.brand
+            ? {
+                brand:
+                params.brand,
+            }
+            : {}),
+
+        ...(params.minPrice !== undefined &&
+        params.minPrice !== ""
+            ? {
+                minPrice:
+                params.minPrice,
+            }
+            : {}),
+
+        ...(params.maxPrice !== undefined &&
+        params.maxPrice !== ""
+            ? {
+                maxPrice:
+                params.maxPrice,
+            }
+            : {}),
+
+        ...(params.sort
+            ? {
+                sort:
+                params.sort,
+            }
+            : {}),
+
+        ...(params.direction
+            ? {
+                direction:
+                params.direction,
+            }
+            : {}),
     };
 }
+
 
 function responseData(response) {
     return response.data;
