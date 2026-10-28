@@ -23,6 +23,7 @@ public class ComputerFactory implements ProductFactory {
                 .brandId(request.brandId() != null ? request.brandId() : StringUtils.EMPTY)
                 .processor(request.processor())
                 .ramGb(request.ramGb() != null ? request.ramGb() : StringUtils.EMPTY)
+                .warrantyInMonth(request.warrantyInMonth())
                 .storageGb(request.storageGb() != null ? request.storageGb() : StringUtils.EMPTY)
                 .screenSize(request.screenSize() != null ? request.screenSize() : StringUtils.EMPTY)
                 .graphics(request.graphics() != null ? request.graphics() : StringUtils.EMPTY)
@@ -54,6 +55,11 @@ public class ComputerFactory implements ProductFactory {
                 .mouse(request.mouse() != null ? request.mouse() : existingComputer.getMouse())
                 .keyboard(request.keyboard() != null ? request.keyboard() : existingComputer.getKeyboard())
                 .categoryId(request.categoryId() != null ? request.categoryId() : existingComputer.getCategoryId())
+                .warrantyInMonth(
+                        request.warrantyInMonth() != null
+                                ? request.warrantyInMonth()
+                                : existingComputer.getWarrantyInMonth()
+                )
                 .build();
     }
 

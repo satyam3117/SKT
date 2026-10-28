@@ -16,7 +16,6 @@ import java.util.Map;
 public class ProductMapper {
 
     public ProductResponse toProductResponse(Product product) {
-
         Map<String, Object> attributes = new LinkedHashMap<>();
 
         if (product instanceof Laptop laptop) {
@@ -45,6 +44,7 @@ public class ProductMapper {
                 product.getName(),
                 product.getDescription(),
                 product.getPrice(),
+                product.getWarrantyInMonth(),
                 normalizeCategory(product.getProductCategory()),
                 product.getBrandId(),
                 product.getCategoryId(),
@@ -76,7 +76,6 @@ public class ProductMapper {
     }
 
     private List<ProductImage> mapImages(Product product) {
-
         if (product.getProductImages() == null) {
             return List.of();
         }

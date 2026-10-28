@@ -16,6 +16,7 @@ const INITIAL_FORM = {
     name: "",
     description: "",
     price: "",
+    warrantyInMonth: "0",
     productCategory: "LAPTOP",
     brandId: "",
     categoryId: "",
@@ -537,6 +538,7 @@ export default function ProductForm() {
             "name",
             "description",
             "price",
+            "warrantyInMonth",
             "productCategory",
             "brandId",
             "categoryId",
@@ -710,6 +712,27 @@ export default function ProductForm() {
                                         No brands were returned by the API.
                                     </small>
                                 )}
+                            </div>
+                            <div>
+                                <label htmlFor="warrantyInMonth" style={LABEL_STYLE}>
+                                    Warranty (months)
+                                </label>
+
+                                <input
+                                    id="warrantyInMonth"
+                                    name="warrantyInMonth"
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    value={form.warrantyInMonth ?? "0"}
+                                    onChange={changeField}
+                                    style={INPUT_STYLE}
+                                    placeholder="12"
+                                />
+
+                                <small style={{ display: "block", marginTop: 6, color: "#64748b" }}>
+                                    Enter 0 if the product has no warranty.
+                                </small>
                             </div>
                         </div>
 

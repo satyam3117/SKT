@@ -30,10 +30,15 @@ public class BaseProductFactory implements ProductFactory {
                 .name(request.name() != null ? request.name() : existingProduct.getName())
                 .description(request.description() != null ? request.description() : existingProduct.getDescription())
                 .price(request.price() != null ? request.price() : existingProduct.getPrice())
+                .warrantyInMonth(request.warrantyInMonth() != null ? request.warrantyInMonth() : existingProduct.getWarrantyInMonth())
                 .productCategory(existingProduct.getProductCategory())
                 .brandId(request.brandId() != null ? request.brandId() : existingProduct.getBrandId())
                 .categoryId(request.categoryId() != null ? request.categoryId() : existingProduct.getCategoryId())
-                .build();
+                .warrantyInMonth(
+                        request.warrantyInMonth() != null
+                                ? request.warrantyInMonth()
+                                : existingProduct.getWarrantyInMonth()
+                ).build();
     }
 
     @Override

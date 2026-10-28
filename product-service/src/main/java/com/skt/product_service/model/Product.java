@@ -81,7 +81,8 @@ public class Product {
     private String skuCode;
     private String brandId;
     private String productCategory; // Helps easily identify the type programmatically
-    
+    private Integer warrantyInMonth;
+
     // Category support
     @NotNull(message = "Category ID is required")
     private String categoryId; // Leaf category ID for DB relations and filtering (e.g., "business-laptop-id")

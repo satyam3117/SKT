@@ -27,6 +27,7 @@ public class LaptopFactory implements ProductFactory {
                 .graphics(request.graphics() != null ? request.graphics() : StringUtils.EMPTY)
                 .brandId(request.brandId() != null ? request.brandId() : StringUtils.EMPTY)
                 .categoryId(request.categoryId())
+                .warrantyInMonth(request.warrantyInMonth())
                 .build();
     }
 
@@ -50,6 +51,7 @@ public class LaptopFactory implements ProductFactory {
                 .graphics(request.graphics() != null ? request.graphics() : existingLaptop.getGraphics())
                 .brandId(request.brandId()!= null ? request.brandId() : existingLaptop.getBrandId())
                 .categoryId(request.categoryId() != null ? request.categoryId() : existingLaptop.getCategoryId())
+                .warrantyInMonth(request.warrantyInMonth() != null ? request.warrantyInMonth() : existingLaptop.getWarrantyInMonth())
                 .build();
     }
 

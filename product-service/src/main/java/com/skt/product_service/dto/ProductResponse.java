@@ -16,6 +16,7 @@ public record ProductResponse(
         String name,
         String description,
         BigDecimal price,
+        Integer warrantyInMonth,
 
         String productCategory,
 
@@ -27,5 +28,4 @@ public record ProductResponse(
         List<ProductImage> productImages,
 
         Map<String, Object> attributes
-) {
-}
+) {}
