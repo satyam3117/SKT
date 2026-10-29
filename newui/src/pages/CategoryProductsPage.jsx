@@ -10,6 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import TopNavbar from "../components/layout/TopNavbar";
 import SubNavbar from "../components/layout/SubNavbar";
+import ProductDetailsModal from "../components/shared/ProductDetailsModal";
 
 import {
     getProductCategories,
@@ -71,49 +72,38 @@ function getProductImage(product) {
 /* Product Card                                                               */
 /* -------------------------------------------------------------------------- */
 
-function ProductCard({ product }) {
-    const [imageFailed, setImageFailed] =
-        useState(false);
-
+function ProductCard({ product, onSelect }) {
+    const [imageFailed, setImageFailed] = useState(false);
     const image = getProductImage(product);
 
     return (
         <article
+            role="button"
+            tabIndex={0}
+            aria-label={`View details for ${product?.name || "product"}`}
+            onClick={() => onSelect(product)}
+            onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    onSelect(product);
+                }
+            }}
             className="
-                group flex min-w-0 flex-col overflow-hidden
-                rounded-xl border border-[#D8DFD1]
-                bg-[#FFFDF7]
-                transition duration-200
-                hover:-translate-y-1
-                hover:border-[#245C45]
-                hover:shadow-lg
+                group flex min-w-0 cursor-pointer flex-col overflow-hidden
+                rounded-xl border border-[#D8DFD1] bg-[#FFFDF7]
+                transition duration-200 hover:-translate-y-1
+                hover:border-[#245C45] hover:shadow-lg
+                focus:outline-none focus:ring-2 focus:ring-[#245C45]
             "
         >
-            {/* Image */}
-
-            <div
-                className="
-                    flex aspect-square items-center
-                    justify-center overflow-hidden
-                    bg-[#E5EBDD]
-                "
-            >
+            <div className="flex aspect-square items-center justify-center overflow-hidden bg-[#E5EBDD]">
                 {image && !imageFailed ? (
                     <img
                         src={image}
-                        alt={
-                            product?.name ||
-                            "Product"
-                        }
+                        alt={product?.name || "Product"}
                         loading="lazy"
-                        className="
-                            h-full w-full object-contain
-                            p-4 transition duration-300
-                            group-hover:scale-105
-                        "
-                        onError={() =>
-                            setImageFailed(true)
-                        }
+                        className="h-full w-full object-contain p-4 transition duration-300 group-hover:scale-105"
+                        onError={() => setImageFailed(true)}
                     />
                 ) : (
                     <PackageSearch
@@ -124,65 +114,36 @@ function ProductCard({ product }) {
                 )}
             </div>
 
-            {/* Information */}
-
             <div className="flex flex-1 flex-col p-4">
-
                 <p className="mb-2 text-xs uppercase tracking-wider text-zinc-500">
-                    {String(
-                        product?.productCategory ||
-                        "Product"
-                    ).replaceAll("_", " ")}
+                    {String(product?.productCategory || "Product").replaceAll("_", " ")}
                 </p>
 
-                <h3
-                    className="
-                        line-clamp-2 min-h-12
-                        font-['Manrope']
-                        font-bold
-                        text-[#26372D]
-                    "
-                >
-                    {product?.name ||
-                        "Unnamed product"}
+                <h3 className="line-clamp-2 min-h-12 font-['Manrope'] font-bold text-[#26372D]">
+                    {product?.name || "Unnamed product"}
                 </h3>
 
-                <p
-                    className="
-                        mt-2 line-clamp-2
-                        text-sm leading-5
-                        text-zinc-500
-                    "
-                >
-                    {product?.description ||
-                        "Product details are not available."}
+                <p className="mt-2 line-clamp-2 text-sm leading-5 text-zinc-500">
+                    {product?.description || "Product details are not available."}
                 </p>
 
                 <div className="mt-auto pt-5">
-
-                    <p
-                        className="
-                            text-lg font-extrabold
-                            text-[#26372D]
-                        "
-                    >
-                        {formatPrice(
-                            product?.price
-                        )}
+                    <p className="text-lg font-extrabold text-[#26372D]">
+                        {formatPrice(product?.price)}
                     </p>
 
                     <p className="mt-1 text-xs text-zinc-500">
-                        SKU:{" "}
-                        {product?.skuCode ||
-                            "Not assigned"}
+                        SKU: {product?.skuCode || "Not assigned"}
                     </p>
 
+                    <p className="mt-3 text-xs font-semibold text-[#245C45]">
+                        View product details →
+                    </p>
                 </div>
             </div>
         </article>
     );
 }
-
 /* -------------------------------------------------------------------------- */
 /* Error                                                                      */
 /* -------------------------------------------------------------------------- */
@@ -261,9 +222,14 @@ function ProductSkeleton() {
 
 export default function CategoryProductsPage() {
 
+
+        // Keep the rest of your existing component code here.
     const { categoryId } = useParams();
 
     const navigate = useNavigate();
+
+    const [selectedProduct, setSelectedProduct] = useState(null);
+
 
     /* ---------------------------------------------------------------------- */
     /* Categories                                                              */
@@ -1290,6 +1256,8 @@ export default function CategoryProductsPage() {
                                                     product={
                                                         product
                                                     }
+                                                    onSelect={setSelectedProduct}
+
                                                 />
                                             )
                                         )}
@@ -1388,6 +1356,13 @@ export default function CategoryProductsPage() {
                 </div>
 
             </main>
+
+            {selectedProduct && (
+                <ProductDetailsModal
+                    product={selectedProduct}
+                    onClose={() => setSelectedProduct(null)}
+                />
+            )}
         </div>
     );
 }
@@ -1469,6 +1444,7 @@ function SubcategoryStrip({
                         </button>
                     )
                 )}
+
 
             </div>
         </section>

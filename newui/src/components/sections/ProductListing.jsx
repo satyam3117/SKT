@@ -4,7 +4,7 @@ import {
     useMemo,
     useState,
 } from "react";
-
+import ProductDetailsModal from "../shared/ProductDetailsModal";
 import {
     ChevronRight,
     Laptop,
@@ -293,6 +293,7 @@ function ProductListing({
         hasPrevious,
         setHasPrevious,
     ] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
 
 
     /*
@@ -1001,6 +1002,7 @@ function ProductListing({
                                 <article
                                     key={product.id}
                                     className="group rounded-lg border border-[#D8DFD1] bg-[#FFFDF7] p-4 transition hover:border-brand"
+                                    onClick={() => setSelectedProduct(product)}
                                 >
 
                                     <div className="relative mb-4 flex aspect-square items-center justify-center overflow-hidden rounded-md bg-zinc-100">
